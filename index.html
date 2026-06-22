@@ -418,8 +418,9 @@ haRow.querySelectorAll('.tab').forEach(t => {
   });
 });
 
-// Boot
-const cached = localStorage.getItem('lfc_ics_cache');
+// Boot — v2 cache key forces re-fetch when parsing logic changes
+const CACHE_KEY = 'lfc_ics_cache_v2';
+const cached = localStorage.getItem(CACHE_KEY);
 if (cached) {
   try {
     allFixtures = JSON.parse(cached).map(f=>({...f,start:new Date(f.start),end:f.end?new Date(f.end):null}));
@@ -478,14 +479,39 @@ function pd(v,fl) {
 function dv(v) { return v.replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\n/gi,' ').replace(/\\\\/g,'\\').trim(); }
 function enrich(e) {
   const s=e.summary||''; let comp='',home='',away='',isHome=null;
-  const si=Math.max(s.lastIndexOf(' - '),s.lastIndexOf(' | ')); let mp=s;
-  if (si>0) { comp=s.slice(si+3).trim(); mp=s.slice(0,si).trim(); }
-  const vs=mp.split(/\s+v(?:s)?\.?\s+/i);
+
+  // ICS format is typically: "Competition | Home Team v Away Team | Extra info"
+  // or: "Home Team v Away Team - Competition"
+  // Try pipe-separated first
+  const parts = s.split('|').map(p=>p.trim());
+  let mp = s;
+  if (parts.length >= 2) {
+    // First part before any pipe is the competition
+    comp = parts[0];
+    // Match part is the second segment containing 'v'
+    const matchSeg = parts.find((p,i)=>i>0 && /\sv(?:s)?\.?\s/i.test(p));
+    if (matchSeg) mp = matchSeg;
+    else mp = parts[1];
+  } else {
+    // Fall back: split on ' - ' taking last part as competition
+    const di = s.lastIndexOf(' - ');
+    if (di>0) { comp=s.slice(di+3).trim(); mp=s.slice(0,di).trim(); }
+  }
+
+  // Also try to get competition from description if still empty
+  if (!comp && e.description) {
+    const dm = e.description.match(/^([^\n|]+?)(?:\s*\||\s*\n)/);
+    if (dm) comp = dm[1].trim();
+  }
+
+  const vs = mp.split(/\s+v(?:s)?\.?\s+/i);
   if (vs.length===2) { home=vs[0].trim(); away=vs[1].trim(); }
+
   const lfc=['liverpool','lfc','liverpool fc'];
   if (lfc.some(n=>home.toLowerCase().includes(n))) isHome=true;
   if (lfc.some(n=>away.toLowerCase().includes(n))) isHome=false;
   const opponent=isHome===true?away:isHome===false?home:mp;
+
   let round='';
   if (e.description) { const m=e.description.match(/(?:round|matchweek|gameweek|gw|mw|stage|group)[:\s]+([^\n,|]+)/i); if(m) round=m[1].trim(); }
   const venue=e.location||(isHome===true?'Anfield':'');
