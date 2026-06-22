@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LFC Fixtures</title>
+  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAEtUlEQVR42u3dO3ITURAFUC+BlZCybLbBAghZCJnBAQllsDTvM/1un666CcZleXx8qzUajV9ejDHGmNbz+nscBVMW565xtM2xeCE3LQADbqIBA27iEcMN8ivYBmK4Dcivr9+/fgHb1IX8BnR1wAb5WLwVkFMUCrkS4DuAUxUAeTW8b58+H4ebssMgjwJdnSq4qSuMuSrelcihbg65EuCZwMEOwJyIeBQ31Adi7oJ4BDfUIIMN9h7MIN8Hm9qJmEGuAZveDa0M8HXY2rpQKwN7L2yYJ2EGdA1sqBdg1srntTXMWjmurWGGGepumIG7H3Z71DBD3RKzFSN7BYEZ5Li2hlmgPgk0zP1QwyxQwyxQ37w3Q5KBOmafhhnqmJaGGeoY1DBLDGqYJQq1Mxoy68yHdj4sb6Oli6KG+THAHw3URVDDPI4Z6iKgtfM8zMmoj2lpmMcxv/d/ob4BNMzzd2aob0QNNNAxoGEeA/3o50K9CfUV0N3OM89o6FTYpUBr53lPBj/63L//XUtr5yPOPT8LXktr5/Lnn7u8yFKqpbXzHsxdr/XYClo778Ps4qUNqLUzzFEtrZ33YO6G+kpLa+fDMHdHvbyltTPQMS2tne/BrKUXtTTQQLcC7cwG0Heh1s6HYdbSk1saaKBbgbZuAH3U2gH0k6B//gC6KmjrxgOg3wB/FKBrrB0w/wfzI5Anwu5+GzGgq2GGGug4zAOoNfQgaPvzIswXUQM9uEfDDHRUSwMNNNAwL0MNNNAaGmhPCCuC9ictBp8Ywgx0VEsDXes8NNBAx7xS2Bkz0IHXcgANdD3Yrt0A+ujLSV0uCrR3scAMdCBqxw/oGNSOG9BRd/EXoIEGGmigG4GGGWioHXSgrRwiQAvQQAvQQAvQIkCLAC1AAy1AAy1AiwAtchtoqOWoOydpaXGzRj8AAVoEaAF6PuhuqK9ekH/1Av/ubwxY8rcKgQY6op2BBhpooIE+HXQn1LNAr/48+7OWBrpDOwO9Z+UAuhjoLqiBDlg3gAY6DrS1A+iYdUNLe1IY185AAx0H+srakYZ61gskq79eCuZl64aWBjqunbU00FHtrKWBjmvnq6Bd/C+z23kaaLu0xLSzlpa4dtbSEtXOnVr6vcdfOdpZSwOtne3SEtjOUEsc5nTQL4cN0FADDfM10CeiBroG5u2gU1sa6IbtnNzSQDdt51TU//o+3x7v/47DXR+HudDqURH1vzD9SbWPn/Ti1BGY01paQzdv5/SzHtIQM9QShxlqmOMwPwMaapiPAD3a0lCfjzmmnaGGORIz1DDHYZ6xT0OdiflY0FDDHIV5Jmqw677XshXmK6i1dV4rR2GGGuaX1JmFGuwzVoxozFDDDPUDqMHec5MdmCej1tZntHJLzKtQg31vK7fGPIIa7HqQYd7Q1mA/fzNKkA9o6+6wV0GGeSFqsPdChhlskKEem9Qbh4/crH10qLwZ9TOwk//iwIyh8WDYFYFfefwgh6Mewb0T+cjjmznUHQZ7FPejvwCrv8bsoSwA9g7clRGDHAy7IvCVQ1Ez2LuR7xpqwL70C1BtKAE7YqiAG2IDNsgGbohNd+B+auZo4H4q5ljkjrYp+0vgKBhjnppfD6xb//r+DKQAAAAASUVORK5CYII=" />
+  <link rel="apple-touch-icon-precomposed" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAEtUlEQVR42u3dO3ITURAFUC+BlZCybLbBAghZCJnBAQllsDTvM/1un666CcZleXx8qzUajV9ejDHGmNbz+nscBVMW565xtM2xeCE3LQADbqIBA27iEcMN8ivYBmK4Dcivr9+/fgHb1IX8BnR1wAb5WLwVkFMUCrkS4DuAUxUAeTW8b58+H4ebssMgjwJdnSq4qSuMuSrelcihbg65EuCZwMEOwJyIeBQ31Adi7oJ4BDfUIIMN9h7MIN8Hm9qJmEGuAZveDa0M8HXY2rpQKwN7L2yYJ2EGdA1sqBdg1srntTXMWjmurWGGGepumIG7H3Z71DBD3RKzFSN7BYEZ5Li2hlmgPgk0zP1QwyxQwyxQ37w3Q5KBOmafhhnqmJaGGeoY1DBLDGqYJQq1Mxoy68yHdj4sb6Oli6KG+THAHw3URVDDPI4Z6iKgtfM8zMmoj2lpmMcxv/d/ob4BNMzzd2aob0QNNNAxoGEeA/3o50K9CfUV0N3OM89o6FTYpUBr53lPBj/63L//XUtr5yPOPT8LXktr5/Lnn7u8yFKqpbXzHsxdr/XYClo778Ps4qUNqLUzzFEtrZ33YO6G+kpLa+fDMHdHvbyltTPQMS2tne/BrKUXtTTQQLcC7cwG0Heh1s6HYdbSk1saaKBbgbZuAH3U2gH0k6B//gC6KmjrxgOg3wB/FKBrrB0w/wfzI5Anwu5+GzGgq2GGGug4zAOoNfQgaPvzIswXUQM9uEfDDHRUSwMNNNAwL0MNNNAaGmhPCCuC9ictBp8Ywgx0VEsDXes8NNBAx7xS2Bkz0IHXcgANdD3Yrt0A+ujLSV0uCrR3scAMdCBqxw/oGNSOG9BRd/EXoIEGGmigG4GGGWioHXSgrRwiQAvQQAvQQAvQIkCLAC1AAy1AAy1AiwAtchtoqOWoOydpaXGzRj8AAVoEaAF6PuhuqK9ekH/1Av/ubwxY8rcKgQY6op2BBhpooIE+HXQn1LNAr/48+7OWBrpDOwO9Z+UAuhjoLqiBDlg3gAY6DrS1A+iYdUNLe1IY185AAx0H+srakYZ61gskq79eCuZl64aWBjqunbU00FHtrKWBjmvnq6Bd/C+z23kaaLu0xLSzlpa4dtbSEtXOnVr6vcdfOdpZSwOtne3SEtjOUEsc5nTQL4cN0FADDfM10CeiBroG5u2gU1sa6IbtnNzSQDdt51TU//o+3x7v/47DXR+HudDqURH1vzD9SbWPn/Ti1BGY01paQzdv5/SzHtIQM9QShxlqmOMwPwMaapiPAD3a0lCfjzmmnaGGORIz1DDHYZ6xT0OdiflY0FDDHIV5Jmqw677XshXmK6i1dV4rR2GGGuaX1JmFGuwzVoxozFDDDPUDqMHec5MdmCej1tZntHJLzKtQg31vK7fGPIIa7HqQYd7Q1mA/fzNKkA9o6+6wV0GGeSFqsPdChhlskKEem9Qbh4/crH10qLwZ9TOwk//iwIyh8WDYFYFfefwgh6Mewb0T+cjjmznUHQZ7FPejvwCrv8bsoSwA9g7clRGDHAy7IvCVQ1Ez2LuR7xpqwL70C1BtKAE7YqiAG2IDNsgGbohNd+B+auZo4H4q5ljkjrYp+0vgKBhjnppfD6xb//r+DKQAAAAASUVORK5CYII=" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LFC Fixtures" />
+  <meta name="theme-color" content="#C8102E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:     #C8102E;
+      --red-dk:  #8B0C1F;
+      --red-gl:  rgba(200,16,46,0.18);
+      --bg:      #0D0D0D;
+      --bg2:     #161616;
+      --bg3:     #1F1F1F;
+      --border:  #242424;
+      --white:   #F5F5F0;
+      --muted:   #777;
+      --muted2:  #555;
+      --gold:    #F6C519;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(13,13,13,0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 100;
+    }
+    .crest { width: 40px; height: 40px; flex-shrink: 0; }
+    .header-text h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px; letter-spacing: 1.5px; line-height: 1;
+    }
+    .header-text p { font-size: 11.5px; color: var(--muted); margin-top: 2px; letter-spacing: 0.3px; }
+    .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .btn-icon {
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--muted); width: 34px; height: 34px;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 15px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-icon:hover { color: var(--white); border-color: #3a3a3a; }
+    .btn-icon.spinning { animation: spin 0.75s linear infinite; }
+
+    /* ── Filter tabs ── */
+    .filter-bar {
+      padding: 10px 20px;
+      display: flex; gap: 7px;
+      overflow-x: auto; scrollbar-width: none;
+      border-bottom: 1px solid var(--border);
+      -webkit-overflow-scrolling: touch;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .tab {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 13px; border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+      transition: all 0.18s; letter-spacing: 0.3px;
+      flex-shrink: 0;
+    }
+    .tab img { width: 16px; height: 16px; object-fit: contain; }
+    .tab:hover { color: var(--white); border-color: #3a3a3a; }
+    .tab.active { background: var(--red); border-color: var(--red); color: #fff; }
+
+    /* ── Main ── */
+    main { padding-bottom: 60px; }
+    .content-wrap { max-width: 680px; margin: 0 auto; }
+
+    /* ── Hero ── */
+    .hero-section { padding: 20px 20px 0; }
+    .section-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px;
+    }
+    .hero-card {
+      background: linear-gradient(145deg, #1a0008 0%, #0d0003 60%, #0a0010 100%);
+      border: 1px solid rgba(200,16,46,0.5);
+      border-radius: 18px;
+      padding: 20px 18px;
+      box-shadow: 0 0 60px rgba(200,16,46,0.12), inset 0 1px 0 rgba(255,255,255,0.04);
+      position: relative; overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute; top: -80px; right: -80px;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(200,16,46,0.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Competition badge row */
+    .hero-comp-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .hero-comp-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 5px 12px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.4px;
+    }
+    .hero-comp-badge img { width: 18px; height: 18px; object-fit: contain; }
+    .hero-round-badge {
+      font-size: 11px; color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 4px 10px;
+    }
+
+    /* Teams */
+    .hero-matchup {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 8px;
+      margin-bottom: 20px;
+    }
+    .hero-team { text-align: center; flex: 1; }
+    .hero-badge-wrap {
+      width: 64px; height: 64px;
+      margin: 0 auto 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-badge-wrap img {
+      max-width: 64px; max-height: 64px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+    }
+    .hero-team-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px; letter-spacing: 0.8px; line-height: 1.2;
+      word-break: break-word;
+    }
+    .hero-vs {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px; color: rgba(255,255,255,0.15);
+      flex-shrink: 0; letter-spacing: 2px;
+    }
+
+    /* Meta row */
+    .hero-meta {
+      display: flex; flex-wrap: wrap;
+      gap: 8px 16px; margin-bottom: 0;
+    }
+    .hero-meta-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12.5px; color: rgba(255,255,255,0.6);
+    }
+    .ha-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; padding: 3px 9px;
+      border-radius: 5px; display: inline-block;
+    }
+    .ha-home { background: rgba(200,16,46,0.25); color: #ff7088; }
+    .ha-away { background: rgba(120,120,120,0.18); color: #999; }
+    .ha-neutral { background: rgba(246,197,25,0.15); color: var(--gold); }
+
+    /* Countdown */
+    .countdown-wrap {
+      margin-top: 18px; padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .countdown-row { display: flex; gap: 8px; }
+    .countdown-item {
+      flex: 1; text-align: center;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px; padding: 10px 4px;
+    }
+    .countdown-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; line-height: 1; color: var(--white);
+    }
+    .countdown-unit {
+      font-size: 9px; letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3); margin-top: 3px;
+    }
+    .matchday-banner {
+      text-align: center; padding: 12px;
+      background: rgba(200,16,46,0.15);
+      border: 1px solid rgba(200,16,46,0.3);
+      border-radius: 10px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px; letter-spacing: 2px; color: #ff7088;
+    }
+
+    /* Cal link */
+    .cal-row {
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .cal-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.45); font-size: 12px;
+      text-decoration: none; padding: 5px 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .cal-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.25); }
+
+    /* ── Fixture list ── */
+    .fixtures-section { padding: 0 20px; }
+    .month-header {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px; letter-spacing: 1px; color: var(--muted2);
+      padding: 22px 0 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .month-count {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px; font-weight: 600;
+      color: var(--muted2); letter-spacing: 0.5px;
+    }
+
+    .fixture-card {
+      display: flex; align-items: center; gap: 0;
+      padding: 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.15s;
+    }
+    .fixture-card:hover { background: rgba(255,255,255,0.02); }
+
+    /* Home/Away left border accent */
+    .fixture-accent {
+      width: 3px; flex-shrink: 0;
+      align-self: stretch; min-height: 68px;
+    }
+    .fixture-accent.home { background: var(--red); }
+    .fixture-accent.away { background: var(--bg3); }
+    .fixture-accent.neutral { background: var(--gold); }
+
+    .fixture-inner {
+      display: flex; align-items: center; gap: 11px;
+      padding: 12px 0 12px 12px; flex: 1; min-width: 0;
+    }
+
+    /* Date col */
+    .fixture-date-col { width: 38px; flex-shrink: 0; text-align: center; }
+    .fixture-day {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; line-height: 1; color: var(--white);
+    }
+    .fixture-dow {
+      font-size: 9.5px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+    }
+    .fixture-divider { width: 1px; height: 38px; background: var(--border); flex-shrink: 0; }
+
+    /* Main content */
+    .fixture-main { flex: 1; min-width: 0; }
+    .fixture-opponent {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 4px;
+    }
+    .opp-badge {
+      width: 26px; height: 26px; flex-shrink: 0;
+      object-fit: contain;
+    }
+    .opp-name {
+      font-weight: 600; font-size: 14.5px;
+      line-height: 1.3; word-break: break-word;
+    }
+    .fixture-sub {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .comp-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10.5px; font-weight: 600; letter-spacing: 0.3px;
+      padding: 2px 7px; border-radius: 4px; white-space: nowrap;
+    }
+    .comp-badge img { width: 12px; height: 12px; object-fit: contain; }
+    .round-tag { font-size: 10.5px; color: var(--muted); }
+    .venue-tag { font-size: 10.5px; color: var(--muted); }
+
+    /* Right col */
+    .fixture-right { flex-shrink: 0; text-align: right; padding-right: 14px; min-width: 64px; }
+    .fixture-time {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 17px; letter-spacing: 0.5px; line-height: 1;
+    }
+    .fixture-time.tbc { color: var(--muted); font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; margin-top: 1px; }
+
+    /* Days pill */
+    .days-pill {
+      display: inline-block; margin-top: 5px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+      padding: 2px 7px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .days-pill.today    { background: rgba(200,16,46,0.25); color: #ff7088; }
+    .days-pill.tomorrow { background: rgba(246,197,25,0.15); color: var(--gold); }
+    .days-pill.soon     { background: rgba(46,204,113,0.15); color: #5dde9a; }
+    .days-pill.normal   { background: rgba(80,80,80,0.2); color: var(--muted); }
+
+    /* Competition colours */
+    .comp-pl   { background: rgba(60,0,180,0.2); color: #a88fff; }
+    .comp-cl   { background: rgba(0,50,130,0.2); color: #70b8ff; }
+    .comp-fa   { background: rgba(190,90,0,0.2); color: #ffb347; }
+    .comp-lc   { background: rgba(0,120,70,0.2); color: #4ddba8; }
+    .comp-uel  { background: rgba(246,197,25,0.15); color: var(--gold); }
+    .comp-cwc  { background: rgba(0,180,180,0.15); color: #5de0e2; }
+    .comp-fr   { background: rgba(70,70,70,0.2); color: #888; }
+    .comp-other{ background: rgba(70,70,70,0.2); color: #999; }
+
+    /* ── States ── */
+    .state-view {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 80px 30px; text-align: center; gap: 12px;
+    }
+    .state-icon { font-size: 42px; }
+    .state-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; }
+    .state-msg { color: var(--muted); font-size: 13.5px; max-width: 300px; line-height: 1.7; }
+    .retry-btn {
+      margin-top: 8px; background: var(--red); color: #fff;
+      border: none; border-radius: 10px;
+      padding: 12px 28px;
+      font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .retry-btn:hover { background: var(--red-dk); }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border); border-top-color: var(--red);
+      border-radius: 50%; animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hidden { display: none !important; }
+
+    /* ── Desktop ── */
+    @media (min-width: 680px) {
+      header { padding: 18px 32px; }
+      .filter-bar { padding-left: 32px; padding-right: 32px; }
+      .hero-section { padding: 24px 32px 0; }
+      .fixtures-section { padding: 0 32px; }
+      .hero-badge-wrap { width: 72px; height: 72px; }
+      .hero-badge-wrap img { max-width: 72px; max-height: 72px; }
+      .hero-team-name { font-size: 18px; }
+      .hero-vs { font-size: 36px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spinner, .btn-icon.spinning { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img class="crest" src="https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg" alt="LFC" />
+  <div class="header-text">
+    <h1>LFC Fixtures</h1>
+    <p id="lastUpdated">Men's First Team · 2025/26</p>
+  </div>
+  <div class="header-right">
+    <button class="btn-icon" id="refreshBtn" title="Refresh">↺</button>
+  </div>
+</header>
+
+<div class="filter-bar hidden" id="filterBar"></div>
+
+<main>
+  <div class="content-wrap">
+
+    <div class="state-view" id="loadingState">
+      <div class="spinner"></div>
+      <div class="state-msg">Loading fixtures…</div>
+    </div>
+
+    <div class="state-view hidden" id="errorState">
+      <div class="state-icon">⚠️</div>
+      <div class="state-title">Could not load</div>
+      <div class="state-msg" id="errorMsg">Unable to fetch the fixture calendar.</div>
+      <button class="retry-btn" onclick="loadFixtures()">TRY AGAIN</button>
+    </div>
+
+    <div id="fixturesContent" class="hidden"></div>
+
+  </div>
+</main>
+
+<script>
+  const WORKER_URL = 'https://lfc-fixtures.duff13.workers.dev';
+  const LFC_ID     = 40; // used for badge lookup only
+
+  // ── Club badge map (Wikipedia SVGs) ───────────────────────────────────
+  const BADGES = {
+    // Premier League
+    'liverpool':              'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg',
+    'arsenal':                'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
+    'manchester city':        'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg',
+    'manchester united':      'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg',
+    'chelsea':                'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg',
+    'tottenham':              'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg',
+    'spurs':                  'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg',
+    'tottenham hotspur':      'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg',
+    'newcastle':              'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
+    'newcastle united':       'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
+    'aston villa':            'https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_FC_crest_%282016%29.svg',
+    'brighton':               'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
+    'brighton & hove albion': 'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
+    'west ham':               'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
+    'west ham united':        'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
+    'brentford':              'https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg',
+    'fulham':                 'https://upload.wikimedia.org/wikipedia/en/e/eb/Fulham_FC_%28shield%29.svg',
+    'crystal palace':         'https://upload.wikimedia.org/wikipedia/en/a/a2/Crystal_Palace_FC_logo_%282022%29.svg',
+    'everton':                'https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg',
+    'nottingham forest':      'https://upload.wikimedia.org/wikipedia/en/e/e5/Nottingham_Forest_F.C._logo.svg',
+    'wolves':                 'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
+    'wolverhampton':          'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
+    'wolverhampton wanderers':'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
+    'bournemouth':            'https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg',
+    'afc bournemouth':        'https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg',
+    'leicester':              'https://upload.wikimedia.org/wikipedia/en/2/2d/Leicester_City_crest.svg',
+    'leicester city':         'https://upload.wikimedia.org/wikipedia/en/2/2d/Leicester_City_crest.svg',
+    'southampton':            'https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg',
+    'ipswich':                'https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg',
+    'ipswich town':           'https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg',
+    'sunderland':             'https://upload.wikimedia.org/wikipedia/en/7/77/Logo_Sunderland.svg',
+    'leeds':                  'https://upload.wikimedia.org/wikipedia/en/5/54/Leeds_United_F.C._logo.svg',
+    'leeds united':           'https://upload.wikimedia.org/wikipedia/en/5/54/Leeds_United_F.C._logo.svg',
+    'burnley':                'https://upload.wikimedia.org/wikipedia/en/6/62/Burnley_F.C._Logo.svg',
+    'sheffield united':       'https://upload.wikimedia.org/wikipedia/en/9/9c/Sheffield_United_FC_logo.svg',
+    'luton':                  'https://upload.wikimedia.org/wikipedia/en/9/9d/Luton_Town_FC.svg',
+    'luton town':             'https://upload.wikimedia.org/wikipedia/en/9/9d/Luton_Town_FC.svg',
+    // European
+    'real madrid':            'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg',
+    'barcelona':              'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg',
+    'atletico madrid':        'https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg',
+    'atletico de madrid':     'https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg',
+    'paris saint-germain':    'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg',
+    'psg':                    'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg',
+    'juventus':               'https://upload.wikimedia.org/wikipedia/commons/1/15/Juventus_FC_2017_logo.svg',
+    'ac milan':               'https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg',
+    'inter milan':            'https://upload.wikimedia.org/wikipedia/commons/0/05/FC_Internazionale_Milano_2021.svg',
+    'internazionale':         'https://upload.wikimedia.org/wikipedia/commons/0/05/FC_Internazionale_Milano_2021.svg',
+    'bayern munich':          'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282002%E2%80%932017%29.svg',
+    'borussia dortmund':      'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg',
+    'ajax':                   'https://upload.wikimedia.org/wikipedia/en/7/79/Ajax_Amsterdam.svg',
+    'benfica':                'https://upload.wikimedia.org/wikipedia/en/8/8e/SL_Benfica_logo.svg',
+    'porto':                  'https://upload.wikimedia.org/wikipedia/en/3/3b/FC_Porto.svg',
+    'celtic':                 'https://upload.wikimedia.org/wikipedia/en/3/30/Celtic_FC.svg',
+    'rangers':                'https://upload.wikimedia.org/wikipedia/en/9/93/Rangers_FC.svg',
+  };
+
+  // ── Competition logo map ───────────────────────────────────────────────
+  const COMP_LOGOS = {
+    'premier league':          'https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg',
+    'uefa champions league':   'https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg',
+    'uefa europa league':      'https://upload.wikimedia.org/wikipedia/en/0/04/UEFA_Europa_League_logo_and_wordmark.svg',
+    'fa cup':                  'https://upload.wikimedia.org/wikipedia/en/7/7a/The_FA_Cup.svg',
+    'efl cup':                 'https://upload.wikimedia.org/wikipedia/en/c/c5/EFL_Cup_logo.svg',
+    'league cup':              'https://upload.wikimedia.org/wikipedia/en/c/c5/EFL_Cup_logo.svg',
+    'carabao cup':             'https://upload.wikimedia.org/wikipedia/en/c/c5/EFL_Cup_logo.svg',
+    'community shield':        'https://upload.wikimedia.org/wikipedia/en/5/5d/FA_Community_Shield.svg',
+    'club world cup':          'https://upload.wikimedia.org/wikipedia/en/thumb/3/38/2025_FIFA_Club_World_Cup_logo.svg/800px-2025_FIFA_Club_World_Cup_logo.svg.png',
+    'fifa club world cup':     'https://upload.wikimedia.org/wikipedia/en/thumb/3/38/2025_FIFA_Club_World_Cup_logo.svg/800px-2025_FIFA_Club_World_Cup_logo.svg.png',
+  };
+
+  function getCompLogo(comp) {
+    return COMP_LOGOS[(comp||'').toLowerCase()] || null;
+  }
+
+  function getClubBadge(name) {
+    if (!name) return null;
+    const key = name.toLowerCase().trim()
+      .replace(/\s+fc$/, '').replace(/^fc\s+/, '')
+      .replace(/\s+afc$/, '').replace(/^afc\s+/, '').trim();
+    return BADGES[key] || BADGES[name.toLowerCase().trim()] || null;
+  }
+
+  // ── State ─────────────────────────────────────────────────────────────
+  let allFixtures = [];
+  let activeComp  = 'all';
+  let cdTimer     = null;
+
+  const refreshBtn      = document.getElementById('refreshBtn');
+  const filterBar       = document.getElementById('filterBar');
+  const loadingState    = document.getElementById('loadingState');
+  const errorState      = document.getElementById('errorState');
+  const errorMsg        = document.getElementById('errorMsg');
+  const fixturesContent = document.getElementById('fixturesContent');
+  const lastUpdated     = document.getElementById('lastUpdated');
+
+  refreshBtn.addEventListener('click', loadFixtures);
+
+  // ── Boot ──────────────────────────────────────────────────────────────
+  const cached = localStorage.getItem('lfc_ics_cache');
+  if (cached) {
+    try {
+      allFixtures = JSON.parse(cached).map(f => ({ ...f, start: new Date(f.start), end: f.end ? new Date(f.end) : null }));
+      buildUI();
+      show('fixtures');
+      fetchICS(true); // silent background refresh
+    } catch(e) { loadFixtures(); }
+  } else {
+    loadFixtures();
+  }
+
+  // ── Fetch ─────────────────────────────────────────────────────────────
+  async function loadFixtures() {
+    show('loading');
+    refreshBtn.classList.add('spinning');
+    await fetchICS(false);
+    refreshBtn.classList.remove('spinning');
+  }
+
+  async function fetchICS(silent) {
+    try {
+      const res  = await fetch(WORKER_URL);
+      const text = await res.text();
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${text.slice(0,120)}`);
+      const parsed = parseICS(text);
+      allFixtures  = parsed;
+      // Cache serialisable copy
+      localStorage.setItem('lfc_ics_cache', JSON.stringify(
+        parsed.map(f => ({ ...f, start: f.start.toISOString(), end: f.end ? f.end.toISOString() : null }))
+      ));
+      lastUpdated.textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+      buildUI();
+      show('fixtures');
+    } catch(err) {
+      if (!silent) {
+        errorMsg.textContent = err.message || 'Could not fetch the fixture calendar.';
+        show('error');
+      }
+    }
+  }
+
+  // ── ICS Parser ────────────────────────────────────────────────────────
+  function parseICS(text) {
+    const now = new Date(); now.setHours(0,0,0,0);
+    const unfolded = text.replace(/\r\n[ \t]/g,'').replace(/\r/g,'');
+    const lines    = unfolded.split('\n');
+    const events   = [];
+    let cur        = null;
+
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (line === 'BEGIN:VEVENT') { cur = {}; continue; }
+      if (line === 'END:VEVENT' && cur) {
+        if (cur.start && cur.start >= now) events.push(cur);
+        cur = null; continue;
+      }
+      if (!cur) continue;
+      const ci    = line.indexOf(':');
+      if (ci === -1) continue;
+      const key   = line.slice(0, ci).split(';')[0].toUpperCase();
+      const value = line.slice(ci + 1);
+      if (key === 'SUMMARY')     cur.summary     = decodeVal(value);
+      if (key === 'LOCATION')    cur.location    = decodeVal(value);
+      if (key === 'DESCRIPTION') cur.description = decodeVal(value);
+      if (key === 'URL')         cur.url         = value.trim();
+      if (key === 'DTSTART') { const p = parseDate(value, line); cur.start = p.date; cur.allDay = p.allDay; }
+      if (key === 'DTEND')   { const p = parseDate(value, line); cur.end   = p.date; }
+    }
+
+    events.sort((a,b) => a.start - b.start);
+    return events.map(enrichEvent);
+  }
+
+  function parseDate(value, fullLine) {
+    const allDay = fullLine.includes('VALUE=DATE') || /^\d{8}$/.test(value.trim());
+    const v = value.trim();
+    let date;
+    if (allDay) {
+      date = new Date(+v.slice(0,4), +v.slice(4,6)-1, +v.slice(6,8));
+    } else {
+      const y=+v.slice(0,4),mo=+v.slice(4,6)-1,d=+v.slice(6,8),h=+v.slice(9,11),mi=+v.slice(11,13),s=+v.slice(13,15);
+      date = v.endsWith('Z') ? new Date(Date.UTC(y,mo,d,h,mi,s)) : new Date(y,mo,d,h,mi,s);
+    }
+    return { date, allDay };
+  }
+
+  function decodeVal(v) {
+    return v.replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\n/gi,' ').replace(/\\\\/g,'\\').trim();
+  }
+
+  function enrichEvent(e) {
+    const summary = e.summary || '';
+    let competition = '', home = '', away = '', isHome = null;
+
+    const dashIdx = summary.lastIndexOf(' - ');
+    const pipeIdx = summary.lastIndexOf(' | ');
+    const splitIdx = Math.max(dashIdx, pipeIdx);
+
+    let matchPart = summary;
+    if (splitIdx > 0) {
+      competition = summary.slice(splitIdx + 3).trim();
+      matchPart   = summary.slice(0, splitIdx).trim();
+    }
+
+    const vsSplit = matchPart.split(/\s+v(?:s)?\.?\s+/i);
+    if (vsSplit.length === 2) { home = vsSplit[0].trim(); away = vsSplit[1].trim(); }
+
+    const lfcNames = ['liverpool', 'lfc', 'liverpool fc'];
+    if (lfcNames.some(n => home.toLowerCase().includes(n)))  isHome = true;
+    if (lfcNames.some(n => away.toLowerCase().includes(n)))  isHome = false;
+
+    const opponent = isHome === true ? away : isHome === false ? home : matchPart;
+
+    // Round from description
+    let round = '';
+    if (e.description) {
+      const m = e.description.match(/(?:round|matchweek|gameweek|gw|mw|stage|group)[:\s]+([^\n,|]+)/i);
+      if (m) round = m[1].trim();
+    }
+
+    const venue = e.location || (isHome === true ? 'Anfield' : '');
+
+    return { ...e, competition, opponent: opponent || summary, isHome, round, venue };
+  }
+
+  // ── Build UI ──────────────────────────────────────────────────────────
+  function buildUI() { buildFilterTabs(); renderFixtures(); }
+
+  function buildFilterTabs() {
+    const counts = {};
+    allFixtures.forEach(f => { const c = f.competition||'Other'; counts[c]=(counts[c]||0)+1; });
+
+    const order = ['Premier League','UEFA Champions League','UEFA Europa League',
+                   'FA Cup','EFL Cup','League Cup','Carabao Cup','Club World Cup',
+                   'FIFA Club World Cup','Community Shield'];
+    const sorted = [...order.filter(c=>counts[c]), ...Object.keys(counts).filter(c=>!order.includes(c))];
+
+    filterBar.innerHTML = `<button class="tab active" data-comp="all">All (${allFixtures.length})</button>`;
+    sorted.forEach(c => {
+      const logo = getCompLogo(c);
+      const btn  = document.createElement('button');
+      btn.className    = 'tab';
+      btn.dataset.comp = c;
+      btn.innerHTML    = `${logo ? `<img src="${logo}" alt="" />` : ''}${compShort(c)} (${counts[c]})`;
+      filterBar.appendChild(btn);
+    });
+
+    filterBar.classList.remove('hidden');
+    filterBar.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        filterBar.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+        tab.classList.add('active');
+        activeComp = tab.dataset.comp;
+        renderFixtures();
+      });
+    });
+  }
+
+  function renderFixtures() {
+    clearInterval(cdTimer);
+    const list = activeComp === 'all' ? allFixtures : allFixtures.filter(f=>f.competition===activeComp);
+
+    if (!list.length) {
+      fixturesContent.innerHTML = `<div class="state-view"><div class="state-icon">📭</div><div class="state-title">No fixtures</div><div class="state-msg">No upcoming fixtures in this competition.</div></div>`;
+      return;
+    }
+
+    let html = buildHero(list[0]);
+
+    if (list.length > 1) {
+      html += `<div class="fixtures-section">`;
+      const byMonth = {};
+      list.slice(1).forEach(f => {
+        const key = f.start.getFullYear()+'-'+String(f.start.getMonth()+1).padStart(2,'0');
+        (byMonth[key]=byMonth[key]||[]).push(f);
+      });
+      Object.entries(byMonth).forEach(([key, fixtures]) => {
+        const [y,m] = key.split('-');
+        const label = new Date(+y,+m-1).toLocaleString('en-GB',{month:'long',year:'numeric'}).toUpperCase();
+        html += `<div class="month-group">
+          <div class="month-header">
+            <span>${label}</span>
+            <span class="month-count">${fixtures.length} FIXTURE${fixtures.length!==1?'S':''}</span>
+          </div>`;
+        fixtures.forEach(f => { html += buildCard(f); });
+        html += `</div>`;
+      });
+      html += `</div>`;
+    }
+
+    fixturesContent.innerHTML = html;
+    startCountdown(list[0]);
+  }
+
+  // ── Hero ──────────────────────────────────────────────────────────────
+  function buildHero(f) {
+    const comp     = f.competition || 'Fixture';
+    const compLogo = getCompLogo(comp);
+    const oppBadge = getClubBadge(f.opponent);
+    const lfcBadge = BADGES['liverpool'];
+    const isHome   = f.isHome;
+    const haClass  = isHome===true?'ha-home':isHome===false?'ha-away':'ha-neutral';
+    const haText   = isHome===true?'HOME':isHome===false?'AWAY':'NEUTRAL';
+    const dateStr  = f.start.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+    const timeStr  = formatTime(f);
+    const venue    = f.venue ? `<div class="hero-meta-item">📍 ${escHtml(f.venue)}</div>` : '';
+    const round    = f.round ? `<span class="hero-round-badge">${escHtml(f.round)}</span>` : '';
+    const gcal     = buildGCal(f);
+
+    return `
+    <div class="hero-section">
+      <div class="section-label">Next Match</div>
+      <div class="hero-card">
+        <div class="hero-comp-row">
+          <div class="hero-comp-badge">
+            ${compLogo ? `<img src="${compLogo}" alt="${comp}" onerror="this.style.display='none'" />` : ''}
+            <span>${escHtml(comp)}</span>
+          </div>
+          ${round}
+        </div>
+        <div class="hero-matchup">
+          <div class="hero-team">
+            <div class="hero-badge-wrap">
+              <img src="${lfcBadge}" alt="Liverpool FC" />
+            </div>
+            <div class="hero-team-name">Liverpool FC</div>
+          </div>
+          <div class="hero-vs">VS</div>
+          <div class="hero-team">
+            <div class="hero-badge-wrap">
+              ${oppBadge
+                ? `<img src="${oppBadge}" alt="${escHtml(f.opponent)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><span style="display:none;font-size:28px;align-items:center;justify-content:center;">⚽</span>`
+                : `<span style="font-size:36px;">⚽</span>`}
+            </div>
+            <div class="hero-team-name">${escHtml(f.opponent)}</div>
+          </div>
+        </div>
+        <div class="hero-meta">
+          <div class="hero-meta-item">📅 ${dateStr}</div>
+          <div class="hero-meta-item">🕐 ${timeStr}</div>
+          ${venue}
+          <div class="hero-meta-item"><span class="ha-badge ${haClass}">${haText}</span></div>
+        </div>
+        <div class="countdown-wrap" id="cdWrap"></div>
+        <div class="cal-row">
+          <a class="cal-btn" href="${gcal}" target="_blank" rel="noopener">📅 Google Calendar</a>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ── Fixture card ──────────────────────────────────────────────────────
+  function buildCard(f) {
+    const d        = f.start;
+    const isHome   = f.isHome;
+    const accentCls= isHome===true?'home':isHome===false?'away':'neutral';
+    const haClass  = isHome===true?'ha-home':isHome===false?'ha-away':'ha-neutral';
+    const haText   = isHome===true?'H':isHome===false?'A':'N';
+    const compCls  = getCompClass(f.competition);
+    const compLogo = getCompLogo(f.competition);
+    const oppBadge = getClubBadge(f.opponent);
+    const time     = formatTime(f);
+    const round    = f.round ? `<span class="round-tag">${escHtml(f.round)}</span>` : '';
+    const venue    = f.venue ? `<span class="venue-tag">· ${escHtml(f.venue)}</span>` : '';
+    const daysPill = buildDaysPill(f.start);
+
+    return `
+    <div class="fixture-card">
+      <div class="fixture-accent ${accentCls}"></div>
+      <div class="fixture-inner">
+        <div class="fixture-date-col">
+          <div class="fixture-day">${d.getDate()}</div>
+          <div class="fixture-dow">${d.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase()}</div>
+        </div>
+        <div class="fixture-divider"></div>
+        <div class="fixture-main">
+          <div class="fixture-opponent">
+            ${oppBadge
+              ? `<img class="opp-badge" src="${oppBadge}" alt="${escHtml(f.opponent)}" onerror="this.style.display='none'" />`
+              : ''}
+            <span class="opp-name">${escHtml(f.opponent)}</span>
+          </div>
+          <div class="fixture-sub">
+            <span class="comp-badge ${compCls}">
+              ${compLogo ? `<img src="${compLogo}" alt="" onerror="this.style.display='none'" />` : ''}
+              ${compShort(f.competition)}
+            </span>
+            ${round}
+            ${venue}
+          </div>
+        </div>
+        <div class="fixture-right">
+          <div class="fixture-time${(f.allDay||isTimeUnknown(f))?' tbc':''}">${time}</div>
+          ${daysPill}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ── Days pill ─────────────────────────────────────────────────────────
+  function buildDaysPill(date) {
+    const now   = new Date(); now.setHours(0,0,0,0);
+    const match = new Date(date); match.setHours(0,0,0,0);
+    const diff  = Math.round((match - now) / 86400000);
+    let cls, label;
+    if (diff === 0)  { cls='today';    label='Today'; }
+    else if (diff===1){ cls='tomorrow'; label='Tomorrow'; }
+    else if (diff<=7) { cls='soon';    label=`${diff} days`; }
+    else              { cls='normal';  label=`${diff} days`; }
+    return `<div class="days-pill ${cls}">${label}</div>`;
+  }
+
+  // ── Countdown ─────────────────────────────────────────────────────────
+  function startCountdown(f) {
+    function tick() {
+      const wrap = document.getElementById('cdWrap');
+      if (!wrap) { clearInterval(cdTimer); return; }
+
+      const diff = f.start.getTime() - Date.now();
+
+      if (f.allDay) {
+        const days = Math.ceil(diff / 86400000);
+        if (days <= 0) {
+          wrap.innerHTML = `<div class="matchday-banner">⚽ MATCH DAY</div>`;
+        } else {
+          wrap.innerHTML = `<div class="countdown-row">
+            <div class="countdown-item"><div class="countdown-num">${days}</div><div class="countdown-unit">Days to go</div></div>
+          </div>`;
+        }
+        clearInterval(cdTimer);
+        return;
+      }
+
+      if (diff <= 0) {
+        wrap.innerHTML = `<div class="matchday-banner">⚽ MATCH DAY — KICK OFF!</div>`;
+        clearInterval(cdTimer); return;
+      }
+
+      // Match day but not kicked off yet
+      const totalHrs = diff / 3600000;
+      if (totalHrs < 24) {
+        const h = Math.floor(diff/3600000);
+        const m = Math.floor((diff%3600000)/60000);
+        const s = Math.floor((diff%60000)/1000);
+        wrap.innerHTML = `<div class="matchday-banner">⚽ MATCH DAY · Kick off in ${h ? h+'h ':'' }${m}m ${pad(s)}s</div>`;
+        return;
+      }
+
+      const days = Math.floor(diff/86400000);
+      const hrs  = Math.floor((diff%86400000)/3600000);
+      const mins = Math.floor((diff%3600000)/60000);
+      const secs = Math.floor((diff%60000)/1000);
+      wrap.innerHTML = `<div class="countdown-row">
+        <div class="countdown-item"><div class="countdown-num">${pad(days)}</div><div class="countdown-unit">Days</div></div>
+        <div class="countdown-item"><div class="countdown-num">${pad(hrs)}</div><div class="countdown-unit">Hours</div></div>
+        <div class="countdown-item"><div class="countdown-num">${pad(mins)}</div><div class="countdown-unit">Mins</div></div>
+        <div class="countdown-item"><div class="countdown-num">${pad(secs)}</div><div class="countdown-unit">Secs</div></div>
+      </div>`;
+    }
+    tick();
+    cdTimer = setInterval(tick, 1000);
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────
+  function formatTime(f) {
+    if (f.allDay || isTimeUnknown(f)) return 'TBC';
+    return f.start.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  }
+  function isTimeUnknown(f) { return f.start.getHours()===0 && f.start.getMinutes()===0; }
+
+  function buildGCal(f) {
+    const fmt = d => d.toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+    const end = f.end ? fmt(f.end) : fmt(new Date(f.start.getTime()+7200000));
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(f.summary||'Liverpool FC')}&dates=${fmt(f.start)}/${end}&location=${encodeURIComponent(f.venue||'')}`;
+  }
+
+  function compShort(name) {
+    const map = {
+      'Premier League':'Premier League','UEFA Champions League':'Champions League',
+      'UEFA Europa League':'Europa League','FA Cup':'FA Cup',
+      'EFL Cup':'League Cup','League Cup':'League Cup','Carabao Cup':'League Cup',
+      'Club World Cup':'Club World Cup','FIFA Club World Cup':'Club World Cup',
+      'Community Shield':'Comm. Shield',
+    };
+    return map[name] || name || 'Fixture';
+  }
+
+  function getCompClass(name) {
+    const n=(name||'').toLowerCase();
+    if (n.includes('premier'))   return 'comp-pl';
+    if (n.includes('champions')) return 'comp-cl';
+    if (n.includes('europa'))    return 'comp-uel';
+    if (n.includes('fa cup'))    return 'comp-fa';
+    if (n.includes('league cup')||n.includes('efl')||n.includes('carabao')) return 'comp-lc';
+    if (n.includes('friendly'))  return 'comp-fr';
+    if (n.includes('club world')) return 'comp-cwc';
+    return 'comp-other';
+  }
+
+  function pad(n) { return String(n).padStart(2,'0'); }
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function show(view) {
+    loadingState.classList.add('hidden');
+    errorState.classList.add('hidden');
+    fixturesContent.classList.add('hidden');
+    if (view==='loading')  loadingState.classList.remove('hidden');
+    if (view==='error')    errorState.classList.remove('hidden');
+    if (view==='fixtures') fixturesContent.classList.remove('hidden');
+  }
+</script>
+</body>
+</html>
