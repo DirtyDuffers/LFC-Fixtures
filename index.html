@@ -335,6 +335,8 @@
 <div class="toast" id="toast"></div>
 <script>
 
+
+
 const WORKER_URL='https://lfc-fixtures.duff13.workers.dev';
 const CACHE_KEY='lfc_ics_v9';
 const RESULTS_KEY='lfc_results_override';
@@ -443,8 +445,8 @@ const BADGES = {
   'stoke':                        'https://upload.wikimedia.org/wikipedia/en/2/29/Stoke_City_FC.svg',
   'derby county':                 'https://upload.wikimedia.org/wikipedia/en/4/4a/Derby_County_FC.svg',
   'derby':                        'https://upload.wikimedia.org/wikipedia/en/4/4a/Derby_County_FC.svg',
-  'coventry city':                'https://upload.wikimedia.org/wikipedia/en/6/6c/Coventry_City_FC.svg',
-  'coventry':                'https://upload.wikimedia.org/wikipedia/en/6/6c/Coventry_City_FC.svg',
+  'coventry city':                'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjN0RDNUU1IiBzdHJva2U9IiMwMDNEQTUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxwYXRoIGQ9Ik01MCAxMiBMODIgMjMgTDgyIDY0IFE4MiA4OCA1MCAxMDIgUTE4IDg4IDE4IDY0IEwxOCAyMyBaIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDNEQTUiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjUiLz4KICA8dGV4dCB4PSI1MCIgeT0iMzIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjMDAzREE1Ij5DT1ZFTlRSWTwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iNDMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiMwMDNEQTUiPkNJVFkgRkM8L3RleHQ+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNjgiIHJ4PSIxOCIgcnk9IjE0IiBmaWxsPSIjMDAzREE1Ii8+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxMSIgcnk9IjEwIiBmaWxsPSIjMDAzREE1Ii8+CiAgPHBhdGggZD0iTTM5IDYyIFEzMCA3MiAzMyA4MCIgc3Ryb2tlPSIjMDAzREE1IiBzdHJva2Utd2lkdGg9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9IjU0IiBjeT0iNTYiIHI9IjIuNSIgZmlsbD0iIzdEQzVFNSIvPgogIDxwYXRoIGQ9Ik01NiA1NyBMNjMgNjAgTDU2IDYzWiIgZmlsbD0iI0ZGRDcwMCIvPgogIDx0ZXh0IHg9IjUwIiB5PSI5NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNy41IiBmaWxsPSIjMDAzREE1IiBmb250LXdlaWdodD0iNjAwIj5FU1QgMTg4MzwvdGV4dD4KPC9zdmc+',
+  'coventry':                'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjN0RDNUU1IiBzdHJva2U9IiMwMDNEQTUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxwYXRoIGQ9Ik01MCAxMiBMODIgMjMgTDgyIDY0IFE4MiA4OCA1MCAxMDIgUTE4IDg4IDE4IDY0IEwxOCAyMyBaIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDNEQTUiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjUiLz4KICA8dGV4dCB4PSI1MCIgeT0iMzIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjMDAzREE1Ij5DT1ZFTlRSWTwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iNDMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiMwMDNEQTUiPkNJVFkgRkM8L3RleHQ+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNjgiIHJ4PSIxOCIgcnk9IjE0IiBmaWxsPSIjMDAzREE1Ii8+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxMSIgcnk9IjEwIiBmaWxsPSIjMDAzREE1Ii8+CiAgPHBhdGggZD0iTTM5IDYyIFEzMCA3MiAzMyA4MCIgc3Ryb2tlPSIjMDAzREE1IiBzdHJva2Utd2lkdGg9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9IjU0IiBjeT0iNTYiIHI9IjIuNSIgZmlsbD0iIzdEQzVFNSIvPgogIDxwYXRoIGQ9Ik01NiA1NyBMNjMgNjAgTDU2IDYzWiIgZmlsbD0iI0ZGRDcwMCIvPgogIDx0ZXh0IHg9IjUwIiB5PSI5NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNy41IiBmaWxsPSIjMDAzREE1IiBmb250LXdlaWdodD0iNjAwIj5FU1QgMTg4MzwvdGV4dD4KPC9zdmc+',
   'wba':                          'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
   'west brom':                    'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
   'west bromwich albion':         'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
@@ -555,16 +557,75 @@ const H2H_DATA={"nottingham forest":{"name":"Nottingham Forest","results":[{"d":
 // H2H lookup: find results for a given opponent name
 function getH2H(opponentName) {
   if (!opponentName) return null;
-  const norm = n => n.toLowerCase().trim()
-    .replace(/\s+fc$/,'').replace(/^fc\s+/,'')
-    .replace(/\s+afc$/,'').replace(/^afc\s+/,'').trim();
-  const key = norm(opponentName);
-  // Try exact key first
-  if (H2H_DATA[key]) return H2H_DATA[key].results;
-  // Try partial match
-  for (const [k, v] of Object.entries(H2H_DATA)) {
-    if (k.includes(key) || key.includes(k)) return v.results;
+
+  function norm(n) {
+    return n.toLowerCase().trim()
+      // Replace & with 'and' and vice-versa variants
+      .replace(/\s*&\s*/g, ' and ')
+      // Common short-name expansions
+      .replace(/^wolves$/,            'wolverhampton wanderers')
+      .replace(/^spurs$/,             'tottenham hotspur')
+      .replace(/^man city$/,          'manchester city')
+      .replace(/^man utd?$/,          'manchester united')
+      .replace(/^man united$/,        'manchester united')
+      .replace(/nott'?m? forest/,     'nottingham forest')
+      .replace(/^newcastle$/,         'newcastle united')
+      .replace(/^leicester$/,         'leicester city')
+      .replace(/^ipswich$/,           'ipswich town')
+      .replace(/^west ham$/,          'west ham united')
+      .replace(/^tottenham$/,         'tottenham hotspur')
+      .replace(/^coventry$/,          'coventry city')
+      .replace(/^brighton$/,          'brighton and hove albion')
+      .replace(/^bournemouth$/,       'bournemouth')
+      .replace(/^birmingham$/,        'birmingham city')
+      .replace(/^leeds$/,             'leeds united')
+      .replace(/^palace$/,            'crystal palace')
+      .replace(/^forest$/,            'nottingham forest')
+      // Strip common suffixes/prefixes
+      .replace(/\s+fc$/, '').replace(/^fc\s+/, '')
+      .replace(/\s+afc$/, '').replace(/^afc\s+/, '')
+      .replace(/\s+cf$/, '').replace(/^cf\s+/, '')
+      .trim();
   }
+
+  // Also normalise the data keys (replace & with 'and')
+  function normKey(k) { return k.replace(/\s*&\s*/g, ' and '); }
+
+  const q = norm(opponentName);
+
+  // Build a normalised map of all data keys on first call
+  if (!getH2H._map) {
+    getH2H._map = {};
+    for (const [k, v] of Object.entries(H2H_DATA)) {
+      getH2H._map[normKey(k)] = v.results;
+    }
+  }
+  const map = getH2H._map;
+
+  // 1. Exact match
+  if (map[q]) return map[q].slice().reverse();
+
+  // 2. Starts-with match (e.g. "ac sparta prague" matches "ac sparta prague")
+  for (const [k, v] of Object.entries(map)) {
+    if (k === q) return v.slice().reverse();
+    if (k.startsWith(q + ' ') || q.startsWith(k + ' ')) return v.slice().reverse();
+  }
+
+  // 3. Contains match — opponent name appears in key or vice versa
+  for (const [k, v] of Object.entries(map)) {
+    if (k.includes(q) || q.includes(k)) return v.slice().reverse();
+  }
+
+  // 4. Word overlap — share most significant words
+  const qWords = q.split(' ').filter(w => w.length > 3);
+  for (const [k, v] of Object.entries(map)) {
+    const kWords = k.split(' ').filter(w => w.length > 3);
+    const shared = qWords.filter(w => kWords.includes(w));
+    if (shared.length >= 1 && shared.length >= Math.min(qWords.length, kWords.length)) {
+      return v.slice().reverse();
+    }
+  }
+
   return null;
 }
 
@@ -732,7 +793,13 @@ function parseICS(text) {
     if (inAlarm) continue;
     if (line==='BEGIN:VEVENT') { cur={}; continue; }
     if (line==='END:VEVENT' && cur) {
-      if (cur.start) { const e=enrich(cur); if(cur.start<now) past.push(e); else future.push(e); }
+      if (cur.start) {
+        const e=enrich(cur);
+        // Only keep events that are actual matches (have a valid v/vs pattern)
+        if (e.isHome !== null) {
+          if (cur.start<now) past.push(e); else future.push(e);
+        }
+      }
       cur=null; continue;
     }
     if (!cur) continue;
@@ -1135,7 +1202,33 @@ function renderCalendar() {
 }
 function showCalPopup(date,matches) {
   $id('calPopupDate').textContent=date.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
-  $id('calPopupContent').innerHTML=matches.map(f=>buildFixCard(f)).join('');
+
+  // Build cards with H2H panels, same as fixture list
+  let html='';
+  matches.forEach(f => {
+    html += buildFixCard(f);
+    // Add H2H toggle + panel
+    const h2hId = 'calh2h_' + f.start.getTime();
+    html += '<button class="h2h-toggle" data-id="'+h2hId+'" data-opponent="'+esc(f.opponent)+'">' +
+      '<span class="h2h-arrow">\u25BE</span> Previous meetings vs '+esc(f.opponent)+'</button>' +
+      '<div class="h2h-panel" id="'+h2hId+'"></div>';
+  });
+
+  $id('calPopupContent').innerHTML = html;
+
+  // Wire H2H toggles
+  $id('calPopupContent').querySelectorAll('.h2h-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = $id(btn.dataset.id);
+      const open  = panel.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      if (open && !panel.dataset.loaded) {
+        panel.dataset.loaded = '1';
+        renderH2H(btn.dataset.opponent, null, panel);
+      }
+    });
+  });
+
   $id('calPopup').classList.remove('hidden');
 }
 $id('calPopupClose').addEventListener('click',()=>$id('calPopup').classList.add('hidden'));
@@ -1237,6 +1330,8 @@ function getAccentClass(n) {
 function pad(n) { return String(n).padStart(2,'0'); }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 // getCompLogo and getClubBadge defined above with COMP_LOGOS and BADGES
+
+
 
 </script>
 </body>
