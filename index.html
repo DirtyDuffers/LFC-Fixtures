@@ -209,7 +209,7 @@
     .form-l{background:var(--red)}
     .h2h-summary{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px}
     .h2h-summary-item{font-size:12px;color:var(--muted)}
-    .h2h-summary-item strong{color:var(--white)}
+    .h2h-summary-item strong{color:inherit}
     .h2h-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
     .h2h-row:last-child{border-bottom:none}
     .h2h-date{color:var(--muted);width:54px;flex-shrink:0}
@@ -622,7 +622,6 @@ const BADGES = {
   'millwall': 'https://upload.wikimedia.org/wikipedia/en/b/b0/Millwall_FC_logo.svg',
   'millwall athletic': 'https://upload.wikimedia.org/wikipedia/en/b/b0/Millwall_FC_logo.svg',
   'milton keynes dons': 'https://upload.wikimedia.org/wikipedia/en/2/20/MK_Dons_FC_logo.svg',
-  'monaco': 'https://upload.wikimedia.org/wikipedia/en/8/8e/AS_Monaco_FC.svg',
   'monterrey': 'https://upload.wikimedia.org/wikipedia/en/4/4c/Monterrey_2019_Logo.svg',
   'napoli': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/SSC_Napoli.svg',
   'newcastle': 'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
@@ -778,10 +777,10 @@ function getClubBadge(name) {
     .replace(/\s+(fc|afc|cf|sc|sk|ac|united|city|town|rovers|wanderers|athletic|albion|hotspur|county|palace|forest|wednesday|north end|park rangers)$/,'')
     .trim();
   if (BADGES[stripped]) return BADGES[stripped];
-  // Partial - sort by key length descending so more specific keys take priority
+  // Partial - longest keys first so specific names beat short/generic ones
   const sorted = Object.entries(BADGES).sort((a,b) => b[0].length - a[0].length);
   for (const [k,u] of sorted) {
-    if (k.length < 4) continue; // skip very short keys to avoid false matches
+    if (k.length < 4) continue;
     if (raw.includes(k) || k.includes(raw)) return u;
   }
   return null;
