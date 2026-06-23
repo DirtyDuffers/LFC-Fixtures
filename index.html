@@ -176,11 +176,11 @@
     .hero-h2h-panel .h2h-title,.hero-h2h-panel .h2h-record,.hero-h2h-panel .h2h-date,.hero-h2h-panel .h2h-comp{color:rgba(255,255,255,.65) !important}
     .hero-h2h-panel .h2h-row{border-bottom-color:rgba(255,255,255,.1)}
     .hero-h2h-panel strong{color:#fff !important}
-    .hero-h2h-panel .h2h-summary-item{color:rgba(255,255,255,.65) !important}
+    .hero-h2h-panel .h2h-summary-item{color:rgba(255,255,255,.65)}
     .hero-h2h-panel .h2h-loading{color:rgba(255,255,255,.5)}
     [data-theme="light"] .hero-h2h-panel .h2h-title,[data-theme="light"] .hero-h2h-panel .h2h-record,[data-theme="light"] .hero-h2h-panel .h2h-date,[data-theme="light"] .hero-h2h-panel .h2h-comp,[data-theme="light"] .hero-h2h-panel .h2h-form{color:rgba(255,255,255,.8) !important}
     [data-theme="light"] .hero-h2h-panel strong{color:#fff !important}
-    [data-theme="light"] .hero-h2h-panel .h2h-summary-item{color:rgba(255,255,255,.8) !important}
+    [data-theme="light"] .hero-h2h-panel .h2h-summary-item{color:rgba(255,255,255,.8)}
     [data-theme="light"] .hero-h2h-panel .h2h-loading{color:rgba(255,255,255,.7)}
     [data-theme="light"] .hero-h2h-panel .h2h-row{border-bottom-color:rgba(255,255,255,.2)}
     [data-theme="light"] .hero-h2h-toggle{color:rgba(255,255,255,.7)}
@@ -1322,13 +1322,13 @@ function renderH2H(opponentName, upcomingVenue, panelEl) {
     html += '<div class="h2h-summary">';
     if (lastHome) {
       const res = lastHome.r||'D';
-      const col = res==='W'?'#3dba78':res==='L'?'var(--red)':'var(--gold)';
-      html += '<div class="h2h-summary-item">Last home: <strong style="color:'+col+'">'+lastHome.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
+      const col = res==='W'?'#3dba78':res==='L'?'#e42027':'#F6EB61';
+      html += '<div class="h2h-summary-item">Last home: <strong style="color:'+col+' !important">'+lastHome.s+'</strong> <span style="color:'+col+' !important">'+res+'</span></div>';
     }
     if (lastAway) {
       const res = lastAway.r||'D';
-      const col = res==='W'?'#3dba78':res==='L'?'var(--red)':'var(--gold)';
-      html += '<div class="h2h-summary-item">Last away: <strong style="color:'+col+'">'+lastAway.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
+      const col = res==='W'?'#3dba78':res==='L'?'#e42027':'#F6EB61';
+      html += '<div class="h2h-summary-item">Last away: <strong style="color:'+col+' !important">'+lastAway.s+'</strong> <span style="color:'+col+' !important">'+res+'</span></div>';
     }
     html += '</div>';
   }
