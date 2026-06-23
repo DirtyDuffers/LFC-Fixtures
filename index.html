@@ -390,10 +390,11 @@ const BADGES = {
   'spurs':                        'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg',
   'newcastle united':             'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
   'newcastle':                    'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
-  'aston villa':                  'https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_FC_crest_%282016%29.svg',
+  'aston villa':                  'https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest.svg',
   'brighton & hove albion':       'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
   'brighton and hove albion':     'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
   'brighton':                     'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
+  'brighton hove albion':         'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
   'west ham united':              'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
   'west ham':                     'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
   'brentford':                    'https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg',
@@ -436,8 +437,8 @@ const BADGES = {
   'stoke':                        'https://upload.wikimedia.org/wikipedia/en/2/29/Stoke_City_FC.svg',
   'derby county':                 'https://upload.wikimedia.org/wikipedia/en/4/4a/Derby_County_FC.svg',
   'derby':                        'https://upload.wikimedia.org/wikipedia/en/4/4a/Derby_County_FC.svg',
-  'coventry city':                'https://upload.wikimedia.org/wikipedia/en/6/6c/Coventry_City_FC.svg',
-  'coventry':                     'https://upload.wikimedia.org/wikipedia/en/6/6c/Coventry_City_FC.svg',
+  'coventry city':                'https://upload.wikimedia.org/wikipedia/en/8/8d/Coventry_City_FC_logo.svg',
+  'coventry':                     'https://upload.wikimedia.org/wikipedia/en/8/8d/Coventry_City_FC_logo.svg',
   'wba':                          'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
   'west brom':                    'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
   'west bromwich albion':         'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
@@ -593,7 +594,7 @@ haRow.querySelectorAll('.tab').forEach(t => {
 });
 
 // Boot — v2 cache key forces re-fetch when parsing logic changes
-const CACHE_KEY = 'lfc_ics_cache_v4';
+const CACHE_KEY = 'lfc_ics_cache_v5';
 const cached = localStorage.getItem(CACHE_KEY);
 if (cached) {
   try {
@@ -625,9 +626,13 @@ async function fetchICS(silent) {
 function parseICS(text) {
   const now=new Date(); now.setHours(0,0,0,0);
   const lines=text.replace(/\r\n[ \t]/g,'').replace(/\r/g,'').split('\n');
-  const events=[]; let cur=null;
+  const events=[]; let cur=null; let inAlarm=false;
   for (const raw of lines) {
     const line=raw.trim();
+    // Track VALARM sub-blocks — ignore everything inside them
+    if (line==='BEGIN:VALARM') { inAlarm=true; continue; }
+    if (line==='END:VALARM')   { inAlarm=false; continue; }
+    if (inAlarm) continue;
     if (line==='BEGIN:VEVENT') { cur={}; continue; }
     if (line==='END:VEVENT'&&cur) { if(cur.start&&cur.start>=now) events.push(cur); cur=null; continue; }
     if (!cur) continue;
