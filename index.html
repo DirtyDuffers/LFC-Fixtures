@@ -192,7 +192,7 @@
 [data-theme="light"] .h2h-panel{background:##3d1a1c}
 [data-theme="light"] .h2h-panel .h2h-title{color:#E42027}
 [data-theme="light"] .h2h-panel .h2h-record{color:#333}
-[data-theme="light"] .h2h-panel .h2h-form{color:#444}
+[data-theme="light"] .h2h-panel .h2h-form{color:#333}
 [data-theme="light"] .h2h-panel .h2h-date{color:#555}
 [data-theme="light"] .h2h-panel .h2h-comp{color:#555}
 [data-theme="light"] .h2h-panel .h2h-row{border-bottom-color:#ccc9c4}
@@ -1318,12 +1318,12 @@ function renderH2H(opponentName, upcomingVenue, panelEl) {
     if (lastHome) {
       const res = lastHome.r||'D';
       const col = res==='W'?'#3dba78':res==='L'?'var(--red)':'var(--gold)';
-      html += '<div class="h2h-summary-item">Last home: <strong style="color:var(--white)">'+lastHome.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
+      html += '<div class="h2h-summary-item">Last home: <strong style="color:var'+col+'">'+lastHome.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
     }
     if (lastAway) {
       const res = lastAway.r||'D';
       const col = res==='W'?'#3dba78':res==='L'?'var(--red)':'var(--gold)';
-      html += '<div class="h2h-summary-item">Last away: <strong style="color:var(--white)">'+lastAway.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
+      html += '<div class="h2h-summary-item">Last away: <strong style="color:var'+col+'">'+lastAway.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
     }
     html += '</div>';
   }
