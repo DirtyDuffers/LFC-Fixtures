@@ -296,6 +296,13 @@
     .planner-input{background:var(--bg3);border:1px solid var(--border);color:var(--white);border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Inter',sans-serif;outline:none;width:100%;box-sizing:border-box;transition:border-color .15s;-webkit-appearance:none}
     .planner-input:focus{border-color:var(--teal)}
     [data-theme="light"] .planner-input{color:#111}
+    .planner-date-wrap{position:relative;width:100%}
+    .planner-date-display{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Inter',sans-serif;width:100%;box-sizing:border-box;cursor:pointer;transition:border-color .15s;display:flex;align-items:center;justify-content:space-between;user-select:none}
+    .planner-date-display.has-value{color:var(--white)}
+    [data-theme="light"] .planner-date-display.has-value{color:#111}
+    .planner-date-display:hover,.planner-date-display:focus-within{border-color:var(--teal)}
+    .planner-date-display .cal-icon{font-size:14px;opacity:.5;flex-shrink:0}
+    .planner-date-hidden{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;font-size:16px}
     .planner-add-btn{background:var(--teal);border:none;color:#fff;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;letter-spacing:.5px;cursor:pointer;white-space:nowrap;transition:opacity .15s;width:100%;margin-top:4px}
     .planner-add-btn:hover{opacity:.85}
     .planner-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
@@ -305,6 +312,9 @@
     .planner-entry-dates{font-size:11px;color:var(--muted)}
     .planner-entry-del{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;transition:color .15s}
     .planner-entry-del:hover{color:var(--red)}
+    .planner-entry-actions{display:flex;gap:2px;flex-shrink:0}
+    .planner-entry-edit{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;transition:color .15s}
+    .planner-entry-edit:hover{color:var(--teal)}
     .planner-check-btn{display:block;width:100%;background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .15s;box-sizing:border-box}
     .planner-check-btn:hover{opacity:.85}
     .planner-empty{text-align:center;color:var(--muted);font-size:13px;padding:24px 0}
@@ -421,6 +431,7 @@
     <div class="planner-wrap">
       <div class="planner-section-title">Away Trips &amp; Holidays</div>
       <div class="planner-form">
+        <div class="planner-form-title" id="plannerFormTitle" style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">New Trip</div>
         <div class="planner-row">
           <div class="planner-field">
             <label class="planner-label">Event name</label>
@@ -430,14 +441,21 @@
         <div class="planner-row">
           <div class="planner-field">
             <label class="planner-label">From</label>
-            <input class="planner-input" id="plannerFrom" type="date"/>
+            <div class="planner-date-wrap">
+              <div class="planner-date-display" id="plannerFromDisplay"><span id="plannerFromText">Start date</span><span class="cal-icon">📅</span></div>
+              <input class="planner-date-hidden" id="plannerFrom" type="date" onchange="plannerFromChanged()"/>
+            </div>
           </div>
           <div class="planner-field">
             <label class="planner-label">To (same for single day)</label>
-            <input class="planner-input" id="plannerTo" type="date"/>
+            <div class="planner-date-wrap">
+              <div class="planner-date-display" id="plannerToDisplay"><span id="plannerToText">End date</span><span class="cal-icon">📅</span></div>
+              <input class="planner-date-hidden" id="plannerTo" type="date"/>
+            </div>
           </div>
         </div>
-        <button class="planner-add-btn" onclick="plannerAdd()">+ Add Date Range</button>
+        <button class="planner-add-btn" id="plannerSubmitBtn" onclick="plannerAdd()">+ Add Date Range</button>
+        <button class="planner-add-btn hidden" id="plannerCancelBtn" onclick="plannerCancelEdit()" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border);margin-top:6px">Cancel Edit</button>
       </div>
       <div class="planner-section-title">Saved Dates</div>
       <div class="planner-list" id="plannerList"></div>
@@ -1011,30 +1029,120 @@ function plannerRender() {
   empty.classList.add('hidden');
   list.innerHTML = plannerEntries.map((e,i) => {
     const range = e.from === e.to ? plannerFmt(e.from) : plannerFmt(e.from) + ' – ' + plannerFmt(e.to);
-    return `<div class="planner-entry">
+    return `<div class="planner-entry" id="plannerEntry${i}">
       <div class="planner-entry-info">
         <div class="planner-entry-name">${esc(e.name)}</div>
         <div class="planner-entry-dates">${range}</div>
       </div>
-      <button class="planner-entry-del" onclick="plannerDelete(${i})" title="Remove">&#10005;</button>
+      <div class="planner-entry-actions">
+        <button class="planner-entry-edit" onclick="plannerEdit(${i})" title="Edit">&#9998;</button>
+        <button class="planner-entry-del" onclick="plannerDelete(${i})" title="Remove">&#10005;</button>
+      </div>
     </div>`;
   }).join('');
+}
+let plannerEditIndex = -1;
+function plannerDateDisplay(iso) {
+  // Convert YYYY-MM-DD to dd/mm/yyyy for display
+  if (!iso) return null;
+  const [y,m,d] = iso.split('-');
+  return d + '/' + m + '/' + y;
+}
+function plannerSyncDisplays() {
+  const fromVal = $id('plannerFrom').value;
+  const toVal = $id('plannerTo').value;
+  const fromDisp = $id('plannerFromDisplay');
+  const toDisp = $id('plannerToDisplay');
+  const fromTxt = $id('plannerFromText');
+  const toTxt = $id('plannerToText');
+  if (fromVal) {
+    fromTxt.textContent = plannerDateDisplay(fromVal);
+    fromDisp.classList.add('has-value');
+  } else {
+    fromTxt.textContent = 'Start date';
+    fromDisp.classList.remove('has-value');
+  }
+  if (toVal) {
+    toTxt.textContent = plannerDateDisplay(toVal);
+    toDisp.classList.add('has-value');
+  } else {
+    toTxt.textContent = 'End date';
+    toDisp.classList.remove('has-value');
+  }
+}
+function plannerFromChanged() {
+  const from = $id('plannerFrom').value;
+  const toEl = $id('plannerTo');
+  if (!from) { plannerSyncDisplays(); return; }
+  toEl.min = from;
+  if (!toEl.value || toEl.value < from) toEl.value = from;
+  plannerSyncDisplays();
+}
+// Listen for To date changes too
+document.addEventListener('DOMContentLoaded', () => {
+  const toEl = $id('plannerTo');
+  if (toEl) toEl.addEventListener('change', plannerSyncDisplays);
+});
+function plannerEdit(i) {
+  plannerLoad();
+  const e = plannerEntries[i];
+  if (!e) return;
+  plannerEditIndex = i;
+  $id('plannerName').value = e.name;
+  $id('plannerFrom').value = e.from;
+  $id('plannerTo').min = e.from;
+  $id('plannerTo').value = e.to;
+  plannerSyncDisplays();
+  $id('plannerFormTitle').textContent = 'Edit Trip';
+  $id('plannerSubmitBtn').textContent = '✓ Save Changes';
+  $id('plannerCancelBtn').classList.remove('hidden');
+  // Highlight the entry being edited
+  document.querySelectorAll('.planner-entry').forEach(el => el.style.opacity = '0.5');
+  const entryEl = $id('plannerEntry' + i);
+  if (entryEl) entryEl.style.opacity = '1';
+  // Scroll form into view
+  $id('plannerName').scrollIntoView({behavior:'smooth', block:'center'});
+  $id('plannerName').focus();
+}
+function plannerCancelEdit() {
+  plannerEditIndex = -1;
+  $id('plannerName').value = '';
+  $id('plannerFrom').value = '';
+  $id('plannerTo').value = '';
+  $id('plannerTo').min = '';
+  $id('plannerFormTitle').textContent = 'New Trip';
+  $id('plannerSubmitBtn').textContent = '+ Add Date Range';
+  $id('plannerCancelBtn').classList.add('hidden');
+  document.querySelectorAll('.planner-entry').forEach(el => el.style.opacity = '1');
+  plannerSyncDisplays();
 }
 function plannerAdd() {
   const name = ($id('plannerName').value||'').trim();
   const from = $id('plannerFrom').value;
   const to   = $id('plannerTo').value || from;
-  if (!name) { showToast('Please enter an event name'); return; }
-  if (!from) { showToast('Please select a start date'); return; }
-  if (to < from) { showToast('End date must be on or after start date'); return; }
+  if (!name) { showToast('Please enter an event name'); $id('plannerName').focus(); return; }
+  if (!from) { showToast('Please select a start date'); $id('plannerFrom').focus(); return; }
+  if (to && to < from) { showToast('End date must be on or after start date'); $id('plannerTo').focus(); return; }
   plannerLoad();
-  plannerEntries.push({ name, from, to });
-  plannerSave();
+  if (plannerEditIndex >= 0) {
+    plannerEntries[plannerEditIndex] = { name, from, to: to || from };
+    plannerSave();
+    plannerEditIndex = -1;
+    showToast('Trip updated!');
+  } else {
+    plannerEntries.push({ name, from, to: to || from });
+    plannerSave();
+    showToast('Trip added!');
+  }
   $id('plannerName').value = '';
   $id('plannerFrom').value = '';
   $id('plannerTo').value = '';
+  $id('plannerTo').min = '';
+  $id('plannerFormTitle').textContent = 'New Trip';
+  $id('plannerSubmitBtn').textContent = '+ Add Date Range';
+  $id('plannerCancelBtn').classList.add('hidden');
+  plannerSyncDisplays();
   plannerRender();
-  showToast('Trip added!');
 }
 function plannerDelete(i) {
   plannerLoad();
