@@ -178,7 +178,7 @@
     .hero-h2h-panel strong{color:#fff !important}
     .hero-h2h-panel .h2h-summary-item{color:rgba(255,255,255,.65) !important}
     .hero-h2h-panel .h2h-loading{color:rgba(255,255,255,.5)}
-    [data-theme="light"] .hero-h2h-panel .h2h-title,[data-theme="light"] .hero-h2h-panel .h2h-record,[data-theme="light"] .hero-h2h-panel .h2h-date,[data-theme="light"] .hero-h2h-panel .h2h-comp{color:rgba(255,255,255,.8) !important}
+    [data-theme="light"] .hero-h2h-panel .h2h-title,[data-theme="light"] .hero-h2h-panel .h2h-record,[data-theme="light"] .hero-h2h-panel .h2h-date,[data-theme="light"] .hero-h2h-panel .h2h-comp,[data-theme="light"] .hero-h2h-panel .h2h-form{color:rgba(255,255,255,.8) !important}
     [data-theme="light"] .hero-h2h-panel strong{color:#fff !important}
     [data-theme="light"] .hero-h2h-panel .h2h-summary-item{color:rgba(255,255,255,.8) !important}
     [data-theme="light"] .hero-h2h-panel .h2h-loading{color:rgba(255,255,255,.7)}
@@ -189,15 +189,15 @@
     .h2h-arrow{transition:transform .2s;display:inline-block;font-size:10px}
     .h2h-toggle.open .h2h-arrow{transform:rotate(180deg)}
     .h2h-panel{background:var(--bg2);border-bottom:1px solid var(--border);padding:0;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s}
-    [data-theme="light"] .h2h-panel{background:#FFFFFF}
-    [data-theme="light"] .h2h-panel .h2h-title{color:#555}
-    [data-theme="light"] .h2h-panel .h2h-record{color:#666}
-    [data-theme="light"] .h2h-panel .h2h-form{color:#666}
-    [data-theme="light"] .h2h-panel .h2h-date{color:#777}
-    [data-theme="light"] .h2h-panel .h2h-comp{color:#888}
-    [data-theme="light"] .h2h-panel .h2h-row{border-bottom-color:#E8E8E8}
-    [data-theme="light"] .h2h-panel .h2h-summary-item{color:#555}
-    [data-theme="light"] .h2h-panel strong{color:#111 !important}
+[data-theme="light"] .h2h-panel{background:##3d1a1c}
+[data-theme="light"] .h2h-panel .h2h-title{color:#E42027}
+[data-theme="light"] .h2h-panel .h2h-record{color:#333}
+[data-theme="light"] .h2h-panel .h2h-form{color:#333}
+[data-theme="light"] .h2h-panel .h2h-date{color:#555}
+[data-theme="light"] .h2h-panel .h2h-comp{color:#555}
+[data-theme="light"] .h2h-panel .h2h-row{border-bottom-color:#ccc9c4}
+[data-theme="light"] .h2h-panel .h2h-summary-item{color:#333}
+[data-theme="light"] .h2h-panel strong{color:#F6EB61 !important}
     .h2h-panel.open{max-height:400px;padding:12px 15px}
     .h2h-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
     .h2h-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
@@ -460,9 +460,11 @@ const BADGES = {
   'anzhi makhachkala': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjQ0M4ODAwIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiMwMDAwMDAiPkFOWkhJPC90ZXh0Pjwvc3ZnPg==',
   'arsenal': 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
   'arsenal fc': 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
-  'as monaco': 'https://upload.wikimedia.org/wikipedia/en/8/8e/AS_Monaco_FC.svg',
+  'as monaco': 'https://upload.wikimedia.org/wikipedia/en/c/cf/LogoASMonacoFC2021.svg',
+  'monaco': 'https://upload.wikimedia.org/wikipedia/en/c/cf/LogoASMonacoFC2021.svg',
+  'as monaco fc': 'https://upload.wikimedia.org/wikipedia/en/c/cf/LogoASMonacoFC2021.svg',
   'as roma': 'https://upload.wikimedia.org/wikipedia/en/f/f7/AS_Roma_logo_%282017%29.svg',
-  'aston villa': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjNjcwRTM2IiBzdHJva2U9IiM5NUJGRTUiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiM5NUJGRTUiPkFWRkM8L3RleHQ+PC9zdmc+',
+  'aston villa': 'https://upload.wikimedia.org/wikipedia/en/9/9a/Aston_Villa_FC_new_crest.svg',
   'atalanta': 'https://upload.wikimedia.org/wikipedia/en/0/0b/Atalanta_BC_crest_2017.svg',
   'atalanta bc': 'https://upload.wikimedia.org/wikipedia/en/0/0b/Atalanta_BC_crest_2017.svg',
   'athletic bilbao': 'https://upload.wikimedia.org/wikipedia/en/d/d8/Athletic_Club_%28football%29_logo.svg',
@@ -500,10 +502,10 @@ const BADGES = {
   'bradford city': 'https://upload.wikimedia.org/wikipedia/en/1/12/Bradford_City_AFC.svg',
   'braga': 'https://upload.wikimedia.org/wikipedia/en/6/6a/SC_Braga_logo.svg',
   'brentford': 'https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg',
-  'brighton': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8IS0tIFNoaWVsZCAtLT4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMDA1N0I4IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDwhLS0gV2hpdGUgYmFuZCAtLT4KICA8cGF0aCBkPSJNMTIgNDAgTDg4IDQwIEw4OCA2NSBRODggOTIgNTAgMTA4IFExMiA5MiAxMiA2NSBaIiBmaWxsPSIjRkZGRkZGIiBvcGFjaXR5PSIwLjE1Ii8+CiAgPCEtLSBTZWFndWxsIHNpbXBsaWZpZWQgLS0+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxNiIgcnk9IjkiIGZpbGw9IiNGRkZGRkYiLz4KICA8ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjgiIHJ5PSI3IiBmaWxsPSIjRkZGRkZGIi8+CiAgPCEtLSBXaW5ncyAtLT4KICA8cGF0aCBkPSJNMzQgNTUgUTI4IDQ4IDI0IDUyIFEzMCA1OCAzNCA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNNjYgNTUgUTcyIDQ4IDc2IDUyIFE3MCA1OCA2NiA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8IS0tIEJlYWsgLS0+CiAgPHBhdGggZD0iTTU0IDU0IEw2MCA1NiBMNTQgNThaIiBmaWxsPSIjRkZENzAwIi8+CiAgPCEtLSBUZXh0IC0tPgogIDx0ZXh0IHg9IjUwIiB5PSIyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iI0ZGRkZGRiI+QlJJR0hUT048L3RleHQ+CiAgPHRleHQgeD0iNTAiIHk9IjM4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj4mYW1wOyBIT1ZFIEFMQklPTjwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZpbGw9IiMwMDU3QjgiPlRIRSBTRUFHVUxMUzwvdGV4dD4KPC9zdmc+',
-  'brighton & hove albion': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8IS0tIFNoaWVsZCAtLT4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMDA1N0I4IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDwhLS0gV2hpdGUgYmFuZCAtLT4KICA8cGF0aCBkPSJNMTIgNDAgTDg4IDQwIEw4OCA2NSBRODggOTIgNTAgMTA4IFExMiA5MiAxMiA2NSBaIiBmaWxsPSIjRkZGRkZGIiBvcGFjaXR5PSIwLjE1Ii8+CiAgPCEtLSBTZWFndWxsIHNpbXBsaWZpZWQgLS0+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxNiIgcnk9IjkiIGZpbGw9IiNGRkZGRkYiLz4KICA8ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjgiIHJ5PSI3IiBmaWxsPSIjRkZGRkZGIi8+CiAgPCEtLSBXaW5ncyAtLT4KICA8cGF0aCBkPSJNMzQgNTUgUTI4IDQ4IDI0IDUyIFEzMCA1OCAzNCA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNNjYgNTUgUTcyIDQ4IDc2IDUyIFE3MCA1OCA2NiA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8IS0tIEJlYWsgLS0+CiAgPHBhdGggZD0iTTU0IDU0IEw2MCA1NiBMNTQgNThaIiBmaWxsPSIjRkZENzAwIi8+CiAgPCEtLSBUZXh0IC0tPgogIDx0ZXh0IHg9IjUwIiB5PSIyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iI0ZGRkZGRiI+QlJJR0hUT048L3RleHQ+CiAgPHRleHQgeD0iNTAiIHk9IjM4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj4mYW1wOyBIT1ZFIEFMQklPTjwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZpbGw9IiMwMDU3QjgiPlRIRSBTRUFHVUxMUzwvdGV4dD4KPC9zdmc+',
-  'brighton and hove albion': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8IS0tIFNoaWVsZCAtLT4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMDA1N0I4IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDwhLS0gV2hpdGUgYmFuZCAtLT4KICA8cGF0aCBkPSJNMTIgNDAgTDg4IDQwIEw4OCA2NSBRODggOTIgNTAgMTA4IFExMiA5MiAxMiA2NSBaIiBmaWxsPSIjRkZGRkZGIiBvcGFjaXR5PSIwLjE1Ii8+CiAgPCEtLSBTZWFndWxsIHNpbXBsaWZpZWQgLS0+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxNiIgcnk9IjkiIGZpbGw9IiNGRkZGRkYiLz4KICA8ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjgiIHJ5PSI3IiBmaWxsPSIjRkZGRkZGIi8+CiAgPCEtLSBXaW5ncyAtLT4KICA8cGF0aCBkPSJNMzQgNTUgUTI4IDQ4IDI0IDUyIFEzMCA1OCAzNCA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNNjYgNTUgUTcyIDQ4IDc2IDUyIFE3MCA1OCA2NiA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8IS0tIEJlYWsgLS0+CiAgPHBhdGggZD0iTTU0IDU0IEw2MCA1NiBMNTQgNThaIiBmaWxsPSIjRkZENzAwIi8+CiAgPCEtLSBUZXh0IC0tPgogIDx0ZXh0IHg9IjUwIiB5PSIyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iI0ZGRkZGRiI+QlJJR0hUT048L3RleHQ+CiAgPHRleHQgeD0iNTAiIHk9IjM4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj4mYW1wOyBIT1ZFIEFMQklPTjwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZpbGw9IiMwMDU3QjgiPlRIRSBTRUFHVUxMUzwvdGV4dD4KPC9zdmc+',
-  'brighton hove albion': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8IS0tIFNoaWVsZCAtLT4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMDA1N0I4IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDwhLS0gV2hpdGUgYmFuZCAtLT4KICA8cGF0aCBkPSJNMTIgNDAgTDg4IDQwIEw4OCA2NSBRODggOTIgNTAgMTA4IFExMiA5MiAxMiA2NSBaIiBmaWxsPSIjRkZGRkZGIiBvcGFjaXR5PSIwLjE1Ii8+CiAgPCEtLSBTZWFndWxsIHNpbXBsaWZpZWQgLS0+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxNiIgcnk9IjkiIGZpbGw9IiNGRkZGRkYiLz4KICA8ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjgiIHJ5PSI3IiBmaWxsPSIjRkZGRkZGIi8+CiAgPCEtLSBXaW5ncyAtLT4KICA8cGF0aCBkPSJNMzQgNTUgUTI4IDQ4IDI0IDUyIFEzMCA1OCAzNCA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNNjYgNTUgUTcyIDQ4IDc2IDUyIFE3MCA1OCA2NiA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8IS0tIEJlYWsgLS0+CiAgPHBhdGggZD0iTTU0IDU0IEw2MCA1NiBMNTQgNThaIiBmaWxsPSIjRkZENzAwIi8+CiAgPCEtLSBUZXh0IC0tPgogIDx0ZXh0IHg9IjUwIiB5PSIyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iI0ZGRkZGRiI+QlJJR0hUT048L3RleHQ+CiAgPHRleHQgeD0iNTAiIHk9IjM4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj4mYW1wOyBIT1ZFIEFMQklPTjwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZpbGw9IiMwMDU3QjgiPlRIRSBTRUFHVUxMUzwvdGV4dD4KPC9zdmc+',
+  'brighton': 'https://upload.wikimedia.org/wikipedia/en/d/d0/Brighton_and_Hove_Albion_FC_crest.svg',
+  'brighton & hove albion': 'https://upload.wikimedia.org/wikipedia/en/d/d0/Brighton_and_Hove_Albion_FC_crest.svg',
+  'brighton and hove albion': 'https://upload.wikimedia.org/wikipedia/en/d/d0/Brighton_and_Hove_Albion_FC_crest.svg',
+  'brighton hove albion': 'https://upload.wikimedia.org/wikipedia/en/d/d0/Brighton_and_Hove_Albion_FC_crest.svg',
   'bristol city': 'https://upload.wikimedia.org/wikipedia/en/d/d4/Bristol_City_crest.svg',
   'bristol rovers': 'https://upload.wikimedia.org/wikipedia/en/b/b9/Bristol_Rovers_F.C._logo.svg',
   'brugge': 'https://upload.wikimedia.org/wikipedia/en/a/a7/Club_Brugge_logo.svg',
@@ -527,8 +529,10 @@ const BADGES = {
   'chesterfield': 'https://upload.wikimedia.org/wikipedia/en/5/5f/Chesterfield_FC_logo.svg',
   'club brugge': 'https://upload.wikimedia.org/wikipedia/en/a/a7/Club_Brugge_logo.svg',
   'club brugge kv': 'https://upload.wikimedia.org/wikipedia/en/a/a7/Club_Brugge_logo.svg',
-  'coventry': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjN0RDNUU1IiBzdHJva2U9IiMwMDNEQTUiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiMwMDNEQTUiPkNDRkM8L3RleHQ+PC9zdmc+',
-  'coventry city': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjN0RDNUU1IiBzdHJva2U9IiMwMDNEQTUiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiMwMDNEQTUiPkNDRkM8L3RleHQ+PC9zdmc+',
+  'como': 'https://upload.wikimedia.org/wikipedia/commons/9/99/Calcio_Como_-_logo_%28Italy%2C_2019-%29.svg',
+  'como 1907': 'https://upload.wikimedia.org/wikipedia/commons/9/99/Calcio_Como_-_logo_%28Italy%2C_2019-%29.svg',
+  'coventry': 'https://upload.wikimedia.org/wikipedia/en/7/7b/Coventry_City_FC_crest.svg',
+  'coventry city': 'https://upload.wikimedia.org/wikipedia/en/7/7b/Coventry_City_FC_crest.svg',
   'crewe': 'https://upload.wikimedia.org/wikipedia/en/8/84/Crewe_Alexandra.svg',
   'crewe alexandra': 'https://upload.wikimedia.org/wikipedia/en/8/84/Crewe_Alexandra.svg',
   'crusaders': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjQ0MwMDAwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGRkZGRkYiPkNSVTwvdGV4dD48L3N2Zz4=',
@@ -752,7 +756,7 @@ const BADGES = {
   'wolverhampton wanderers': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
   'wolves': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
   'workington': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjQ0MwMDAwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGRkZGRkYiPldBRkM8L3RleHQ+PC9zdmc+',
-  'wrexham': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjQ0MwMDAwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxwYXRoIGQ9Ik01MCAxMiBMODIgMjMgTDgyIDY0IFE4MiA4OCA1MCAxMDIgUTE4IDg4IDE4IDY0IEwxOCAyMyBaIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjQiLz4KICA8dGV4dCB4PSI1MCIgeT0iNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj5XUkVYPC90ZXh0PgogIDx0ZXh0IHg9IjUwIiB5PSI2NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGRkZGRkYiPkhBTTwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiNGRkZGRkYiIGZvbnQtd2VpZ2h0PSI2MDAiPkFGQzwvdGV4dD4KPC9zdmc+',
+  'wrexham': 'https://upload.wikimedia.org/wikipedia/en/0/0d/Wrexham_A.F.C._Logo.svg',
   'wycombe': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Wycombe_Wanderers_FC_logo.svg',
   'wycombe wanderers': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Wycombe_Wanderers_FC_logo.svg',
   'yeovil': 'https://upload.wikimedia.org/wikipedia/en/5/5e/Yeovil_Town_FC.svg',
@@ -774,8 +778,10 @@ function getClubBadge(name) {
     .replace(/\s+(fc|afc|cf|sc|sk|ac|united|city|town|rovers|wanderers|athletic|albion|hotspur|county|palace|forest|wednesday|north end|park rangers)$/,'')
     .trim();
   if (BADGES[stripped]) return BADGES[stripped];
-  // Partial
-  for (const [k,u] of Object.entries(BADGES)) {
+  // Partial - sort by key length descending so more specific keys take priority
+  const sorted = Object.entries(BADGES).sort((a,b) => b[0].length - a[0].length);
+  for (const [k,u] of sorted) {
+    if (k.length < 4) continue; // skip very short keys to avoid false matches
     if (raw.includes(k) || k.includes(raw)) return u;
   }
   return null;
@@ -1318,12 +1324,12 @@ function renderH2H(opponentName, upcomingVenue, panelEl) {
     if (lastHome) {
       const res = lastHome.r||'D';
       const col = res==='W'?'#3dba78':res==='L'?'var(--red)':'var(--gold)';
-      html += '<div class="h2h-summary-item">Last home: <strong style="color:var(--white)">'+lastHome.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
+      html += '<div class="h2h-summary-item">Last home: <strong style="color:'+col+'">'+lastHome.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
     }
     if (lastAway) {
       const res = lastAway.r||'D';
       const col = res==='W'?'#3dba78':res==='L'?'var(--red)':'var(--gold)';
-      html += '<div class="h2h-summary-item">Last away: <strong style="color:var(--white)">'+lastAway.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
+      html += '<div class="h2h-summary-item">Last away: <strong style="color:'+col+'">'+lastAway.s+'</strong> <span style="color:'+col+'">'+res+'</span></div>';
     }
     html += '</div>';
   }
