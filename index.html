@@ -285,6 +285,50 @@
     .app-footer{text-align:center;padding:24px 20px 8px;font-size:11px;color:var(--muted2);line-height:1.8}
     .app-footer span{color:var(--red);font-weight:600}
     [data-theme="light"] .app-footer span{color:var(--teal)}
+    /* ── Away Planner ── */
+    .planner-wrap{padding:16px 20px 0}
+    .planner-section-title{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+    [data-theme="light"] .planner-section-title{color:var(--teal)}
+    .planner-form{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+    .planner-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
+    .planner-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
+    .planner-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+    .planner-input{background:var(--bg3);border:1px solid var(--border);color:var(--white);border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Inter',sans-serif;outline:none;width:100%;box-sizing:border-box;transition:border-color .15s;-webkit-appearance:none}
+    .planner-input:focus{border-color:var(--teal)}
+    [data-theme="light"] .planner-input{color:#111}
+    .planner-add-btn{background:var(--teal);border:none;color:#fff;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;letter-spacing:.5px;cursor:pointer;white-space:nowrap;transition:opacity .15s;width:100%;margin-top:4px}
+    .planner-add-btn:hover{opacity:.85}
+    .planner-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+    .planner-entry{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .planner-entry-info{flex:1;min-width:0}
+    .planner-entry-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .planner-entry-dates{font-size:11px;color:var(--muted)}
+    .planner-entry-del{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;transition:color .15s}
+    .planner-entry-del:hover{color:var(--red)}
+    .planner-check-btn{display:block;width:100%;background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .15s;box-sizing:border-box}
+    .planner-check-btn:hover{opacity:.85}
+    .planner-empty{text-align:center;color:var(--muted);font-size:13px;padding:24px 0}
+    .planner-result-group{margin-bottom:16px}
+    .planner-result-header{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px 10px 0 0}
+    .planner-result-icon{font-size:18px;flex-shrink:0}
+    .planner-result-name{font-size:13px;font-weight:700;color:var(--white);flex:1;min-width:0}
+    .planner-result-dates{font-size:10px;color:var(--muted);white-space:nowrap}
+    .planner-result-count{font-size:11px;font-weight:700;color:#fff;background:var(--red);border-radius:20px;padding:2px 8px;flex-shrink:0}
+    [data-theme="light"] .planner-result-count{background:var(--teal)}
+    .planner-result-none{font-size:12px;color:var(--muted);padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px}
+    .planner-result-fixture{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg2);border-left:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .planner-result-fixture:last-child{border-radius:0 0 10px 10px}
+    .planner-result-fixture-date{font-size:11px;color:var(--muted);width:64px;flex-shrink:0}
+    .planner-result-fixture-name{font-size:12px;font-weight:600;color:var(--white);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .planner-result-fixture-comp{font-size:10px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+    .planner-back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--teal);font-size:13px;font-weight:700;cursor:pointer;padding:0;font-family:'Inter',sans-serif;margin-bottom:14px}
+    .planner-summary{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.6}
+    .planner-filter-row{display:flex;gap:6px;margin-bottom:16px}
+    .planner-filter-btn{flex:1;padding:7px 4px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.4px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;text-align:center}
+    .planner-filter-btn.active{background:var(--red);border-color:var(--red);color:#fff}
+    .planner-filter-btn.active-home{background:rgba(228,32,39,.12);border-color:var(--red);color:var(--red)}
+    .planner-filter-btn.active-away{background:rgba(0,178,169,.12);border-color:var(--teal);color:var(--teal)}
+    [data-theme="light"] .planner-filter-btn.active{background:var(--teal);border-color:var(--teal);color:#fff}
     .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#222;color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;z-index:400;white-space:nowrap}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
     [data-theme="light"] .toast{background:#111}
@@ -371,10 +415,57 @@
     <button class="modal-skip" id="h2hSkipBtn">Skip for now</button>
   </div>
 </div>
+<!-- Away Planner – entry page -->
+<div class="page" id="pagePlanner">
+  <div class="content-wrap">
+    <div class="planner-wrap">
+      <div class="planner-section-title">Away Trips &amp; Holidays</div>
+      <div class="planner-form">
+        <div class="planner-row">
+          <div class="planner-field">
+            <label class="planner-label">Event name</label>
+            <input class="planner-input" id="plannerName" type="text" placeholder="e.g. Lanzarote holiday" maxlength="50"/>
+          </div>
+        </div>
+        <div class="planner-row">
+          <div class="planner-field">
+            <label class="planner-label">From</label>
+            <input class="planner-input" id="plannerFrom" type="date"/>
+          </div>
+          <div class="planner-field">
+            <label class="planner-label">To (same for single day)</label>
+            <input class="planner-input" id="plannerTo" type="date"/>
+          </div>
+        </div>
+        <button class="planner-add-btn" onclick="plannerAdd()">+ Add Date Range</button>
+      </div>
+      <div class="planner-section-title">Saved Dates</div>
+      <div class="planner-list" id="plannerList"></div>
+      <div class="planner-empty hidden" id="plannerEmpty">No dates added yet. Add a trip above.</div>
+      <button class="planner-check-btn" onclick="plannerCheck()">Check Missed Matches &#8594;</button>
+    </div>
+  </div>
+</div>
+<!-- Away Planner – results page -->
+<div class="page" id="pagePlannerResults">
+  <div class="content-wrap">
+    <div class="planner-wrap">
+      <button class="planner-back-btn" onclick="showPage('pagePlanner')">&#8592; Back to Away Trips</button>
+      <div class="planner-section-title">Matches You'll Miss</div>
+      <div class="planner-filter-row">
+        <button class="planner-filter-btn active" data-ha="all" onclick="setPlannerFilter('all')">All</button>
+        <button class="planner-filter-btn" data-ha="home" onclick="setPlannerFilter('home')">🔴 Home</button>
+        <button class="planner-filter-btn" data-ha="away" onclick="setPlannerFilter('away')">✈️ Away</button>
+      </div>
+      <div id="plannerResults"></div>
+    </div>
+  </div>
+</div>
 <nav class="bottom-nav">
   <button class="nav-item active" data-page="pageFixtures"><span class="nav-icon">&#128203;</span>Fixtures</button>
   <button class="nav-item" data-page="pageCalendar"><span class="nav-icon">&#128197;</span>Calendar</button>
   <button class="nav-item" data-page="pageResults"><span class="nav-icon">&#127942;</span>Results</button>
+  <button class="nav-item" data-page="pagePlanner"><span class="nav-icon">&#9992;&#65039;</span>Away</button>
 </nav>
 <div class="toast" id="toast"></div>
 <script>
@@ -892,6 +983,166 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e =
   if (!localStorage.getItem('lfc_theme')) { theme = e.matches?'dark':'light'; applyTheme(theme); }
 });
 
+// ── Away Planner ────────────────────────────────────────────────────────────
+const PLANNER_KEY = 'lfc_planner_v1';
+let plannerEntries = [];
+
+function plannerLoad() {
+  try { plannerEntries = JSON.parse(localStorage.getItem(PLANNER_KEY)) || []; } catch(e) { plannerEntries = []; }
+}
+function plannerSave() {
+  localStorage.setItem(PLANNER_KEY, JSON.stringify(plannerEntries));
+}
+function plannerFmt(iso) {
+  // iso is YYYY-MM-DD
+  const [y,m,d] = iso.split('-');
+  return d+'/'+m+'/'+y;
+}
+function plannerRender() {
+  plannerLoad();
+  const list = $id('plannerList');
+  const empty = $id('plannerEmpty');
+  if (!list) return;
+  if (!plannerEntries.length) {
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  list.innerHTML = plannerEntries.map((e,i) => {
+    const range = e.from === e.to ? plannerFmt(e.from) : plannerFmt(e.from) + ' – ' + plannerFmt(e.to);
+    return `<div class="planner-entry">
+      <div class="planner-entry-info">
+        <div class="planner-entry-name">${esc(e.name)}</div>
+        <div class="planner-entry-dates">${range}</div>
+      </div>
+      <button class="planner-entry-del" onclick="plannerDelete(${i})" title="Remove">&#10005;</button>
+    </div>`;
+  }).join('');
+}
+function plannerAdd() {
+  const name = ($id('plannerName').value||'').trim();
+  const from = $id('plannerFrom').value;
+  const to   = $id('plannerTo').value || from;
+  if (!name) { showToast('Please enter an event name'); return; }
+  if (!from) { showToast('Please select a start date'); return; }
+  if (to < from) { showToast('End date must be on or after start date'); return; }
+  plannerLoad();
+  plannerEntries.push({ name, from, to });
+  plannerSave();
+  $id('plannerName').value = '';
+  $id('plannerFrom').value = '';
+  $id('plannerTo').value = '';
+  plannerRender();
+  showToast('Trip added!');
+}
+function plannerDelete(i) {
+  plannerLoad();
+  plannerEntries.splice(i, 1);
+  plannerSave();
+  plannerRender();
+}
+let plannerResultsData = [];
+let plannerHAFilter = 'all';
+
+function setPlannerFilter(ha) {
+  plannerHAFilter = ha;
+  document.querySelectorAll('.planner-filter-btn').forEach(b => {
+    b.classList.remove('active','active-home','active-away');
+  });
+  const btn = document.querySelector(`.planner-filter-btn[data-ha="${ha}"]`);
+  if (btn) {
+    if (ha === 'all') btn.classList.add('active');
+    else if (ha === 'home') btn.classList.add('active-home');
+    else btn.classList.add('active-away');
+  }
+  plannerRenderResults();
+}
+
+function plannerRenderResults() {
+  const el = $id('plannerResults');
+  if (!el) return;
+  const filter = plannerHAFilter;
+  const filtered = plannerResultsData.map(e => ({
+    ...e,
+    hits: e.hits.filter(f => {
+      if (filter === 'all') return true;
+      if (filter === 'home') return f.isHome === true;
+      return f.isHome === false;
+    })
+  }));
+  const totalFiltered = filtered.reduce((s,e) => s + e.hits.length, 0);
+  if (totalFiltered === 0) {
+    const msg = filter === 'all'
+      ? "No fixtures fall within your saved dates. You won't miss a thing!"
+      : `No ${filter} matches during your trips.`;
+    el.innerHTML = `<div class="planner-empty">${msg}</div>`;
+    return;
+  }
+  el.innerHTML = filtered.map(e => {
+    const range = e.from === e.to ? plannerFmt(e.from) : plannerFmt(e.from) + ' – ' + plannerFmt(e.to);
+    const count = e.hits.length;
+    const header = `<div class="planner-result-header">
+      <span class="planner-result-icon">&#9992;&#65039;</span>
+      <span class="planner-result-name">${esc(e.name)}</span>
+      <span class="planner-result-dates">${range}</span>
+      <span class="planner-result-count">${count} match${count!==1?'es':''}</span>
+    </div>`;
+    if (!count) {
+      return `<div class="planner-result-group">${header}<div class="planner-result-none">No ${filter === 'all' ? '' : filter + ' '}matches during this trip &#127881;</div></div>`;
+    }
+    const rows = e.hits.map(f => {
+      const d = new Date(f.start);
+      const dateStr = d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+      const opp = f.opponent || f.summary || 'Unknown';
+      const ha = f.isHome ? '🔴 H' : '✈️ A';
+      const comp = f.competition || '';
+      return `<div class="planner-result-fixture">
+        <span class="planner-result-fixture-date">${dateStr}</span>
+        <span class="planner-result-fixture-name">${ha} ${esc(opp)}</span>
+        <span class="planner-result-fixture-comp">${esc(comp)}</span>
+      </div>`;
+    }).join('');
+    return `<div class="planner-result-group">${header}${rows}</div>`;
+  }).join('');
+}
+
+function plannerCheck() {
+  plannerLoad();
+  if (!plannerEntries.length) { showToast('Add at least one date range first'); return; }
+  const allF = [...allFixtures, ...allPast];
+  plannerResultsData = plannerEntries.map(e => {
+    const from = new Date(e.from + 'T00:00:00');
+    const to   = new Date(e.to   + 'T23:59:59');
+    const hits = allF.filter(f => {
+      const d = new Date(f.start);
+      return d >= from && d <= to;
+    }).sort((a,b) => new Date(a.start) - new Date(b.start));
+    return { ...e, hits };
+  });
+  plannerHAFilter = 'all';
+  document.querySelectorAll('.planner-filter-btn').forEach(b => {
+    b.classList.remove('active','active-home','active-away');
+  });
+  const allBtn = document.querySelector('.planner-filter-btn[data-ha="all"]');
+  if (allBtn) allBtn.classList.add('active');
+  plannerRenderResults();
+  showPage('pagePlannerResults');
+}
+function showPage(id) {
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  $id(id).classList.add('active');
+  const navBtn = document.querySelector(`.nav-item[data-page="${id}"]`);
+  if (navBtn) navBtn.classList.add('active');
+  else {
+    // sub-page: keep parent nav item highlighted
+    if (id === 'pagePlannerResults') document.querySelector('.nav-item[data-page="pagePlanner"]').classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+// init planner when switching to planner tab - handled by main nav loop below
+
 // Offline
 function updateOnline() { $id('offlineBanner').classList.toggle('show', !navigator.onLine); }
 window.addEventListener('online', updateOnline);
@@ -912,6 +1163,7 @@ document.querySelectorAll('.nav-item').forEach(btn => {
     filterSection.classList.toggle('hidden', !isFix);
     $id('searchWrap').classList.toggle('visible', isFix && searchVisible);
     if (btn.dataset.page === 'pageCalendar') renderCalendar();
+    if (btn.dataset.page === 'pagePlanner') plannerRender();
     if (btn.dataset.page === 'pageResults')  renderResults();
   });
 });
