@@ -14,291 +14,245 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root { --red:#C8102E; --red-dk:#8B0C1F; --gold:#F6C519; }
-
-    [data-theme="dark"] {
-      --bg:#0D0D0D; --bg2:#161616; --bg3:#1F1F1F; --border:#242424;
-      --white:#F5F5F0; --muted:#777; --muted2:#555;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--red:#C8102E;--red-dk:#8B0C1F;--gold:#F6C519;--teal:#00B2A9}
+    [data-theme="dark"]{
+      --bg:#0D0D0D;--bg2:#161616;--bg3:#1F1F1F;--border:#242424;
+      --white:#F5F5F0;--muted:#777;--muted2:#555;
       --hero-grad:linear-gradient(145deg,#1a0008 0%,#0d0003 60%,#0a0010 100%);
-      --hero-border:rgba(200,16,46,0.45);
-      --hero-glow:0 0 60px rgba(200,16,46,0.12);
-      --header-bg:rgba(13,13,13,0.94);
+      --hero-border:rgba(200,16,46,0.45);--hero-glow:0 0 60px rgba(200,16,46,0.12);
+      --header-bg:rgba(13,13,13,0.94);--nav-bg:#111111;
     }
-    [data-theme="light"] {
-      --bg:#F0EFEA; --bg2:#FFFFFF; --bg3:#E6E5E0; --border:#D0CFCA;
-      --white:#111111; --muted:#666; --muted2:#999;
-      --teal:#00B2A9; --teal-faint:rgba(0,178,169,0.12); --teal-mid:rgba(0,178,169,0.25);
+    [data-theme="light"]{
+      --bg:#F0EFEA;--bg2:#FFFFFF;--bg3:#E6E5E0;--border:#D0CFCA;
+      --white:#111111;--muted:#666;--muted2:#999;
       --hero-grad:linear-gradient(145deg,#8B0C1F 0%,#C8102E 60%,#a00020 100%);
-      --hero-border:rgba(200,16,46,0.6);
-      --hero-glow:0 4px 32px rgba(200,16,46,0.25);
-      --header-bg:rgba(240,239,234,0.94);
+      --hero-border:rgba(200,16,46,0.6);--hero-glow:0 4px 32px rgba(200,16,46,0.25);
+      --header-bg:rgba(240,239,234,0.94);--nav-bg:#FFFFFF;
     }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;font-size:15px;line-height:1.5;min-height:100vh;transition:background 0.25s,color 0.25s;overscroll-behavior-y:contain}
 
-    html { scroll-behavior:smooth; }
-    body {
-      background:var(--bg); color:var(--white);
-      font-family:'Inter',sans-serif; font-size:15px;
-      line-height:1.5; min-height:100vh;
-      transition:background 0.25s,color 0.25s;
-    }
+    /* HEADER */
+    header{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--header-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:100;transition:background 0.25s,border-color 0.25s}
+    .crest{width:34px;height:34px;object-fit:contain;flex-shrink:0;border-radius:50%}
+    [data-theme="light"] .crest{background:#00B2A9;padding:4px}
+    .header-text h1{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;line-height:1}
+    .header-text p{font-size:11px;color:var(--muted);margin-top:1px}
+    .header-right{margin-left:auto;display:flex;align-items:center;gap:7px}
+    .btn-icon{background:var(--bg3);border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:color 0.2s,border-color 0.2s,background 0.25s}
+    .btn-icon:hover{color:var(--white);border-color:var(--muted)}
+    .btn-icon.spinning{animation:spin 0.75s linear infinite}
 
-    /* Header */
-    header {
-      display:flex; align-items:center; gap:12px;
-      padding:14px 20px;
-      border-bottom:1px solid var(--border);
-      position:sticky; top:0;
-      background:var(--header-bg);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
-      z-index:100;
-      transition:background 0.25s,border-color 0.25s;
-    }
-    .crest { width:34px; height:34px; object-fit:contain; flex-shrink:0; border-radius:50%; }
-    [data-theme="light"] .crest { background:#00B2A9; padding:4px; }
-    .header-text h1 {
-      font-family:'Bebas Neue',sans-serif;
-      font-size:22px; letter-spacing:1.5px; line-height:1;
-    }
-    .header-text p { font-size:11px; color:var(--muted); margin-top:1px; }
-    .header-right { margin-left:auto; display:flex; align-items:center; gap:7px; }
-    .btn-icon {
-      background:var(--bg3); border:1px solid var(--border);
-      color:var(--muted); width:34px; height:34px;
-      border-radius:8px; display:flex; align-items:center; justify-content:center;
-      cursor:pointer; font-size:15px;
-      transition:color 0.2s,border-color 0.2s,background 0.25s;
-    }
-    .btn-icon:hover { color:var(--white); border-color:var(--muted); }
-    .btn-icon.spinning { animation:spin 0.75s linear infinite; }
+    /* BOTTOM NAV */
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--nav-bg);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+    .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;cursor:pointer;border:none;background:none;color:var(--muted);font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.5px;gap:4px;transition:color 0.2s}
+    .nav-item.active{color:var(--red)}
+    [data-theme="light"] .nav-item.active{color:var(--teal)}
+    .nav-icon{font-size:20px;line-height:1}
 
-    /* Filter section */
-    .filter-section {
-      border-bottom:1px solid var(--border);
-      background:var(--bg);
-      transition:background 0.25s,border-color 0.25s;
-    }
-    .filter-row {
-      padding:8px 20px; display:flex; gap:7px;
-      overflow-x:auto; scrollbar-width:none;
-      -webkit-overflow-scrolling:touch;
-    }
-    .filter-row::-webkit-scrollbar { display:none; }
-    .filter-row + .filter-row { border-top:1px solid var(--border); padding-top:8px; }
+    /* PAGES */
+    .page{display:none;padding-bottom:80px}
+    .page.active{display:block}
 
-    .tab {
-      display:inline-flex; align-items:center; gap:5px;
-      background:var(--bg3); border:1px solid var(--border); color:var(--muted);
-      padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600;
-      cursor:pointer; white-space:nowrap; flex-shrink:0;
-      transition:all 0.18s; letter-spacing:0.3px;
-    }
-    .tab img { width:14px; height:14px; object-fit:contain; }
-    .tab:hover { color:var(--white); border-color:var(--muted); }
-    .tab.active { background:var(--red); border-color:var(--red); color:#fff; }
-    .tab.active-home { background:rgba(200,16,46,0.12); border-color:var(--red); color:var(--red); }
-    .tab.active-away { background:rgba(100,100,100,0.12); border-color:var(--muted); color:var(--white); }
+    /* FILTER SECTION */
+    .filter-section{border-bottom:1px solid var(--border);background:var(--bg);transition:background 0.25s,border-color 0.25s}
+    [data-theme="light"] .filter-section{border-bottom-color:var(--teal);border-bottom-width:2px}
+    .filter-row{padding:8px 20px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    .filter-row::-webkit-scrollbar{display:none}
+    .filter-row+.filter-row{border-top:1px solid var(--border)}
+    .tab{display:inline-flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.18s;letter-spacing:0.3px}
+    .tab img{width:14px;height:14px;object-fit:contain}
+    .tab:hover{color:var(--white);border-color:var(--muted)}
+    .tab.active{background:var(--red);border-color:var(--red);color:#fff}
+    .tab.active-home{background:rgba(200,16,46,0.12);border-color:var(--red);color:var(--red)}
+    .tab.active-away{background:rgba(100,100,100,0.12);border-color:var(--muted);color:var(--white)}
+    [data-theme="light"] .tab.active{background:var(--teal);border-color:var(--teal)}
+    [data-theme="light"] .tab.active-away{background:rgba(0,178,169,0.1);border-color:var(--teal);color:var(--teal)}
 
-    /* Main */
-    main { padding-bottom:60px; }
-    .content-wrap { max-width:680px; margin:0 auto; }
+    /* CONTENT WRAP */
+    .content-wrap{max-width:680px;margin:0 auto}
 
-    /* Hero */
-    .hero-section { padding:20px 20px 0; }
-    .section-label {
-      font-size:10px; font-weight:700;
-      letter-spacing:2.5px; text-transform:uppercase;
-      color:var(--muted); margin-bottom:10px;
-    }
-    .hero-card {
-      background:var(--hero-grad);
-      border:1px solid var(--hero-border);
-      border-radius:18px; padding:20px 18px;
-      box-shadow:var(--hero-glow);
-      position:relative; overflow:hidden; margin-bottom:24px;
-    }
-    .hero-card::after {
-      content:''; position:absolute; top:-80px; right:-80px;
-      width:260px; height:260px;
-      background:radial-gradient(circle,rgba(255,255,255,0.06) 0%,transparent 65%);
-      pointer-events:none;
-    }
-    .hero-comp-row {
-      display:flex; align-items:center;
-      justify-content:space-between; margin-bottom:18px;
-    }
-    .hero-comp-badge {
-      display:inline-flex; align-items:center; gap:7px;
-      background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.15);
-      border-radius:20px; padding:5px 12px;
-      font-size:12px; font-weight:600; color:#fff;
-    }
-    .hero-comp-badge img { width:18px; height:18px; object-fit:contain; }
-    .hero-round-badge {
-      font-size:11px; color:rgba(255,255,255,0.5);
-      background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1);
-      border-radius:20px; padding:4px 10px;
-    }
-    .hero-matchup {
-      display:flex; align-items:center; justify-content:space-between;
-      gap:8px; margin-bottom:18px;
-    }
-    .hero-team { text-align:center; flex:1; }
-    .hero-badge-wrap {
-      width:64px; height:64px; margin:0 auto 10px;
-      display:flex; align-items:center; justify-content:center;
-    }
-    .hero-badge-wrap img {
-      max-width:64px; max-height:64px; object-fit:contain;
-      filter:drop-shadow(0 2px 8px rgba(0,0,0,0.4));
-    }
-    .lfc-hero-logo { filter:brightness(10) drop-shadow(0 2px 8px rgba(0,0,0,0.4)) !important; }
-    .hero-team-name {
-      font-family:'Bebas Neue',sans-serif;
-      font-size:16px; letter-spacing:0.8px; line-height:1.2;
-      word-break:break-word; color:#fff;
-    }
-    .hero-vs { font-family:'Bebas Neue',sans-serif; font-size:32px; color:rgba(255,255,255,0.18); flex-shrink:0; }
-    .hero-meta { display:flex; flex-wrap:wrap; gap:8px 16px; }
-    .hero-meta-item { display:flex; align-items:center; gap:6px; font-size:12.5px; color:rgba(255,255,255,0.65); }
-    .ha-badge { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 9px; border-radius:5px; }
-    .ha-home    { background:rgba(255,255,255,0.15); color:#fff; }
-    .ha-away    { background:rgba(0,0,0,0.25); color:rgba(255,255,255,0.7); }
-    .ha-neutral { background:rgba(246,197,25,0.2); color:var(--gold); }
+    /* PULL TO REFRESH */
+    .ptr-indicator{text-align:center;padding:12px;font-size:12px;color:var(--muted);overflow:hidden;max-height:0;transition:max-height 0.3s}
+    .ptr-indicator.visible{max-height:40px}
 
-    /* Countdown */
-    .countdown-wrap { margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); }
-    .countdown-row { display:flex; gap:8px; }
-    .countdown-item {
-      flex:1; text-align:center;
-      background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.06);
-      border-radius:10px; padding:10px 4px;
+    /* SKELETON */
+    .skeleton-wrap{padding:20px}
+    .skeleton-hero{height:220px;border-radius:18px;margin-bottom:20px;background:var(--bg3);animation:shimmer 1.4s infinite linear;background-size:200% 100%}
+    .skeleton-card{height:68px;border-radius:8px;margin-bottom:8px;background:var(--bg3);animation:shimmer 1.4s infinite linear;background-size:200% 100%}
+    [data-theme="dark"] .skeleton-hero,[data-theme="dark"] .skeleton-card{background:linear-gradient(90deg,#1a1a1a 25%,#222 50%,#1a1a1a 75%);background-size:200% 100%}
+    [data-theme="light"] .skeleton-hero,[data-theme="light"] .skeleton-card{background:linear-gradient(90deg,#e0dfda 25%,#eeedea 50%,#e0dfda 75%);background-size:200% 100%}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* HERO */
+    .hero-section{padding:20px 20px 0}
+    .section-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+    [data-theme="light"] .section-label{color:var(--teal)}
+    .hero-card{background:var(--hero-grad);border:1px solid var(--hero-border);border-radius:18px;padding:20px 18px;box-shadow:var(--hero-glow);position:relative;overflow:hidden;margin-bottom:16px}
+    .hero-card::after{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(255,255,255,0.06) 0%,transparent 65%);pointer-events:none}
+    .hero-comp-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .hero-comp-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;color:#fff}
+    .hero-comp-badge img{width:18px;height:18px;object-fit:contain}
+    .hero-round-badge{font-size:11px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 10px}
+    .hero-matchup{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px}
+    .hero-team{text-align:center;flex:1}
+    .hero-badge-wrap{width:60px;height:60px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center}
+    .hero-badge-wrap img{max-width:60px;max-height:60px;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.4))}
+    .lfc-hero-logo{filter:brightness(10) drop-shadow(0 2px 8px rgba(0,0,0,0.4)) !important}
+    .hero-team-name{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.8px;line-height:1.2;word-break:break-word;color:#fff}
+    .hero-vs{font-family:'Bebas Neue',sans-serif;font-size:30px;color:rgba(255,255,255,0.18);flex-shrink:0}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:6px 14px}
+    .hero-meta-item{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.65)}
+    .ha-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:5px}
+    .ha-home{background:rgba(255,255,255,0.15);color:#fff}
+    .ha-away{background:rgba(0,0,0,0.25);color:rgba(255,255,255,0.7)}
+    .ha-neutral{background:rgba(246,197,25,0.2);color:var(--gold)}
+
+    /* COUNTDOWN */
+    .countdown-wrap{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08)}
+    .countdown-row{display:flex;gap:8px}
+    .countdown-item{flex:1;text-align:center;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:9px 4px}
+    .countdown-num{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;color:#fff}
+    .countdown-unit{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:3px}
+    .matchday-banner{text-align:center;padding:12px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#fff}
+
+    /* CAL + SHARE ROW */
+    .action-row{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px;flex-wrap:wrap}
+    .action-btn{display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,0.5);font-size:11.5px;text-decoration:none;padding:5px 10px;border:1px solid rgba(255,255,255,0.12);border-radius:6px;cursor:pointer;background:none;font-family:'Inter',sans-serif;transition:color 0.2s,border-color 0.2s;white-space:nowrap}
+    .action-btn:hover{color:#fff;border-color:rgba(255,255,255,0.3)}
+
+    /* UPCOMING STRIP (next 5) */
+    .upcoming-strip{padding:0 20px 20px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+    .upcoming-strip::-webkit-scrollbar{display:none}
+    .upcoming-chip{flex-shrink:0;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px 12px;min-width:90px;text-align:center;cursor:default;transition:background 0.15s}
+    .upcoming-chip:first-child{border-color:var(--red);background:rgba(200,16,46,0.08)}
+    [data-theme="light"] .upcoming-chip:first-child{border-color:var(--teal);background:rgba(0,178,169,0.08)}
+    .chip-date{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.5px;margin-bottom:4px}
+    .chip-opp{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:4px}
+    .chip-opp img{width:20px;height:20px;object-fit:contain}
+    .chip-name{font-size:11px;font-weight:600;color:var(--white);line-height:1.2;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .chip-comp{font-size:9.5px;color:var(--muted)}
+
+    /* FIXTURE LIST */
+    .fixtures-section{padding:0 20px}
+    .month-header{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--muted2);padding:18px 0 8px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;transition:border-color 0.25s}
+    [data-theme="light"] .month-header{color:var(--teal);border-bottom-color:var(--teal);opacity:0.85}
+    .month-count{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:var(--muted2)}
+    .fixture-card{display:flex;align-items:stretch;border-bottom:1px solid var(--border);transition:background 0.15s,border-color 0.25s}
+    .fixture-card:hover{background:rgba(200,16,46,0.04)}
+    [data-theme="light"] .fixture-card:hover{background:rgba(0,178,169,0.06)}
+    .fixture-accent{width:3px;flex-shrink:0}
+    .fixture-accent.home{background:var(--red)}
+    .fixture-accent.away{background:var(--bg3);transition:background 0.25s}
+    [data-theme="light"] .fixture-accent.away{background:var(--teal)}
+    .fixture-accent.neutral{background:var(--gold)}
+    .fixture-inner{display:flex;align-items:center;gap:11px;padding:12px 0 12px 12px;flex:1;min-width:0}
+    .fixture-date-col{width:38px;flex-shrink:0;text-align:center}
+    .fixture-day{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1}
+    .fixture-dow{font-size:9.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+    .fixture-divider{width:1px;align-self:stretch;background:var(--border);flex-shrink:0;margin:4px 0;transition:background 0.25s}
+    .fixture-main{flex:1;min-width:0}
+    .fixture-opponent{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+    .opp-badge{width:24px;height:24px;flex-shrink:0;object-fit:contain}
+    .opp-name{font-weight:600;font-size:14px;line-height:1.3;word-break:break-word}
+    .fixture-sub{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .comp-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap}
+    .comp-badge img{width:11px;height:11px;object-fit:contain}
+    .round-tag{font-size:10.5px;color:var(--muted)}
+    .venue-tag{font-size:10.5px;color:var(--muted)}
+    .fixture-right{flex-shrink:0;text-align:right;padding-right:14px;min-width:64px}
+    .fixture-time{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.5px;line-height:1}
+    .fixture-time.tbc{color:var(--muted);font-family:'Inter',sans-serif;font-size:12px;font-weight:600}
+    .days-pill{display:inline-block;margin-top:5px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap}
+    .days-pill.today{background:rgba(200,16,46,0.15);color:var(--red)}
+    .days-pill.tomorrow{background:rgba(0,178,169,0.15);color:#008f87}
+    .days-pill.soon{background:rgba(0,178,169,0.1);color:#008f87}
+    .days-pill.normal{background:rgba(120,120,120,0.12);color:var(--muted)}
+    [data-theme="dark"] .days-pill.tomorrow,[data-theme="dark"] .days-pill.soon{color:var(--teal)}
+
+    /* FIXTURE SHARE BUTTON */
+    .fixture-share{padding-right:4px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;opacity:0;transition:opacity 0.2s}
+    .fixture-card:hover .fixture-share{opacity:1}
+
+    /* COMP BADGE COLOURS */
+    .comp-pl{background:rgba(60,0,180,0.15);color:#a88fff}
+    .comp-cl{background:rgba(0,50,130,0.15);color:#70b8ff}
+    .comp-fa{background:rgba(190,90,0,0.15);color:#ffb347}
+    .comp-lc{background:rgba(0,120,70,0.15);color:#4ddba8}
+    .comp-uel{background:rgba(246,197,25,0.12);color:#8a6e00}
+    .comp-cwc{background:rgba(0,180,180,0.12);color:#5de0e2}
+    .comp-fr{background:rgba(100,100,100,0.12);color:#888}
+    .comp-other{background:rgba(100,100,100,0.12);color:#999}
+    [data-theme="dark"] .comp-uel{color:var(--gold)}
+
+    /* RESULTS PAGE */
+    .result-card{display:flex;align-items:stretch;border-bottom:1px solid var(--border)}
+    .result-inner{display:flex;align-items:center;gap:11px;padding:12px 14px 12px 15px;flex:1;min-width:0}
+    .result-date-col{width:38px;flex-shrink:0;text-align:center}
+    .result-score{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;text-align:right;min-width:54px;flex-shrink:0}
+    .result-score.win{color:#3dba78}
+    .result-score.draw{color:var(--gold)}
+    .result-score.loss{color:var(--red)}
+    .result-score.tbd{color:var(--muted);font-size:14px;font-family:'Inter',sans-serif;font-weight:600}
+
+    /* CALENDAR PAGE */
+    .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px}
+    .cal-month-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
+    .cal-nav-btn{background:var(--bg3);border:1px solid var(--border);color:var(--white);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+    .cal-nav-btn:hover{background:var(--border)}
+    .cal-grid-wrap{padding:0 20px 20px}
+    .cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+    .cal-dow{text-align:center;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);padding:4px 0}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+    .cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:4px 2px;border-radius:8px;cursor:default;transition:background 0.15s;position:relative}
+    .cal-cell.has-match{background:rgba(200,16,46,0.1);cursor:pointer}
+    .cal-cell.has-match:hover{background:rgba(200,16,46,0.2)}
+    [data-theme="light"] .cal-cell.has-match{background:rgba(0,178,169,0.1)}
+    [data-theme="light"] .cal-cell.has-match:hover{background:rgba(0,178,169,0.2)}
+    .cal-cell.today .cal-day{background:var(--red);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+    .cal-cell.other-month{opacity:0.3}
+    .cal-day{font-size:13px;font-weight:600;color:var(--white);line-height:1;margin-bottom:3px}
+    .cal-dot-row{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
+    .cal-dot{width:5px;height:5px;border-radius:50%;background:var(--red)}
+    [data-theme="light"] .cal-dot{background:var(--teal)}
+    .cal-match-popup{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);padding:0 0 80px}
+    .cal-match-popup.hidden{display:none}
+    .cal-popup-inner{background:var(--bg2);border:1px solid var(--border);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:680px;max-height:60vh;overflow-y:auto}
+    .cal-popup-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .cal-popup-date{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px}
+    .cal-popup-close{background:var(--bg3);border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+
+    /* STATES */
+    .state-view{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 30px;text-align:center;gap:12px}
+    .state-icon{font-size:42px}
+    .state-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
+    .state-msg{color:var(--muted);font-size:13.5px;max-width:300px;line-height:1.7}
+    .retry-btn{margin-top:8px;background:var(--red);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer}
+    .no-results{padding:40px 20px;text-align:center;color:var(--muted)}
+    .hidden{display:none !important}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;z-index:300;white-space:nowrap}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* DESKTOP */
+    @media(min-width:680px){
+      header{padding:16px 32px}
+      .filter-row,.hero-section,.fixtures-section,.cal-nav,.cal-grid-wrap,.upcoming-strip{padding-left:32px;padding-right:32px}
+      .hero-badge-wrap{width:68px;height:68px}
+      .hero-badge-wrap img{max-width:68px;max-height:68px}
+      .fixture-share{opacity:0.4}
+      .bottom-nav{max-width:680px;left:50%;transform:translateX(-50%);border-radius:16px 16px 0 0;border-left:1px solid var(--border);border-right:1px solid var(--border)}
     }
-    .countdown-num { font-family:'Bebas Neue',sans-serif; font-size:28px; line-height:1; color:#fff; }
-    .countdown-unit { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-top:3px; }
-    .matchday-banner {
-      text-align:center; padding:12px;
-      background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
-      border-radius:10px; font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:2px; color:#fff;
-    }
-    .cal-row { margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.07); }
-    .cal-btn {
-      display:inline-flex; align-items:center; gap:6px;
-      color:rgba(255,255,255,0.45); font-size:12px; text-decoration:none;
-      padding:5px 10px; border:1px solid rgba(255,255,255,0.1); border-radius:6px;
-      transition:color 0.2s,border-color 0.2s;
-    }
-    .cal-btn:hover { color:#fff; border-color:rgba(255,255,255,0.3); }
-
-    /* Fixture list */
-    .fixtures-section { padding:0 20px; }
-    .month-header {
-      font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1px; color:var(--muted2);
-      padding:20px 0 8px; border-bottom:1px solid var(--border);
-      display:flex; align-items:center; justify-content:space-between;
-      transition:border-color 0.25s;
-    }
-    .month-count { font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:var(--muted2); }
-
-    .fixture-card {
-      display:flex; align-items:stretch;
-      border-bottom:1px solid var(--border);
-      transition:background 0.15s,border-color 0.25s;
-    }
-    .fixture-card:hover { background:rgba(200,16,46,0.04); }
-    [data-theme="light"] .fixture-card:hover { background:rgba(0,178,169,0.06); }
-
-    /* Light mode sea green accents */
-    [data-theme="light"] .section-label { color:#00B2A9; }
-    [data-theme="light"] .month-header { color:#00B2A9; border-bottom-color:#00B2A9; opacity:0.85; }
-    [data-theme="light"] .filter-row + .filter-row { border-top-color:#00B2A9; border-top-opacity:0.3; }
-    [data-theme="light"] .tab.active { background:#00B2A9; border-color:#00B2A9; color:#fff; }
-    [data-theme="light"] .tab.active-home { background:rgba(200,16,46,0.1); border-color:var(--red); color:var(--red); }
-    [data-theme="light"] .tab.active-away { background:rgba(0,178,169,0.1); border-color:#00B2A9; color:#00B2A9; }
-    [data-theme="light"] .fixture-accent.home { background:var(--red); }
-    [data-theme="light"] .fixture-accent.away { background:#00B2A9; }
-    [data-theme="light"] .days-pill.today    { background:rgba(200,16,46,0.1); color:var(--red); }
-    [data-theme="light"] .days-pill.tomorrow { background:rgba(0,178,169,0.15); color:#008f87; }
-    [data-theme="light"] .days-pill.soon     { background:rgba(0,178,169,0.1); color:#008f87; }
-    [data-theme="light"] .days-pill.normal   { background:rgba(0,0,0,0.06); color:#666; }
-    [data-theme="light"] .spinner { border-color:#D0CFCA; border-top-color:#00B2A9; }
-    [data-theme="light"] .btn-icon:hover { color:#00B2A9; border-color:#00B2A9; }
-    [data-theme="light"] .filter-section { border-bottom-color:#00B2A9; border-bottom-width:2px; }
-
-    .fixture-accent { width:3px; flex-shrink:0; }
-    .fixture-accent.home    { background:var(--red); }
-    .fixture-accent.away    { background:var(--bg3); transition:background 0.25s; }
-    .fixture-accent.neutral { background:var(--gold); }
-
-    .fixture-inner { display:flex; align-items:center; gap:11px; padding:12px 0 12px 12px; flex:1; min-width:0; }
-    .fixture-date-col { width:38px; flex-shrink:0; text-align:center; }
-    .fixture-day { font-family:'Bebas Neue',sans-serif; font-size:22px; line-height:1; }
-    .fixture-dow { font-size:9.5px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
-    .fixture-divider { width:1px; align-self:stretch; background:var(--border); flex-shrink:0; margin:4px 0; transition:background 0.25s; }
-    .fixture-main { flex:1; min-width:0; }
-    .fixture-opponent { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
-    .opp-badge { width:24px; height:24px; flex-shrink:0; object-fit:contain; }
-    .opp-name { font-weight:600; font-size:14px; line-height:1.3; word-break:break-word; }
-    .fixture-sub { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-    .comp-badge {
-      display:inline-flex; align-items:center; gap:4px;
-      font-size:10px; font-weight:600; padding:2px 6px; border-radius:4px; white-space:nowrap;
-    }
-    .comp-badge img { width:11px; height:11px; object-fit:contain; }
-    .round-tag { font-size:10.5px; color:var(--muted); }
-    .venue-tag { font-size:10.5px; color:var(--muted); }
-
-    .fixture-right { flex-shrink:0; text-align:right; padding-right:14px; min-width:64px; }
-    .fixture-time { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:0.5px; line-height:1; }
-    .fixture-time.tbc { color:var(--muted); font-family:'Inter',sans-serif; font-size:12px; font-weight:600; }
-
-    .days-pill { display:inline-block; margin-top:5px; font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; white-space:nowrap; }
-    .days-pill.today    { background:rgba(200,16,46,0.15); color:var(--red); }
-    .days-pill.tomorrow { background:rgba(246,197,25,0.15); color:#c9a000; }
-    .days-pill.soon     { background:rgba(46,204,113,0.12); color:#3dba78; }
-    .days-pill.normal   { background:rgba(120,120,120,0.12); color:var(--muted); }
-    [data-theme="dark"] .days-pill.tomorrow { color:var(--gold); }
-
-    .comp-pl    { background:rgba(60,0,180,0.15); color:#a88fff; }
-    .comp-cl    { background:rgba(0,50,130,0.15); color:#70b8ff; }
-    .comp-fa    { background:rgba(190,90,0,0.15); color:#ffb347; }
-    .comp-lc    { background:rgba(0,120,70,0.15); color:#4ddba8; }
-    .comp-uel   { background:rgba(246,197,25,0.12); color:#8a6e00; }
-    .comp-cwc   { background:rgba(0,180,180,0.12); color:#5de0e2; }
-    .comp-fr    { background:rgba(100,100,100,0.12); color:#888; }
-    .comp-other { background:rgba(100,100,100,0.12); color:#999; }
-    [data-theme="dark"] .comp-uel { color:var(--gold); }
-
-    /* States */
-    .state-view { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px 30px; text-align:center; gap:12px; }
-    .state-icon { font-size:42px; }
-    .state-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; }
-    .state-msg { color:var(--muted); font-size:13.5px; max-width:300px; line-height:1.7; }
-    .retry-btn { margin-top:8px; background:var(--red); color:#fff; border:none; border-radius:10px; padding:12px 28px; font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:1px; cursor:pointer; }
-    .retry-btn:hover { background:var(--red-dk); }
-    .spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--red); border-radius:50%; animation:spin 0.75s linear infinite; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-    .hidden { display:none !important; }
-    .no-results { padding:40px 20px; text-align:center; color:var(--muted); }
-    .no-results .icon { font-size:32px; margin-bottom:10px; }
-
-    @media (min-width:680px) {
-      header { padding:16px 32px; }
-      .filter-row { padding-left:32px; padding-right:32px; }
-      .hero-section { padding:24px 32px 0; }
-      .fixtures-section { padding:0 32px; }
-      .hero-badge-wrap { width:72px; height:72px; }
-      .hero-badge-wrap img { max-width:72px; max-height:72px; }
-    }
-    @media (prefers-reduced-motion:reduce) { .spinner,.btn-icon.spinning { animation:none; } }
+    @media(prefers-reduced-motion:reduce){.skeleton-hero,.skeleton-card{animation:none}.btn-icon.spinning{animation:none}}
   </style>
 </head>
 <body>
 
 <header>
-  <img class="crest" src="data:image/png;base64,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" alt="LFC" />
+  <img class="crest" id="headerCrest" src="" alt="LFC" />
   <div class="header-text">
     <h1>LFC Fixtures</h1>
     <p id="lastUpdated">Men's First Team</p>
@@ -309,6 +263,7 @@
   </div>
 </header>
 
+<!-- FILTER BAR (fixtures page only) -->
 <div class="filter-section hidden" id="filterSection">
   <div class="filter-row" id="compRow"></div>
   <div class="filter-row" id="haRow">
@@ -318,26 +273,70 @@
   </div>
 </div>
 
-<main>
+<!-- PULL TO REFRESH -->
+<div class="ptr-indicator" id="ptrIndicator">↓ Release to refresh</div>
+
+<!-- PAGES -->
+<div class="page active" id="pageFixtures">
   <div class="content-wrap">
-    <div class="state-view" id="loadingState">
-      <div class="spinner"></div>
-      <div class="state-msg">Loading fixtures…</div>
-    </div>
-    <div class="state-view hidden" id="errorState">
-      <div class="state-icon">⚠️</div>
-      <div class="state-title">Could not load</div>
-      <div class="state-msg" id="errorMsg"></div>
-      <button class="retry-btn" onclick="loadFixtures()">TRY AGAIN</button>
-    </div>
-    <div id="fixturesContent" class="hidden"></div>
+    <div id="fixturesContent"></div>
   </div>
-</main>
+</div>
+
+<div class="page" id="pageCalendar">
+  <div class="content-wrap">
+    <div class="cal-nav">
+      <button class="cal-nav-btn" id="calPrev">‹</button>
+      <div class="cal-month-label" id="calMonthLabel"></div>
+      <button class="cal-nav-btn" id="calNext">›</button>
+    </div>
+    <div class="cal-grid-wrap">
+      <div class="cal-dow-row">
+        <div class="cal-dow">MON</div><div class="cal-dow">TUE</div><div class="cal-dow">WED</div>
+        <div class="cal-dow">THU</div><div class="cal-dow">FRI</div><div class="cal-dow">SAT</div><div class="cal-dow">SUN</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="pageResults">
+  <div class="content-wrap">
+    <div id="resultsContent"></div>
+  </div>
+</div>
+
+<!-- CALENDAR POPUP -->
+<div class="cal-match-popup hidden" id="calPopup">
+  <div class="cal-popup-inner">
+    <div class="cal-popup-header">
+      <div class="cal-popup-date" id="calPopupDate"></div>
+      <button class="cal-popup-close" id="calPopupClose">✕</button>
+    </div>
+    <div id="calPopupContent"></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-page="pageFixtures">
+    <span class="nav-icon">📋</span>Fixtures
+  </button>
+  <button class="nav-item" data-page="pageCalendar">
+    <span class="nav-icon">📅</span>Calendar
+  </button>
+  <button class="nav-item" data-page="pageResults">
+    <span class="nav-icon">🏆</span>Results
+  </button>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script>
 const WORKER_URL = 'https://lfc-fixtures.duff13.workers.dev';
+const CACHE_KEY  = 'lfc_ics_cache_v7';
 const LFC_LOGO   = 'data:image/png;base64,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';
-
 const COMP_LOGOS = {
   'premier league':               'https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg',
   'uefa champions league':        'https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg',
@@ -373,6 +372,7 @@ function getCompLogo(c) {
   return null;
 }
 
+
 const BADGES = {
   // Liverpool
   'liverpool':                    'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg',
@@ -390,11 +390,11 @@ const BADGES = {
   'spurs':                        'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg',
   'newcastle united':             'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
   'newcastle':                    'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
-  'aston villa':                  'https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest.svg',
-  'brighton & hove albion':       'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
-  'brighton and hove albion':     'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
-  'brighton':                     'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
-  'brighton hove albion':         'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg',
+  'aston villa':                  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTIwIj4KICA8IS0tIFNoaWVsZCBzaGFwZSAtLT4KICA8cGF0aCBkPSJNNTAgNSBMOTAgMjAgTDkwIDcwIFE5MCAxMDAgNTAgMTE1IFExMCAxMDAgMTAgNzAgTDEwIDIwIFoiIGZpbGw9IiM5NUJGRTUiIHN0cm9rZT0iIzdCMDAzQyIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPCEtLSBDbGFyZXQgYm9yZGVyIHN0cmlwZXMgLS0+CiAgPHBhdGggZD0iTTUwIDUgTDkwIDIwIEw5MCA3MCBROTAgMTAwIDUwIDExNSBRMTAgMTAwIDEwIDcwIEwxMCAyMCBaIiBmaWxsPSJub25lIiBzdHJva2U9IiM3QjAwM0MiIHN0cm9rZS13aWR0aD0iOCIgb3BhY2l0eT0iMC41Ii8+CiAgPCEtLSBBVkZDIHRleHQgLS0+CiAgPHRleHQgeD0iNTAiIHk9IjQyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iIzdCMDAzQyI+QVZGQzwvdGV4dD4KICA8IS0tIFNpbXBsaWZpZWQgbGlvbiAtLT4KICA8ZWxsaXBzZSBjeD0iNTAiIGN5PSI2MiIgcng9IjE0IiByeT0iMTYiIGZpbGw9IiNGNUQwMjAiLz4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUyIiByPSI5IiBmaWxsPSIjRjVEMDIwIi8+CiAgPHRleHQgeD0iNTAiIHk9IjU3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEyIiBmaWxsPSIjN0IwMDNDIj7imZ48L3RleHQ+CiAgPCEtLSBTdGFyIC0tPgogIDx0ZXh0IHg9IjUwIiB5PSIzNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0Y1RDAyMCI+4piFPC90ZXh0PgogIDwhLS0gMTg3NCAtLT4KICA8dGV4dCB4PSI1MCIgeT0iOTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiM3QjAwM0MiPjE4NzQ8L3RleHQ+Cjwvc3ZnPg==',
+  'brighton & hove albion':                  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8IS0tIFNoaWVsZCAtLT4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMDA1N0I4IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDwhLS0gV2hpdGUgYmFuZCAtLT4KICA8cGF0aCBkPSJNMTIgNDAgTDg4IDQwIEw4OCA2NSBRODggOTIgNTAgMTA4IFExMiA5MiAxMiA2NSBaIiBmaWxsPSIjRkZGRkZGIiBvcGFjaXR5PSIwLjE1Ii8+CiAgPCEtLSBTZWFndWxsIHNpbXBsaWZpZWQgLS0+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxNiIgcnk9IjkiIGZpbGw9IiNGRkZGRkYiLz4KICA8ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjgiIHJ5PSI3IiBmaWxsPSIjRkZGRkZGIi8+CiAgPCEtLSBXaW5ncyAtLT4KICA8cGF0aCBkPSJNMzQgNTUgUTI4IDQ4IDI0IDUyIFEzMCA1OCAzNCA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNNjYgNTUgUTcyIDQ4IDc2IDUyIFE3MCA1OCA2NiA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8IS0tIEJlYWsgLS0+CiAgPHBhdGggZD0iTTU0IDU0IEw2MCA1NiBMNTQgNThaIiBmaWxsPSIjRkZENzAwIi8+CiAgPCEtLSBUZXh0IC0tPgogIDx0ZXh0IHg9IjUwIiB5PSIyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iI0ZGRkZGRiI+QlJJR0hUT048L3RleHQ+CiAgPHRleHQgeD0iNTAiIHk9IjM4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj4mYW1wOyBIT1ZFIEFMQklPTjwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZpbGw9IiMwMDU3QjgiPlRIRSBTRUFHVUxMUzwvdGV4dD4KPC9zdmc+',
+  'brighton and hove albion':                  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8IS0tIFNoaWVsZCAtLT4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMDA1N0I4IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDwhLS0gV2hpdGUgYmFuZCAtLT4KICA8cGF0aCBkPSJNMTIgNDAgTDg4IDQwIEw4OCA2NSBRODggOTIgNTAgMTA4IFExMiA5MiAxMiA2NSBaIiBmaWxsPSIjRkZGRkZGIiBvcGFjaXR5PSIwLjE1Ii8+CiAgPCEtLSBTZWFndWxsIHNpbXBsaWZpZWQgLS0+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxNiIgcnk9IjkiIGZpbGw9IiNGRkZGRkYiLz4KICA8ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjgiIHJ5PSI3IiBmaWxsPSIjRkZGRkZGIi8+CiAgPCEtLSBXaW5ncyAtLT4KICA8cGF0aCBkPSJNMzQgNTUgUTI4IDQ4IDI0IDUyIFEzMCA1OCAzNCA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNNjYgNTUgUTcyIDQ4IDc2IDUyIFE3MCA1OCA2NiA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8IS0tIEJlYWsgLS0+CiAgPHBhdGggZD0iTTU0IDU0IEw2MCA1NiBMNTQgNThaIiBmaWxsPSIjRkZENzAwIi8+CiAgPCEtLSBUZXh0IC0tPgogIDx0ZXh0IHg9IjUwIiB5PSIyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iI0ZGRkZGRiI+QlJJR0hUT048L3RleHQ+CiAgPHRleHQgeD0iNTAiIHk9IjM4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj4mYW1wOyBIT1ZFIEFMQklPTjwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZpbGw9IiMwMDU3QjgiPlRIRSBTRUFHVUxMUzwvdGV4dD4KPC9zdmc+',
+  'brighton':                  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8IS0tIFNoaWVsZCAtLT4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMDA1N0I4IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDwhLS0gV2hpdGUgYmFuZCAtLT4KICA8cGF0aCBkPSJNMTIgNDAgTDg4IDQwIEw4OCA2NSBRODggOTIgNTAgMTA4IFExMiA5MiAxMiA2NSBaIiBmaWxsPSIjRkZGRkZGIiBvcGFjaXR5PSIwLjE1Ii8+CiAgPCEtLSBTZWFndWxsIHNpbXBsaWZpZWQgLS0+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxNiIgcnk9IjkiIGZpbGw9IiNGRkZGRkYiLz4KICA8ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjgiIHJ5PSI3IiBmaWxsPSIjRkZGRkZGIi8+CiAgPCEtLSBXaW5ncyAtLT4KICA8cGF0aCBkPSJNMzQgNTUgUTI4IDQ4IDI0IDUyIFEzMCA1OCAzNCA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNNjYgNTUgUTcyIDQ4IDc2IDUyIFE3MCA1OCA2NiA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8IS0tIEJlYWsgLS0+CiAgPHBhdGggZD0iTTU0IDU0IEw2MCA1NiBMNTQgNThaIiBmaWxsPSIjRkZENzAwIi8+CiAgPCEtLSBUZXh0IC0tPgogIDx0ZXh0IHg9IjUwIiB5PSIyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iI0ZGRkZGRiI+QlJJR0hUT048L3RleHQ+CiAgPHRleHQgeD0iNTAiIHk9IjM4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj4mYW1wOyBIT1ZFIEFMQklPTjwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZpbGw9IiMwMDU3QjgiPlRIRSBTRUFHVUxMUzwvdGV4dD4KPC9zdmc+',
+  'brighton hove albion':                  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8IS0tIFNoaWVsZCAtLT4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMDA1N0I4IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDwhLS0gV2hpdGUgYmFuZCAtLT4KICA8cGF0aCBkPSJNMTIgNDAgTDg4IDQwIEw4OCA2NSBRODggOTIgNTAgMTA4IFExMiA5MiAxMiA2NSBaIiBmaWxsPSIjRkZGRkZGIiBvcGFjaXR5PSIwLjE1Ii8+CiAgPCEtLSBTZWFndWxsIHNpbXBsaWZpZWQgLS0+CiAgPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTgiIHJ4PSIxNiIgcnk9IjkiIGZpbGw9IiNGRkZGRkYiLz4KICA8ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjgiIHJ5PSI3IiBmaWxsPSIjRkZGRkZGIi8+CiAgPCEtLSBXaW5ncyAtLT4KICA8cGF0aCBkPSJNMzQgNTUgUTI4IDQ4IDI0IDUyIFEzMCA1OCAzNCA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNNjYgNTUgUTcyIDQ4IDc2IDUyIFE3MCA1OCA2NiA1N1oiIGZpbGw9IiNGRkZGRkYiLz4KICA8IS0tIEJlYWsgLS0+CiAgPHBhdGggZD0iTTU0IDU0IEw2MCA1NiBMNTQgNThaIiBmaWxsPSIjRkZENzAwIi8+CiAgPCEtLSBUZXh0IC0tPgogIDx0ZXh0IHg9IjUwIiB5PSIyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iI0ZGRkZGRiI+QlJJR0hUT048L3RleHQ+CiAgPHRleHQgeD0iNTAiIHk9IjM4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj4mYW1wOyBIT1ZFIEFMQklPTjwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZpbGw9IiMwMDU3QjgiPlRIRSBTRUFHVUxMUzwvdGV4dD4KPC9zdmc+',
   'west ham united':              'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
   'west ham':                     'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
   'brentford':                    'https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg',
@@ -437,8 +437,8 @@ const BADGES = {
   'stoke':                        'https://upload.wikimedia.org/wikipedia/en/2/29/Stoke_City_FC.svg',
   'derby county':                 'https://upload.wikimedia.org/wikipedia/en/4/4a/Derby_County_FC.svg',
   'derby':                        'https://upload.wikimedia.org/wikipedia/en/4/4a/Derby_County_FC.svg',
-  'coventry city':                'https://upload.wikimedia.org/wikipedia/en/8/8d/Coventry_City_FC_logo.svg',
-  'coventry':                     'https://upload.wikimedia.org/wikipedia/en/8/8d/Coventry_City_FC_logo.svg',
+  'coventry city':                'https://upload.wikimedia.org/wikipedia/en/6/6c/Coventry_City_FC.svg',
+  'coventry':                'https://upload.wikimedia.org/wikipedia/en/6/6c/Coventry_City_FC.svg',
   'wba':                          'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
   'west brom':                    'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
   'west bromwich albion':         'https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg',
@@ -544,43 +544,63 @@ function getClubBadge(name) {
 // getCompLogo defined with COMP_LOGOS above
 // getClubBadge defined with BADGES above
 
-let allFixtures=[], activeComp='all', activeHA='all', cdTimer=null;
-// Respect system preference; localStorage overrides
+// ── State ────────────────────────────────────────────────────────────────
+let allFixtures = [], activeComp = 'all', activeHA = 'all', cdTimer = null;
+let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 
+// ── DOM refs ─────────────────────────────────────────────────────────────
 const $id = id => document.getElementById(id);
 const refreshBtn    = $id('refreshBtn');
 const themeBtn      = $id('themeBtn');
 const filterSection = $id('filterSection');
 const compRow       = $id('compRow');
 const haRow         = $id('haRow');
-const fixturesContent = $id('fixturesContent');
 const lastUpdated   = $id('lastUpdated');
 
+// ── Theme ────────────────────────────────────────────────────────────────
 applyTheme(theme);
-themeBtn.addEventListener('click', () => {
-  theme = theme === 'dark' ? 'light' : 'dark';
-  localStorage.setItem('lfc_theme', theme);
-  applyTheme(theme);
-});
-
-// React to OS theme changes (only if user hasn't manually set a preference)
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-  if (!localStorage.getItem('lfc_theme')) {
-    theme = e.matches ? 'dark' : 'light';
-    applyTheme(theme);
-  }
-});
+themeBtn.addEventListener('click', () => { theme = theme==='dark'?'light':'dark'; localStorage.setItem('lfc_theme',theme); applyTheme(theme); });
 function applyTheme(t) {
   document.body.dataset.theme = t;
-  // Icon shows the current mode — click to toggle to the other
-  themeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
-  themeBtn.title = t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+  themeBtn.textContent = t==='dark' ? '🌙' : '☀️';
+  themeBtn.title = t==='dark' ? 'Switch to light mode' : 'Switch to dark mode';
+  // Update header crest
+  const crest = $id('headerCrest');
+  if (crest) crest.src = LFC_LOGO;
 }
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  if (!localStorage.getItem('lfc_theme')) { theme = e.matches?'dark':'light'; applyTheme(theme); }
+});
 
-refreshBtn.addEventListener('click', loadFixtures);
+// ── Navigation ───────────────────────────────────────────────────────────
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    $id(btn.dataset.page).classList.add('active');
+    // Show/hide filter bar only on fixtures page
+    filterSection.classList.toggle('hidden', btn.dataset.page !== 'pageFixtures');
+    if (btn.dataset.page === 'pageCalendar') renderCalendar();
+    if (btn.dataset.page === 'pageResults')  renderResults();
+  });
+});
 
+// ── Pull to refresh ───────────────────────────────────────────────────────
+let ptrStartY = 0, ptrPulling = false;
+const ptrEl = $id('ptrIndicator');
+document.addEventListener('touchstart', e => { ptrStartY = e.touches[0].clientY; }, {passive:true});
+document.addEventListener('touchmove', e => {
+  const diff = e.touches[0].clientY - ptrStartY;
+  if (window.scrollY === 0 && diff > 60) { ptrPulling = true; ptrEl.classList.add('visible'); }
+}, {passive:true});
+document.addEventListener('touchend', () => {
+  if (ptrPulling) { ptrPulling = false; ptrEl.classList.remove('visible'); loadFixtures(); }
+});
+
+// ── Home/Away filter ─────────────────────────────────────────────────────
 haRow.querySelectorAll('.tab').forEach(t => {
   t.addEventListener('click', () => {
     haRow.querySelectorAll('.tab').forEach(x => x.classList.remove('active','active-home','active-away'));
@@ -593,135 +613,180 @@ haRow.querySelectorAll('.tab').forEach(t => {
   });
 });
 
-// Boot — v2 cache key forces re-fetch when parsing logic changes
-const CACHE_KEY = 'lfc_ics_cache_v5';
+// ── Boot ─────────────────────────────────────────────────────────────────
 const cached = localStorage.getItem(CACHE_KEY);
 if (cached) {
   try {
     allFixtures = JSON.parse(cached).map(f=>({...f,start:new Date(f.start),end:f.end?new Date(f.end):null}));
-    buildUI(); show('fixtures'); fetchICS(true);
+    buildUI(); fetchICS(true);
   } catch(e) { loadFixtures(); }
-} else { loadFixtures(); }
+} else { showSkeleton(); loadFixtures(); }
+
+refreshBtn.addEventListener('click', loadFixtures);
+
+// ── Fetch ─────────────────────────────────────────────────────────────────
+function showSkeleton() {
+  $id('fixturesContent').innerHTML = `
+    <div class="skeleton-wrap">
+      <div class="skeleton-hero"></div>
+      ${Array(5).fill('<div class="skeleton-card"></div>').join('')}
+    </div>`;
+}
 
 async function loadFixtures() {
-  show('loading'); refreshBtn.classList.add('spinning');
+  refreshBtn.classList.add('spinning');
+  if (!allFixtures.length) showSkeleton();
   await fetchICS(false);
   refreshBtn.classList.remove('spinning');
 }
 
 async function fetchICS(silent) {
   try {
-    const res = await fetch(WORKER_URL);
+    const res  = await fetch(WORKER_URL);
     const text = await res.text();
     if (!res.ok) throw new Error('HTTP '+res.status+': '+text.slice(0,120));
     allFixtures = parseICS(text);
-    localStorage.setItem(CACHE_KEY, JSON.stringify(allFixtures.map(f=>({...f,start:f.start.toISOString(),end:f.end?f.end.toISOString():null}))));
-    lastUpdated.textContent = 'Men\'s First Team · Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    buildUI(); show('fixtures');
+    localStorage.setItem(CACHE_KEY, JSON.stringify(
+      allFixtures.map(f=>({...f,start:f.start.toISOString(),end:f.end?f.end.toISOString():null}))
+    ));
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    lastUpdated.textContent = 'Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' · '+tz;
+    buildUI();
   } catch(err) {
-    if (!silent) { $id('errorMsg').textContent = err.message||'Could not fetch fixtures.'; show('error'); }
+    if (!silent) {
+      $id('fixturesContent').innerHTML = `
+        <div class="state-view">
+          <div class="state-icon">⚠️</div>
+          <div class="state-title">Could not load</div>
+          <div class="state-msg">${esc(err.message||'Unable to fetch fixtures.')}</div>
+          <button class="retry-btn" onclick="loadFixtures()">TRY AGAIN</button>
+        </div>`;
+    }
   }
 }
 
+// ── ICS Parser ────────────────────────────────────────────────────────────
 function parseICS(text) {
-  const now=new Date(); now.setHours(0,0,0,0);
-  const lines=text.replace(/\r\n[ \t]/g,'').replace(/\r/g,'').split('\n');
-  const events=[]; let cur=null; let inAlarm=false;
+  const lines = text.replace(/\r\n[ \t]/g,'').replace(/\r/g,'').split('\n');
+  const all=[], past=[], future=[];
+  const now = new Date(); now.setHours(0,0,0,0);
+  let cur=null, inAlarm=false;
   for (const raw of lines) {
     const line=raw.trim();
-    // Track VALARM sub-blocks — ignore everything inside them
-    if (line==='BEGIN:VALARM') { inAlarm=true; continue; }
-    if (line==='END:VALARM')   { inAlarm=false; continue; }
+    if (line==='BEGIN:VALARM'){inAlarm=true;continue}
+    if (line==='END:VALARM'){inAlarm=false;continue}
     if (inAlarm) continue;
-    if (line==='BEGIN:VEVENT') { cur={}; continue; }
-    if (line==='END:VEVENT'&&cur) { if(cur.start&&cur.start>=now) events.push(cur); cur=null; continue; }
+    if (line==='BEGIN:VEVENT'){cur={};continue}
+    if (line==='END:VEVENT'&&cur){
+      if(cur.start){ all.push(cur); if(cur.start<now) past.push(cur); else future.push(cur); }
+      cur=null; continue;
+    }
     if (!cur) continue;
     const ci=line.indexOf(':'); if(ci===-1) continue;
     const key=line.slice(0,ci).split(';')[0].toUpperCase();
     const val=line.slice(ci+1);
-    if (key==='SUMMARY')     cur.summary    =dv(val);
-    if (key==='LOCATION')    cur.location   =dv(val);
-    if (key==='DESCRIPTION') cur.description=dvDesc(val);
-    if (key==='URL')         cur.url        =val.trim();
-    if (key==='DTSTART') { const p=pd(val,line); cur.start=p.date; cur.allDay=p.allDay; }
-    if (key==='DTEND')   { const p=pd(val,line); cur.end=p.date; }
+    if(key==='SUMMARY')     cur.summary    =dv(val);
+    if(key==='LOCATION')    cur.location   =dv(val);
+    if(key==='DESCRIPTION') cur.description=dvDesc(val);
+    if(key==='URL')         cur.url        =val.trim();
+    if(key==='DTSTART'){const p=pd(val,line);cur.start=p.date;cur.allDay=p.allDay}
+    if(key==='DTEND'){const p=pd(val,line);cur.end=p.date}
   }
-  events.sort((a,b)=>a.start-b.start);
-  return events.map(enrich);
+  future.sort((a,b)=>a.start-b.start);
+  past.sort((a,b)=>b.start-a.start);
+  // Store separately on allFixtures
+  allFixtures._past   = past.map(enrich);
+  allFixtures._future = future.map(enrich);
+  return future.map(enrich);
 }
-function pd(v,fl) {
-  const allDay=fl.includes('VALUE=DATE')||/^\d{8}$/.test(v.trim()); const s=v.trim(); let date;
-  if (allDay) { date=new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8)); }
-  else { const y=+s.slice(0,4),mo=+s.slice(4,6)-1,d=+s.slice(6,8),h=+s.slice(9,11),mi=+s.slice(11,13),sc=+s.slice(13,15); date=s.endsWith('Z')?new Date(Date.UTC(y,mo,d,h,mi,sc)):new Date(y,mo,d,h,mi,sc); }
-  return {date,allDay};
+function pd(v,fl){
+  const allDay=fl.includes('VALUE=DATE')||/^\d{8}$/.test(v.trim());
+  const s=v.trim(); let date;
+  if(allDay){date=new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8))}
+  else{const y=+s.slice(0,4),mo=+s.slice(4,6)-1,d=+s.slice(6,8),h=+s.slice(9,11),mi=+s.slice(11,13),sc=+s.slice(13,15);date=s.endsWith('Z')?new Date(Date.UTC(y,mo,d,h,mi,sc)):new Date(y,mo,d,h,mi,sc)}
+  return{date,allDay}
 }
-function dv(v) { return v.replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\n/gi,' ').replace(/\\\\/g,'\\').trim(); }
-// Description variant: preserve \n as real newlines so we can split on first line
-function dvDesc(v) { return v.replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\n/gi,'\n').replace(/\\\\/g,'\\').trim(); }
-function enrich(e) {
+function dv(v){return v.replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\n/gi,' ').replace(/\\\\/g,'\\').trim()}
+function dvDesc(v){return v.replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\n/gi,'\n').replace(/\\\\/g,'\\').trim()}
+function enrich(e){
   const s=e.summary||''; let comp='',home='',away='',isHome=null;
-
-  // Competition = first line of DESCRIPTION, text before the first pipe
-  // e.g. "Premier League | Follow the live action on the Liverpool website..."
-  if (e.description) {
-    const firstLine = e.description.split('\n')[0].trim();
-    const pipeIdx   = firstLine.indexOf('|');
-    comp = (pipeIdx > 0 ? firstLine.slice(0, pipeIdx) : firstLine).trim();
+  if(e.description){
+    const firstLine=e.description.split('\n')[0].trim();
+    const pi=firstLine.indexOf('|');
+    comp=(pi>0?firstLine.slice(0,pi):firstLine).trim();
   }
-
-  // SUMMARY is the match teams: "Liverpool v Fulham" or "Arsenal v Liverpool"
-  const vs = s.split(/\s+v(?:s)?\.?\s+/i);
-  if (vs.length===2) { home=vs[0].trim(); away=vs[1].trim(); }
-
+  const vs=s.split(/\s+v(?:s)?\.?\s+/i);
+  if(vs.length===2){home=vs[0].trim();away=vs[1].trim()}
   const lfc=['liverpool','lfc','liverpool fc'];
-  if (lfc.some(n=>home.toLowerCase().includes(n))) isHome=true;
-  if (lfc.some(n=>away.toLowerCase().includes(n))) isHome=false;
+  if(lfc.some(n=>home.toLowerCase().includes(n))) isHome=true;
+  if(lfc.some(n=>away.toLowerCase().includes(n))) isHome=false;
   const opponent=isHome===true?away:isHome===false?home:s;
-
   const venue=e.location||(isHome===true?'Anfield':'');
-  return {...e,competition:comp,opponent:opponent||s,isHome,round:'',venue};
+  return{...e,competition:comp,opponent:opponent||s,isHome,round:'',venue};
 }
 
+// ── Build UI ──────────────────────────────────────────────────────────────
+function buildUI(){ buildCompTabs(); renderFixtures(); }
 
-function buildUI() { buildCompTabs(); renderFixtures(); }
-
-function buildCompTabs() {
+function buildCompTabs(){
   const counts={};
-  allFixtures.forEach(f=>{const c=f.competition||'Other'; counts[c]=(counts[c]||0)+1;});
+  allFixtures.forEach(f=>{const c=f.competition||'Other';counts[c]=(counts[c]||0)+1});
   const order=['Premier League','UEFA Champions League','UEFA Europa League','FA Cup','EFL Cup','League Cup','Carabao Cup','Club World Cup','FIFA Club World Cup','Community Shield'];
   const sorted=[...order.filter(c=>counts[c]),...Object.keys(counts).filter(c=>!order.includes(c))];
   compRow.innerHTML=`<button class="tab active" data-comp="all">All (${allFixtures.length})</button>`;
   sorted.forEach(c=>{
-    const logo=getCompLogo(c); const btn=document.createElement('button');
-    btn.className='tab'; btn.dataset.comp=c;
-    btn.innerHTML=(logo?`<img src="${logo}" alt="" onerror="this.style.display='none'" />`:'') + compShort(c) + ` (${counts[c]})`;
+    const logo=getCompLogo(c);const btn=document.createElement('button');
+    btn.className='tab';btn.dataset.comp=c;
+    btn.innerHTML=(logo?`<img src="${logo}" alt="" onerror="this.style.display='none'" />`:'')+ compShort(c)+` (${counts[c]})`;
     compRow.appendChild(btn);
   });
   filterSection.classList.remove('hidden');
   compRow.querySelectorAll('.tab').forEach(t=>{
     t.addEventListener('click',()=>{
       compRow.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      t.classList.add('active'); activeComp=t.dataset.comp; renderFixtures();
+      t.classList.add('active');activeComp=t.dataset.comp;renderFixtures();
     });
   });
 }
 
-function getFiltered() {
-  let list = activeComp==='all' ? allFixtures : allFixtures.filter(f=>f.competition===activeComp);
-  if (activeHA==='home') list=list.filter(f=>f.isHome===true);
-  if (activeHA==='away') list=list.filter(f=>f.isHome===false);
+function getFiltered(){
+  let list=activeComp==='all'?allFixtures:allFixtures.filter(f=>f.competition===activeComp);
+  if(activeHA==='home') list=list.filter(f=>f.isHome===true);
+  if(activeHA==='away') list=list.filter(f=>f.isHome===false);
   return list;
 }
 
-function renderFixtures() {
+// ── Fixtures Page ─────────────────────────────────────────────────────────
+function renderFixtures(){
   clearInterval(cdTimer);
   const list=getFiltered();
-  if (!list.length) {
-    fixturesContent.innerHTML=`<div class="no-results"><div class="icon">📭</div><div>No fixtures match your filters.</div></div>`;
-    return;
-  }
+  const el=$id('fixturesContent');
+  if(!list.length){el.innerHTML=`<div class="no-results">No fixtures match your filters.</div>`;return}
+
   let html=buildHero(list[0]);
-  if (list.length>1) {
+
+  // Upcoming strip (next 2-5 after the hero)
+  if(list.length>1){
+    const strip=list.slice(1,6);
+    html+=`<div class="upcoming-strip">`;
+    strip.forEach(f=>{
+      const d=f.start;
+      const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+      const oppBadge=getClubBadge(f.opponent);
+      html+=`<div class="upcoming-chip">
+        <div class="chip-date">${dateStr}</div>
+        <div class="chip-opp">
+          ${oppBadge?`<img src="${oppBadge}" alt="" onerror="this.style.display='none'" />`:'⚽'}
+        </div>
+        <div class="chip-name">${esc(f.opponent)}</div>
+        <div class="chip-comp">${compShort(f.competition)}</div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  // Remaining by month
+  if(list.length>1){
     html+=`<div class="fixtures-section">`;
     const byMonth={};
     list.slice(1).forEach(f=>{
@@ -729,20 +794,32 @@ function renderFixtures() {
       (byMonth[k]=byMonth[k]||[]).push(f);
     });
     Object.entries(byMonth).forEach(([k,fixtures])=>{
-      const [y,m]=k.split('-');
+      const[y,m]=k.split('-');
       const label=new Date(+y,+m-1).toLocaleString('en-GB',{month:'long',year:'numeric'}).toUpperCase();
       html+=`<div class="month-group"><div class="month-header"><span>${label}</span><span class="month-count">${fixtures.length} FIXTURE${fixtures.length!==1?'S':''}</span></div>`;
-      fixtures.forEach(f=>{html+=buildCard(f);});
+      fixtures.forEach(f=>{html+=buildCard(f)});
       html+=`</div>`;
     });
     html+=`</div>`;
   }
-  fixturesContent.innerHTML=html;
+
+  el.innerHTML=html;
+
+  // Wire up share buttons
+  el.querySelectorAll('.fixture-share').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      const idx=+btn.dataset.idx;
+      shareFixture(list[idx]);
+    });
+  });
+
   startCountdown(list[0]);
 }
 
-function buildHero(f) {
-  const comp=f.competition||'Fixture', cLogo=getCompLogo(comp), oppBadge=getClubBadge(f.opponent);
+// ── Hero ──────────────────────────────────────────────────────────────────
+function buildHero(f){
+  const comp=f.competition||'Fixture',cLogo=getCompLogo(comp),oppBadge=getClubBadge(f.opponent);
   const isHome=f.isHome;
   const haClass=isHome===true?'ha-home':isHome===false?'ha-away':'ha-neutral';
   const haText=isHome===true?'HOME':isHome===false?'AWAY':'NEUTRAL';
@@ -766,7 +843,7 @@ function buildHero(f) {
         <div class="hero-vs">VS</div>
         <div class="hero-team">
           <div class="hero-badge-wrap">
-            ${oppBadge?`<img src="${oppBadge}" alt="${esc(f.opponent)}" onerror="this.outerHTML='<span style=\\'font-size:36px;\\'>⚽</span>'" />`:`<span style="font-size:36px;">⚽</span>`}
+            ${oppBadge?`<img src="${oppBadge}" alt="${esc(f.opponent)}" onerror="this.outerHTML='<span style=\\'font-size:32px;\\'>⚽</span>'" />`:`<span style="font-size:32px;">⚽</span>`}
           </div>
           <div class="hero-team-name">${esc(f.opponent)}</div>
         </div>
@@ -778,19 +855,34 @@ function buildHero(f) {
         <div class="hero-meta-item"><span class="ha-badge ${haClass}">${haText}</span></div>
       </div>
       <div class="countdown-wrap" id="cdWrap"></div>
-      <div class="cal-row"><a class="cal-btn" href="${buildGCal(f)}" target="_blank" rel="noopener">📅 Add to Google Calendar</a></div>
+      <div class="action-row">
+        <a class="action-btn" href="${buildGCal(f)}" target="_blank" rel="noopener">📅 Google Calendar</a>
+        <a class="action-btn" href="${buildICSDownload(f)}" download="lfc-fixture.ics">🍎 Apple Calendar</a>
+        <button class="action-btn" onclick="shareFixture(${JSON.stringify(f).replace(/"/g,'&quot;')})">↗ Share</button>
+      </div>
     </div>
   </div>`;
 }
 
-function buildCard(f) {
-  const d=f.start, isHome=f.isHome;
+// ── Fixture Card ──────────────────────────────────────────────────────────
+function buildCard(f, idx=0, showScore=false, score=''){
+  const d=f.start,isHome=f.isHome;
   const accentCls=isHome===true?'home':isHome===false?'away':'neutral';
-  const cCls=getCompClass(f.competition), cLogo=getCompLogo(f.competition), oppBadge=getClubBadge(f.opponent);
+  const cCls=getCompClass(f.competition),cLogo=getCompLogo(f.competition),oppBadge=getClubBadge(f.opponent);
+  const time=formatTime(f);
+  const round=f.round?`<span class="round-tag">${esc(f.round)}</span>`:'';
+  const venue=f.venue?`<span class="venue-tag">· ${esc(f.venue)}</span>`:'';
+  const pill=showScore?'':buildDaysPill(f.start);
+  const rightCol=showScore
+    ?`<div class="result-score ${scoreClass(score)}">${score||'TBD'}</div>`
+    :`<div class="fixture-right">
+        <div class="fixture-time${(f.allDay||isTimeUnknown(f))?' tbc':''}">${time}</div>
+        ${pill}
+      </div>`;
   return `
-  <div class="fixture-card">
+  <div class="${showScore?'result-card':'fixture-card'}">
     <div class="fixture-accent ${accentCls}"></div>
-    <div class="fixture-inner">
+    <div class="${showScore?'result-inner':'fixture-inner'}">
       <div class="fixture-date-col">
         <div class="fixture-day">${d.getDate()}</div>
         <div class="fixture-dow">${d.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase()}</div>
@@ -806,31 +898,129 @@ function buildCard(f) {
             ${cLogo?`<img src="${cLogo}" alt="" onerror="this.style.display='none'" />`:''}
             ${compShort(f.competition)}
           </span>
-          ${f.round?`<span class="round-tag">${esc(f.round)}</span>`:''}
-          ${f.venue?`<span class="venue-tag">· ${esc(f.venue)}</span>`:''}
+          ${round}${venue}
         </div>
       </div>
-      <div class="fixture-right">
-        <div class="fixture-time${(f.allDay||isTimeUnknown(f))?' tbc':''}">${formatTime(f)}</div>
-        ${buildDaysPill(f.start)}
-      </div>
+      ${rightCol}
+      ${!showScore?`<button class="fixture-share" data-idx="${idx}" title="Share">↗</button>`:''}
     </div>
   </div>`;
 }
 
-function startCountdown(f) {
-  function tick() {
-    const wrap=$id('cdWrap'); if(!wrap){clearInterval(cdTimer);return;}
+// ── Results Page ──────────────────────────────────────────────────────────
+function renderResults(){
+  const el=$id('resultsContent');
+  const past=(allFixtures._past||[]);
+  if(!past.length){
+    el.innerHTML=`<div class="state-view"><div class="state-icon">📭</div><div class="state-title">No Results Yet</div><div class="state-msg">Past fixtures will appear here once the season gets underway.</div></div>`;
+    return;
+  }
+  let html=`<div class="fixtures-section">`;
+  const byMonth={};
+  past.forEach(f=>{
+    const k=f.start.getFullYear()+'-'+String(f.start.getMonth()+1).padStart(2,'0');
+    (byMonth[k]=byMonth[k]||[]).push(f);
+  });
+  Object.entries(byMonth).forEach(([k,fixtures])=>{
+    const[y,m]=k.split('-');
+    const label=new Date(+y,+m-1).toLocaleString('en-GB',{month:'long',year:'numeric'}).toUpperCase();
+    html+=`<div class="month-group"><div class="month-header"><span>${label}</span><span class="month-count">${fixtures.length}</span></div>`;
+    fixtures.forEach(f=>{html+=buildCard(f,0,true,'')});
+    html+=`</div>`;
+  });
+  html+=`</div>`;
+  el.innerHTML=html;
+}
+
+// ── Calendar Page ─────────────────────────────────────────────────────────
+function initCal(){
+  const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth();
+}
+function renderCalendar(){
+  if(!calYear) initCal();
+  const label=new Date(calYear,calMonth).toLocaleString('en-GB',{month:'long',year:'numeric'}).toUpperCase();
+  $id('calMonthLabel').textContent=label;
+
+  const grid=$id('calGrid');
+  grid.innerHTML='';
+
+  // Build match index
+  const matchDays={};
+  const allEvents=[...allFixtures,...(allFixtures._past||[])];
+  allEvents.forEach(f=>{
+    if(f.start.getFullYear()===calYear&&f.start.getMonth()===calMonth){
+      const day=f.start.getDate();
+      (matchDays[day]=matchDays[day]||[]).push(f);
+    }
+  });
+
+  const firstDay=new Date(calYear,calMonth,1);
+  // Monday=0 offset
+  let startDow=(firstDay.getDay()+6)%7;
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const prevDays=new Date(calYear,calMonth,0).getDate();
+  const today=new Date();
+
+  // Prev month padding
+  for(let i=startDow-1;i>=0;i--){
+    const cell=document.createElement('div');
+    cell.className='cal-cell other-month';
+    cell.innerHTML=`<div class="cal-day">${prevDays-i}</div>`;
+    grid.appendChild(cell);
+  }
+
+  for(let d=1;d<=daysInMonth;d++){
+    const cell=document.createElement('div');
+    const isToday=today.getDate()===d&&today.getMonth()===calMonth&&today.getFullYear()===calYear;
+    const matches=matchDays[d]||[];
+    cell.className='cal-cell'+(isToday?' today':'')+(matches.length?' has-match':'');
+    const dayEl=`<div class="cal-day">${d}</div>`;
+    const dots=matches.length?`<div class="cal-dot-row">${matches.slice(0,3).map(()=>'<div class="cal-dot"></div>').join('')}</div>`:'';
+    cell.innerHTML=dayEl+dots;
+    if(matches.length){
+      cell.addEventListener('click',()=>showCalPopup(new Date(calYear,calMonth,d),matches));
+    }
+    grid.appendChild(cell);
+  }
+
+  // Next month padding
+  const totalCells=startDow+daysInMonth;
+  const rem=(7-totalCells%7)%7;
+  for(let d=1;d<=rem;d++){
+    const cell=document.createElement('div');
+    cell.className='cal-cell other-month';
+    cell.innerHTML=`<div class="cal-day">${d}</div>`;
+    grid.appendChild(cell);
+  }
+}
+
+function showCalPopup(date, matches){
+  const dateStr=date.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  $id('calPopupDate').textContent=dateStr;
+  let html='';
+  matches.forEach(f=>{html+=buildCard(f,0,false,'')});
+  $id('calPopupContent').innerHTML=html;
+  $id('calPopup').classList.remove('hidden');
+}
+$id('calPopupClose').addEventListener('click',()=>$id('calPopup').classList.add('hidden'));
+$id('calPopup').addEventListener('click',e=>{if(e.target===$id('calPopup'))$id('calPopup').classList.add('hidden')});
+$id('calPrev').addEventListener('click',()=>{calMonth--;if(calMonth<0){calMonth=11;calYear--}renderCalendar()});
+$id('calNext').addEventListener('click',()=>{calMonth++;if(calMonth>11){calMonth=0;calYear++}renderCalendar()});
+
+// ── Countdown ─────────────────────────────────────────────────────────────
+function startCountdown(f){
+  function tick(){
+    const wrap=$id('cdWrap'); if(!wrap){clearInterval(cdTimer);return}
     const diff=f.start.getTime()-Date.now();
-    if (f.allDay) {
+    if(f.allDay){
       const days=Math.ceil(diff/86400000);
       wrap.innerHTML=days<=0?`<div class="matchday-banner">⚽ MATCH DAY</div>`:`<div class="countdown-row"><div class="countdown-item"><div class="countdown-num">${days}</div><div class="countdown-unit">Days to go</div></div></div>`;
-      clearInterval(cdTimer); return;
+      clearInterval(cdTimer);return;
     }
-    if (diff<=0) { wrap.innerHTML=`<div class="matchday-banner">⚽ MATCH DAY — KICK OFF!</div>`; clearInterval(cdTimer); return; }
-    if (diff<86400000) {
+    if(diff<=0){wrap.innerHTML=`<div class="matchday-banner">⚽ KICK OFF!</div>`;clearInterval(cdTimer);return}
+    if(diff<86400000){
       const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-      wrap.innerHTML=`<div class="matchday-banner">⚽ MATCH DAY · Kick off in ${h?h+'h ':''}${m}m ${pad(s)}s</div>`; return;
+      wrap.innerHTML=`<div class="matchday-banner">⚽ MATCH DAY · Kick off in ${h?h+'h ':''}${m}m ${pad(s)}s</div>`;return;
     }
     const days=Math.floor(diff/86400000),hrs=Math.floor((diff%86400000)/3600000),mins=Math.floor((diff%3600000)/60000),secs=Math.floor((diff%60000)/1000);
     wrap.innerHTML=`<div class="countdown-row">
@@ -840,47 +1030,54 @@ function startCountdown(f) {
       <div class="countdown-item"><div class="countdown-num">${pad(secs)}</div><div class="countdown-unit">Secs</div></div>
     </div>`;
   }
-  tick(); cdTimer=setInterval(tick,1000);
+  tick();cdTimer=setInterval(tick,1000);
 }
 
-function formatTime(f) { return (f.allDay||isTimeUnknown(f))?'TBC':f.start.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
-function isTimeUnknown(f) { return f.start.getHours()===0&&f.start.getMinutes()===0; }
-function buildDaysPill(date) {
-  const now=new Date(); now.setHours(0,0,0,0); const m=new Date(date); m.setHours(0,0,0,0);
+// ── Share ─────────────────────────────────────────────────────────────────
+function shareFixture(f){
+  const text=`⚽ Liverpool FC ${f.isHome===true?'vs':'@'} ${f.opponent}\n📅 ${f.start.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}\n🕐 ${formatTime(f)}\n${f.competition?'🏆 '+f.competition:''}`;
+  if(navigator.share){
+    navigator.share({title:'LFC Fixture',text}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(text).then(()=>showToast('Copied to clipboard!')).catch(()=>showToast('Share not supported'));
+  }
+}
+
+// ── ICS Download ──────────────────────────────────────────────────────────
+function buildICSDownload(f){
+  const fmt=d=>{
+    const s=d.toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+    return s;
+  };
+  const end=f.end?fmt(f.end):fmt(new Date(f.start.getTime()+7200000));
+  const ics=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//LFC Fixtures//EN\r\nBEGIN:VEVENT\r\nDTSTART:${fmt(f.start)}\r\nDTEND:${end}\r\nSUMMARY:Liverpool FC ${f.isHome?'v':'@'} ${f.opponent}\r\nDESCRIPTION:${f.competition||'Fixture'}\r\nLOCATION:${f.venue||''}\r\nEND:VEVENT\r\nEND:VCALENDAR`;
+  return 'data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function buildGCal(f){
+  const fmt=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const end=f.end?fmt(f.end):fmt(new Date(f.start.getTime()+7200000));
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(f.summary||'Liverpool FC')}&dates=${fmt(f.start)}/${end}&location=${encodeURIComponent(f.venue||'')}`;
+}
+function formatTime(f){return(f.allDay||isTimeUnknown(f))?'TBC':f.start.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}
+function isTimeUnknown(f){return f.start.getHours()===0&&f.start.getMinutes()===0}
+function buildDaysPill(date){
+  const now=new Date();now.setHours(0,0,0,0);const m=new Date(date);m.setHours(0,0,0,0);
   const diff=Math.round((m-now)/86400000);
   if(diff===0) return `<div class="days-pill today">Today</div>`;
   if(diff===1) return `<div class="days-pill tomorrow">Tomorrow</div>`;
   if(diff<=7)  return `<div class="days-pill soon">${diff} days</div>`;
   return `<div class="days-pill normal">${diff} days</div>`;
 }
-function buildGCal(f) {
-  const fmt=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
-  const end=f.end?fmt(f.end):fmt(new Date(f.start.getTime()+7200000));
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(f.summary||'Liverpool FC')}&dates=${fmt(f.start)}/${end}&location=${encodeURIComponent(f.venue||'')}`;
-}
-function compShort(n) {
-  const m={'Premier League':'Premier League','UEFA Champions League':'Champions League','UEFA Europa League':'Europa League','FA Cup':'FA Cup','EFL Cup':'League Cup','League Cup':'League Cup','Carabao Cup':'League Cup','Club World Cup':'Club World Cup','FIFA Club World Cup':'Club World Cup','Community Shield':'Comm. Shield'};
-  return m[n]||n||'Fixture';
-}
-function getCompClass(n) {
-  const k=(n||'').toLowerCase();
-  if(k.includes('premier'))   return 'comp-pl';
-  if(k.includes('champions')) return 'comp-cl';
-  if(k.includes('europa'))    return 'comp-uel';
-  if(k.includes('fa cup'))    return 'comp-fa';
-  if(k.includes('league cup')||k.includes('efl')||k.includes('carabao')) return 'comp-lc';
-  if(k.includes('friendly'))  return 'comp-fr';
-  if(k.includes('club world')) return 'comp-cwc';
-  return 'comp-other';
-}
-function pad(n){return String(n).padStart(2,'0');}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function show(v){
-  ['loadingState','errorState','fixturesContent'].forEach(id=>$id(id).classList.add('hidden'));
-  if(v==='loading') $id('loadingState').classList.remove('hidden');
-  if(v==='error')   $id('errorState').classList.remove('hidden');
-  if(v==='fixtures') $id('fixturesContent').classList.remove('hidden');
-}
+function scoreClass(s){if(!s||s==='TBD') return 'tbd'; const[a,b]=s.split('-').map(Number); if(a>b) return 'win'; if(a<b) return 'loss'; return 'draw'}
+function showToast(msg){const t=$id('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function compShort(n){const m={'Premier League':'Premier League','UEFA Champions League':'Champions League','UEFA Europa League':'Europa League','FA Cup':'FA Cup','EFL Cup':'League Cup','League Cup':'League Cup','Carabao Cup':'League Cup','Club World Cup':'Club World Cup','FIFA Club World Cup':'Club World Cup','Community Shield':'Comm. Shield'};return m[n]||n||'Fixture'}
+function getCompClass(n){const k=(n||'').toLowerCase();if(k.includes('premier'))return 'comp-pl';if(k.includes('champions'))return 'comp-cl';if(k.includes('europa'))return 'comp-uel';if(k.includes('fa cup'))return 'comp-fa';if(k.includes('league cup')||k.includes('efl')||k.includes('carabao'))return 'comp-lc';if(k.includes('friendly'))return 'comp-fr';if(k.includes('club world'))return 'comp-cwc';return 'comp-other'}
+function pad(n){return String(n).padStart(2,'0')}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+// getCompLogo defined with COMP_LOGOS above
+// getClubBadge defined with BADGES above
 </script>
 </body>
 </html>
