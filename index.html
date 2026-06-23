@@ -363,6 +363,7 @@
 
 
 
+
 const WORKER_URL='https://lfc-fixtures.duff13.workers.dev';
 const CACHE_KEY='lfc_ics_v12';
 const RESULTS_KEY='lfc_results_override';
@@ -723,7 +724,7 @@ const BADGES = {
   'wolverhampton wanderers': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
   'wolves': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
   'workington': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjQ0MwMDAwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGRkZGRkYiPldBRkM8L3RleHQ+PC9zdmc+',
-  'wrexham': 'https://upload.wikimedia.org/wikipedia/en/c/c4/Wrexham_AFC_crest.svg',
+  'wrexham': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj4KICA8cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjQ0MwMDAwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxwYXRoIGQ9Ik01MCAxMiBMODIgMjMgTDgyIDY0IFE4MiA4OCA1MCAxMDIgUTE4IDg4IDE4IDY0IEwxOCAyMyBaIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjQiLz4KICA8dGV4dCB4PSI1MCIgeT0iNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjRkZGRkZGIj5XUkVYPC90ZXh0PgogIDx0ZXh0IHg9IjUwIiB5PSI2NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGRkZGRkYiPkhBTTwvdGV4dD4KICA8dGV4dCB4PSI1MCIgeT0iODQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiNGRkZGRkYiIGZvbnQtd2VpZ2h0PSI2MDAiPkFGQzwvdGV4dD4KPC9zdmc+',
   'wycombe': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Wycombe_Wanderers_FC_logo.svg',
   'wycombe wanderers': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Wycombe_Wanderers_FC_logo.svg',
   'yeovil': 'https://upload.wikimedia.org/wikipedia/en/5/5e/Yeovil_Town_FC.svg',
@@ -1187,6 +1188,7 @@ function buildHero(f) {
     '<a class="action-btn" href="'+buildICS(f)+'" download="lfc-fixture.ics">\uD83C\uDF4E Apple Cal</a>' +
     '<button class="action-btn" onclick=\'shareFixture('+fData+')\'>&#8599; Share</button>' +
     '</div></div></div>';
+  return heroCard;
 }
 
 // Fixture card with swipe wrapper
@@ -1597,6 +1599,7 @@ function getAccentClass(n) {
 function pad(n) { return String(n).padStart(2,'0'); }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 // getCompLogo and getClubBadge defined above with COMP_LOGOS and BADGES
+
 
 
 
