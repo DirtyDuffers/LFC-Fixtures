@@ -502,6 +502,15 @@
 <div class="page" id="pageResults">
   <div class="content-wrap">
     <div id="statsStrip"></div>
+    <div class="filter-section" id="resultsFilterSection" style="display:none">
+      <div class="filter-row" id="resultsHARow">
+        <button class="tab active" data-ha="all">All Venues</button>
+        <button class="tab" data-ha="home">🔴 Home</button>
+        <button class="tab" data-ha="away">✈️ Away</button>
+      </div>
+      <div class="filter-row" id="resultsCompRow"></div>
+      <div class="filter-row" id="resultsSeasonRow"></div>
+    </div>
     <div id="resultsContent"></div>
     <div class="app-footer">Built with &#10084;&#65039; by <span>Duffers</span></div>
   </div>
@@ -2296,6 +2305,15 @@ function checkAndSavePlayedFixtures() {
 }
 
 // Results page
+// Results page filter state
+let resultsHA = 'all', resultsComp = 'all', resultsSeason = 'all';
+
+function getSeason(date) {
+  const y = date.getFullYear(), m = date.getMonth();
+  const sy = m >= 7 ? y : y - 1;
+  return sy + '/' + String(sy + 1).slice(2);
+}
+
 function renderResults() {
   const el = $id('resultsContent');
   if (!allPast.length) {
@@ -2304,54 +2322,132 @@ function renderResults() {
     return;
   }
 
-  // Season stats
-  const overrides = JSON.parse(localStorage.getItem(RESULTS_KEY)||'{}');
-  let w=0,d=0,l=0,gf=0,ga=0;
-  allPast.forEach(f => {
-    const key = f.opponent.toLowerCase();
-    const extra = overrides[key]||[];
-    // Try to find a result for this specific match from overrides
-    const matchResult = extra.find(r => r.matchDate === f.start.toISOString().slice(0,10));
-    if (matchResult) {
-      const [lg,og] = matchResult.s.split('-').map(Number);
-      gf+=lg; ga+=og;
-      if(lg>og) w++; else if(lg<og) l++; else d++;
-    }
+  const sorted = [...allPast].sort((a,b) => b.start - a.start);
+
+  // Build filter options from full unfiltered set
+  const comps = [...new Set(sorted.map(f => f.competition).filter(Boolean))].sort();
+  const seasons = [...new Set(sorted.map(f => getSeason(f.start instanceof Date ? f.start : new Date(f.start))))];
+
+  // Show filter section
+  const filterSection = $id('resultsFilterSection');
+  if (filterSection) filterSection.style.display = '';
+
+  // Comp row — build once
+  const compRow = $id('resultsCompRow');
+  if (compRow && !compRow._wired) {
+    compRow._wired = true;
+    compRow.innerHTML = '<button class="tab active" data-rcomp="all">All Comps</button>';
+    comps.forEach(c => {
+      const logo = getCompLogo(c);
+      const btn = document.createElement('button');
+      btn.className = 'tab'; btn.dataset.rcomp = c;
+      btn.innerHTML = (logo ? '<img src="'+logo+'" alt="" onerror="this.style.display=\'none\'"/>' : '') + compShort(c);
+      compRow.appendChild(btn);
+    });
+    compRow.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', () => {
+        if (navigator.vibrate) navigator.vibrate(8);
+        compRow.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active'); resultsComp = t.dataset.rcomp; renderResults();
+      });
+    });
+  }
+
+  // Season row — build once
+  const seasonRow = $id('resultsSeasonRow');
+  if (seasonRow && !seasonRow._wired) {
+    seasonRow._wired = true;
+    seasonRow.innerHTML = '<button class="tab active" data-rseason="all">All Seasons</button>';
+    seasons.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'tab'; btn.dataset.rseason = s;
+      btn.textContent = s;
+      seasonRow.appendChild(btn);
+    });
+    seasonRow.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', () => {
+        if (navigator.vibrate) navigator.vibrate(8);
+        seasonRow.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active'); resultsSeason = t.dataset.rseason; renderResults();
+      });
+    });
+  }
+
+  // HA row — wire once
+  const haRow = $id('resultsHARow');
+  if (haRow && !haRow._wired) {
+    haRow._wired = true;
+    haRow.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', () => {
+        if (navigator.vibrate) navigator.vibrate(8);
+        haRow.querySelectorAll('.tab').forEach(x => x.classList.remove('active','active-home','active-away'));
+        if (t.dataset.ha === 'home') t.classList.add('active-home');
+        else if (t.dataset.ha === 'away') t.classList.add('active-away');
+        else t.classList.add('active');
+        resultsHA = t.dataset.ha; renderResults();
+      });
+    });
+  }
+
+  // Apply filters
+  const list = sorted.filter(f => {
+    const d = f.start instanceof Date ? f.start : new Date(f.start);
+    if (resultsHA === 'home' && f.isHome !== true) return false;
+    if (resultsHA === 'away' && f.isHome !== false) return false;
+    if (resultsComp !== 'all' && f.competition !== resultsComp) return false;
+    if (resultsSeason !== 'all' && getSeason(d) !== resultsSeason) return false;
+    return true;
   });
-  const played=w+d+l;
+
+  // Stats from filtered list
+  let w=0,d=0,l=0;
+  list.forEach(f => {
+    const r = f.result || (() => {
+      const h2h = getH2H(f.opponent)||[];
+      const iso = (f.start instanceof Date ? f.start : new Date(f.start)).toISOString().slice(0,10);
+      const found = h2h.find(x => x.iso === iso);
+      return found ? found.r : null;
+    })();
+    if (r==='W') w++; else if (r==='L') l++; else if (r==='D') d++;
+  });
   $id('statsStrip').innerHTML = '<div class="stats-strip">' +
-    '<div class="stat-item"><div class="stat-num">'+(played||allPast.length)+'</div><div class="stat-label">Played</div></div>' +
-    (played?'<div class="stat-item"><div class="stat-num green">'+w+'</div><div class="stat-label">Won</div></div>' +
+    '<div class="stat-item"><div class="stat-num">'+list.length+'</div><div class="stat-label">Played</div></div>' +
+    '<div class="stat-item"><div class="stat-num green">'+w+'</div><div class="stat-label">Won</div></div>' +
     '<div class="stat-item"><div class="stat-num gold">'+d+'</div><div class="stat-label">Drawn</div></div>' +
-    '<div class="stat-item"><div class="stat-num red">'+l+'</div><div class="stat-label">Lost</div></div>':
-    '<div class="stat-item"><div class="stat-num">'+(allPast.filter(f=>f.isHome===true).length)+'</div><div class="stat-label">Home</div></div>' +
-    '<div class="stat-item"><div class="stat-num">'+(allPast.filter(f=>f.isHome===false).length)+'</div><div class="stat-label">Away</div></div>') +
+    '<div class="stat-item"><div class="stat-num red">'+l+'</div><div class="stat-label">Lost</div></div>' +
     '</div>';
 
+  if (!list.length) {
+    el.innerHTML = '<div class="state-view"><div class="state-icon">\uD83D\uDD0D</div><div class="state-title">No Results</div><div class="state-msg">No matches match the selected filters.</div></div>';
+    return;
+  }
+
+  // Group by month — newest first
   let html = '<div class="fixtures-section">';
-  const byMonth={};
-  allPast.forEach(f => {
-    const k=f.start.getFullYear()+'-'+String(f.start.getMonth()+1).padStart(2,'0');
+  const byMonth = {};
+  list.forEach(f => {
+    const ds = f.start instanceof Date ? f.start : new Date(f.start);
+    const k = ds.getFullYear()+'-'+String(ds.getMonth()+1).padStart(2,'0');
     (byMonth[k]=byMonth[k]||[]).push(f);
   });
   Object.entries(byMonth).forEach(([k,fixtures]) => {
-    const [y,m]=k.split('-');
-    const label=new Date(+y,+m-1).toLocaleString('en-GB',{month:'long',year:'numeric'}).toUpperCase();
+    const [y,m] = k.split('-');
+    const label = new Date(+y,+m-1).toLocaleString('en-GB',{month:'long',year:'numeric'}).toUpperCase();
     html += '<div class="month-group"><div class="month-header"><span>'+label+'</span><span class="month-count">'+fixtures.length+'</span></div>';
     fixtures.forEach(f => {
-      const d=f.start, ob=getClubBadge(f.opponent);
+      const ds = f.start instanceof Date ? f.start : new Date(f.start);
+      const ob = getClubBadge(f.opponent);
       const cCls=getCompClass(f.competition), cLogo=getCompLogo(f.competition);
       const accentCls=getAccentClass(f.competition);
       const haSmall=f.isHome===true?'home':f.isHome===false?'away':'neutral';
-      // Use score directly from fixture if available (historical data), else H2H lookup
-      const h2h = getH2H(f.opponent)||[];
-      const matchISO = f.start.toISOString().slice(0,10);
-      const found = h2h.find(r => r.iso === matchISO);
-      const scoreDisplay = f.score || (found ? found.s : 'TBD');
-      const resultLetter = f.result || (found ? found.r : null);
-      const resultCls = resultLetter ? (resultLetter==='W'?'win':resultLetter==='L'?'loss':'draw') : 'tbd';
+      const h2h=getH2H(f.opponent)||[];
+      const matchISO=ds.toISOString().slice(0,10);
+      const found=h2h.find(r=>r.iso===matchISO);
+      const scoreDisplay=f.score||(found?found.s:'TBD');
+      const resultLetter=f.result||(found?found.r:null);
+      const resultCls=resultLetter?(resultLetter==='W'?'win':resultLetter==='L'?'loss':'draw'):'tbd';
       html += '<div class="result-card"><div class="fixture-accent '+accentCls+'"></div><div class="result-inner">' +
-        '<div class="fixture-date-col"><div class="fixture-day">'+d.getDate()+'</div><div class="fixture-dow">'+d.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase()+'</div></div>' +
+        '<div class="fixture-date-col"><div class="fixture-day">'+ds.getDate()+'</div><div class="fixture-dow">'+ds.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase()+'</div></div>' +
         '<div class="fixture-divider"></div>' +
         '<div class="fixture-main"><div class="fixture-opponent">' +
         (ob?'<img class="opp-badge" src="'+ob+'" alt="'+esc(f.opponent)+'" onerror="this.style.display=\'none\'"/>':'') +
