@@ -1935,11 +1935,14 @@ async function fetchICS(silent) {
 
 // ICS Parser
 function mergeHistorical(icsPast) {
+  const now = new Date();
   // Build set of existing dates+opponents to avoid duplicates
   const existing = new Set(icsPast.map(f => {
     const d = f.start instanceof Date ? f.start : new Date(f.start);
     return d.toISOString().slice(0,10) + '|' + (f.opponent||'').toLowerCase().trim();
   }));
+
+  // Pull in HIST_RESULTS (deep historical data)
   const hist = HIST_RESULTS
     .map(r => ({
       ...r,
@@ -1952,10 +1955,43 @@ function mergeHistorical(icsPast) {
       summary: r.summary
     }))
     .filter(r => {
+      if (r.start >= now) return false;
       const key = r.start.toISOString().slice(0,10) + '|' + (r.opponent||'').toLowerCase().trim();
-      return !existing.has(key);
+      if (existing.has(key)) return false;
+      existing.add(key);
+      return true;
     });
-  const merged = [...icsPast, ...hist];
+
+  // Pull in H2H_DATA results (PL era + cups for specific opponents)
+  const h2hFlat = [];
+  for (const entry of Object.values(H2H_DATA)) {
+    for (const r of entry.results) {
+      const d = new Date(r.iso + 'T12:00:00');
+      if (d >= now) continue;
+      const oppLower = entry.name.toLowerCase().trim();
+      const key = r.iso + '|' + oppLower;
+      if (existing.has(key)) continue;
+      existing.add(key);
+      const isHome = r.v === 'H';
+      h2hFlat.push({
+        start: d,
+        end: null,
+        uid: null,
+        allDay: false,
+        opponent: entry.name,
+        isHome,
+        score: r.s,
+        result: r.r,
+        competition: r.c || '',
+        venue: isHome ? 'Anfield' : '',
+        location: isHome ? 'Anfield' : '',
+        description: (r.c || '') + (r.s ? '\nScore: '+r.s+' ('+r.r+')' : ''),
+        summary: isHome ? 'Liverpool FC vs '+entry.name : entry.name+' vs Liverpool FC'
+      });
+    }
+  }
+
+  const merged = [...icsPast, ...hist, ...h2hFlat];
   merged.sort((a,b) => b.start - a.start);
   return merged;
 }
