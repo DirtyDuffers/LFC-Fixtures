@@ -285,6 +285,67 @@
     .app-footer{text-align:center;padding:24px 20px 8px;font-size:11px;color:var(--muted2);line-height:1.8}
     .app-footer span{color:var(--red);font-weight:600}
     [data-theme="light"] .app-footer span{color:var(--teal)}
+    /* ── Change Alert Banner ── */
+    .change-banner{display:none;align-items:flex-start;gap:10px;background:var(--teal);color:#fff;padding:10px 16px;font-size:12px;line-height:1.5;position:relative;cursor:pointer}
+    .change-banner.show{display:flex}
+    .change-banner-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+    .change-banner-text{flex:1}
+    .change-banner-text strong{display:block;font-size:12px;margin-bottom:2px}
+    .change-banner-close{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;opacity:.8}
+    .change-banner-close:hover{opacity:1}
+    .change-banner-link{font-size:11px;opacity:.85;text-decoration:underline;margin-top:2px;display:inline-block}
+    /* ── Change Log page ── */
+    .changelog-wrap{padding:16px 20px 0}
+    .changelog-section-title{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+    [data-theme="light"] .changelog-section-title{color:var(--teal)}
+    .changelog-empty{text-align:center;color:var(--muted);font-size:13px;padding:40px 0}
+    .changelog-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+    .changelog-item-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+    .changelog-item-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.5px}
+    .changelog-item-badge.new{background:rgba(61,186,120,.15);color:#3dba78;border:1px solid rgba(61,186,120,.3)}
+    .changelog-item-badge.changed{background:rgba(246,235,97,.15);color:#b8a800;border:1px solid rgba(246,235,97,.3)}
+    [data-theme="light"] .changelog-item-badge.changed{color:#8a7a00}
+    .changelog-item-time{font-size:10px;color:var(--muted2);margin-left:auto}
+    .changelog-item-title{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px}
+    .changelog-item-detail{font-size:11px;color:var(--muted);line-height:1.5}
+    .changelog-clear-btn{display:block;width:100%;background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px;transition:all .15s}
+    .changelog-clear-btn:hover{border-color:var(--red);color:var(--red)}
+    /* ── On This Day page ── */
+    .otd-wrap{padding:16px 20px 0}
+    .otd-date{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;color:var(--white);margin-bottom:2px}
+    .otd-subtitle{font-size:12px;color:var(--muted);margin-bottom:16px}
+    .otd-empty{text-align:center;color:var(--muted);font-size:13px;padding:40px 0}
+    .otd-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+    .otd-year{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--teal);width:44px;flex-shrink:0;text-align:center}
+    .otd-info{flex:1;min-width:0}
+    .otd-opponent{font-size:13px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .otd-meta{font-size:11px;color:var(--muted);margin-top:2px}
+    .otd-score{font-size:16px;font-weight:800;flex-shrink:0;text-align:right}
+    /* ── About Page ── */
+    .about-wrap{padding:20px 20px 0}
+    .about-hero{text-align:center;padding:24px 0 20px}
+    .about-crest{width:64px;height:64px;object-fit:contain;margin-bottom:12px}
+    .about-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--white);line-height:1}
+    .about-subtitle{font-size:12px;color:var(--muted);margin-top:4px}
+    .about-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+    .about-card-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+    .about-card p{font-size:13px;color:var(--muted);line-height:1.65;margin:0 0 8px}
+    .about-card p:last-child{margin-bottom:0}
+    .about-card strong{color:var(--white)}
+    .about-step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+    .about-step:last-child{margin-bottom:0}
+    .about-step-num{background:var(--red);color:#fff;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    [data-theme="light"] .about-step-num{background:var(--teal)}
+    .about-step-text{font-size:13px;color:var(--muted);line-height:1.55}
+    .about-step-text strong{color:var(--white)}
+    .about-bmac{display:flex;align-items:center;justify-content:center;gap:10px;background:#FFDD00;border:none;border-radius:12px;padding:13px 20px;width:100%;cursor:pointer;font-size:14px;font-weight:700;color:#000;font-family:'Inter',sans-serif;text-decoration:none;box-sizing:border-box;transition:opacity .15s;margin-bottom:4px}
+    .about-bmac:hover{opacity:.88}
+    .about-version{text-align:center;font-size:11px;color:var(--muted2);padding:12px 0 4px}
+    /* Long-press refresh ring */
+    .refresh-ring{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;z-index:999;pointer-events:none;opacity:0;transition:opacity .2s}
+    .refresh-ring svg{width:80px;height:80px;transform:rotate(-90deg)}
+    .refresh-ring circle{fill:none;stroke:var(--teal);stroke-width:5;stroke-dasharray:220;stroke-dashoffset:220;transition:stroke-dashoffset linear}
+    .refresh-ring.show{opacity:1}
     /* ── Away Planner ── */
     .planner-wrap{padding:16px 20px 0}
     .planner-section-title{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
@@ -385,7 +446,41 @@
   <div class="ptr-spinner" id="ptrSpinner"></div>
   <span id="ptrText">Pull down to refresh</span>
 </div>
-<div class="page active" id="pageFixtures"><div class="content-wrap"><div id="fixturesContent"></div></div></div>
+<div class="page active" id="pageFixtures">
+  <div class="change-banner" id="changeBanner">
+    <span class="change-banner-icon">🔔</span>
+    <div class="change-banner-text">
+      <strong id="changeBannerTitle"></strong>
+      <span id="changeBannerDetail"></span>
+      <span class="change-banner-link" onclick="goChangelog()">View all changes →</span>
+    </div>
+    <button class="change-banner-close" onclick="dismissBanner()">&#10005;</button>
+  </div>
+  <div class="content-wrap"><div id="fixturesContent"></div></div>
+</div>
+
+<!-- Change Log sub-page -->
+<div class="page" id="pageChangelog">
+  <div class="content-wrap">
+    <div class="changelog-wrap">
+      <button class="planner-back-btn" onclick="showPage('pageFixtures')">&#8592; Back to Fixtures</button>
+      <div class="changelog-section-title">Fixture Changes</div>
+      <div id="changelogList"></div>
+      <button class="changelog-clear-btn" onclick="clearChangelog()">Clear change history</button>
+    </div>
+  </div>
+</div>
+
+<!-- On This Day page -->
+<div class="page" id="pageOTD">
+  <div class="content-wrap">
+    <div class="otd-wrap">
+      <div class="otd-date" id="otdDate"></div>
+      <div class="otd-subtitle">Past results on this day in history</div>
+      <div id="otdList"></div>
+    </div>
+  </div>
+</div>
 <div class="page" id="pageCalendar">
   <div class="content-wrap">
     <div class="cal-nav">
@@ -475,15 +570,82 @@
         <button class="planner-filter-btn" data-ha="home" onclick="setPlannerFilter('home')">🔴 Home</button>
         <button class="planner-filter-btn" data-ha="away" onclick="setPlannerFilter('away')">✈️ Away</button>
       </div>
+      <div class="planner-filter-row" id="plannerCompRow" style="flex-wrap:wrap;gap:6px 6px"></div>
       <div id="plannerResults"></div>
     </div>
   </div>
+</div>
+<!-- About page -->
+<div class="page" id="pageAbout">
+  <div class="content-wrap">
+    <div class="about-wrap">
+      <div class="about-hero">
+        <img class="about-crest" id="aboutCrest" src="" alt="LFC"/>
+        <div class="about-title">LFC Fixtures</div>
+        <div class="about-subtitle">Your Liverpool FC companion</div>
+      </div>
+
+      <!-- Buy Me a Coffee -->
+      <a class="about-bmac" href="https://buymeacoffee.com/duffers" target="_blank" rel="noopener">
+        ☕ Buy Me a Coffee
+      </a>
+
+      <!-- About the app -->
+      <div class="about-card">
+        <div class="about-card-title">About</div>
+        <p>Built by a Liverpool supporter, for Liverpool supporters. The idea was simple — have a fast, clean way to check fixtures, results and head-to-head records without navigating a full website or downloading a separate calendar app.</p>
+        <p>Search opponents, browse by competition, plan trips around away games and export matches straight to your calendar — all in one place.</p>
+      </div>
+
+      <!-- Author -->
+      <div class="about-card">
+        <div class="about-card-title">Author</div>
+        <p><strong>Duffers</strong></p>
+        <p>A Liverpool fan who builds small apps to scratch everyday itches. LFC Fixtures is one of several tools built to make following the club that little bit easier.</p>
+      </div>
+
+      <!-- Add to Home Screen -->
+      <div class="about-card">
+        <div class="about-card-title">Add to Home Screen</div>
+        <p>Install this app on your device for the full experience — no App Store needed.</p>
+        <div class="about-step">
+          <div class="about-step-num">1</div>
+          <div class="about-step-text"><strong>iPhone / iPad (Safari)</strong> — tap the <strong>Share</strong> button (box with arrow) at the bottom of the screen, then choose <strong>Add to Home Screen</strong>.</div>
+        </div>
+        <div class="about-step">
+          <div class="about-step-num">2</div>
+          <div class="about-step-text"><strong>Android (Chrome)</strong> — tap the <strong>three-dot menu</strong> in the top right, then choose <strong>Add to Home Screen</strong> or <strong>Install App</strong>.</div>
+        </div>
+        <div class="about-step">
+          <div class="about-step-num">3</div>
+          <div class="about-step-text"><strong>Desktop (Chrome / Edge)</strong> — look for the <strong>install icon</strong> (⊕) in the address bar and click it.</div>
+        </div>
+        <p style="margin-top:10px">Once installed, the app opens full-screen like a native app and updates automatically whenever a new version is released.</p>
+      </div>
+
+      <!-- Refreshing the app -->
+      <div class="about-card">
+        <div class="about-card-title">Refreshing the App</div>
+        <p><strong>Normal tap</strong> on the ↺ button in the header re-fetches the latest fixture data.</p>
+        <p><strong>Long-press (hold for 2 seconds)</strong> on the ↺ button does a full app refresh — clears the cached version and reloads the latest code from the server. Useful if an update doesn't seem to have come through.</p>
+        <p>Your Away Planner trips and preferences are stored separately and are <strong>never</strong> affected by a refresh.</p>
+      </div>
+
+      <div class="about-version" id="aboutVersion">Version 1.0</div>
+    </div>
+  </div>
+</div>
+<!-- Long-press refresh ring overlay -->
+<div class="refresh-ring" id="refreshRing">
+  <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="35" id="refreshRingCircle"/></svg>
 </div>
 <nav class="bottom-nav">
   <button class="nav-item active" data-page="pageFixtures"><span class="nav-icon">&#128203;</span>Fixtures</button>
   <button class="nav-item" data-page="pageCalendar"><span class="nav-icon">&#128197;</span>Calendar</button>
   <button class="nav-item" data-page="pageResults"><span class="nav-icon">&#127942;</span>Results</button>
+  <button class="nav-item" data-page="pageOTD"><span class="nav-icon">&#128336;</span>This Day</button>
   <button class="nav-item" data-page="pagePlanner"><span class="nav-icon">&#9992;&#65039;</span>Away</button>
+  <button class="nav-item" data-page="pageAbout"><span class="nav-icon">&#8505;&#65039;</span>About</button>
 </nav>
 <div class="toast" id="toast"></div>
 <script>
@@ -1152,10 +1314,12 @@ function plannerDelete(i) {
 }
 let plannerResultsData = [];
 let plannerHAFilter = 'all';
+let plannerCompFilter = 'all';
 
 function setPlannerFilter(ha) {
+  if (navigator.vibrate) navigator.vibrate(8);
   plannerHAFilter = ha;
-  document.querySelectorAll('.planner-filter-btn').forEach(b => {
+  document.querySelectorAll('.planner-filter-btn[data-ha]').forEach(b => {
     b.classList.remove('active','active-home','active-away');
   });
   const btn = document.querySelector(`.planner-filter-btn[data-ha="${ha}"]`);
@@ -1167,23 +1331,50 @@ function setPlannerFilter(ha) {
   plannerRenderResults();
 }
 
+function setPlannerComp(comp) {
+  if (navigator.vibrate) navigator.vibrate(8);
+  plannerCompFilter = comp;
+  document.querySelectorAll('.planner-filter-btn[data-comp]').forEach(b => {
+    b.classList.remove('active');
+  });
+  const btn = document.querySelector(`.planner-filter-btn[data-comp="${CSS.escape(comp)}"]`);
+  if (btn) btn.classList.add('active');
+  plannerRenderResults();
+}
+
+function plannerBuildCompRow() {
+  const row = $id('plannerCompRow');
+  if (!row) return;
+  // Gather unique competitions from all hits
+  const comps = new Set();
+  plannerResultsData.forEach(e => e.hits.forEach(f => { if (f.competition) comps.add(f.competition); }));
+  if (comps.size <= 1) { row.innerHTML = ''; return; } // no need for filter if only one comp
+  const allBtn = `<button class="planner-filter-btn active" data-comp="all" onclick="setPlannerComp('all')">All comps</button>`;
+  const compBtns = [...comps].sort().map(c =>
+    `<button class="planner-filter-btn" data-comp="${esc(c)}" onclick="setPlannerComp('${esc(c)}')">${esc(c)}</button>`
+  ).join('');
+  row.innerHTML = allBtn + compBtns;
+  row.style.marginBottom = '12px';
+}
+
 function plannerRenderResults() {
   const el = $id('plannerResults');
   if (!el) return;
-  const filter = plannerHAFilter;
+  const haFilter = plannerHAFilter;
+  const compFilter = plannerCompFilter;
   const filtered = plannerResultsData.map(e => ({
     ...e,
     hits: e.hits.filter(f => {
-      if (filter === 'all') return true;
-      if (filter === 'home') return f.isHome === true;
-      return f.isHome === false;
+      const haOk = haFilter === 'all' || (haFilter === 'home' ? f.isHome === true : f.isHome === false);
+      const compOk = compFilter === 'all' || f.competition === compFilter;
+      return haOk && compOk;
     })
   }));
   const totalFiltered = filtered.reduce((s,e) => s + e.hits.length, 0);
   if (totalFiltered === 0) {
-    const msg = filter === 'all'
+    const msg = haFilter === 'all' && compFilter === 'all'
       ? "No fixtures fall within your saved dates. You won't miss a thing!"
-      : `No ${filter} matches during your trips.`;
+      : `No matches for the selected filters.`;
     el.innerHTML = `<div class="planner-empty">${msg}</div>`;
     return;
   }
@@ -1197,16 +1388,17 @@ function plannerRenderResults() {
       <span class="planner-result-count">${count} match${count!==1?'es':''}</span>
     </div>`;
     if (!count) {
-      return `<div class="planner-result-group">${header}<div class="planner-result-none">No ${filter === 'all' ? '' : filter + ' '}matches during this trip &#127881;</div></div>`;
+      return `<div class="planner-result-group">${header}<div class="planner-result-none">No matches for this filter &#127881;</div></div>`;
     }
     const rows = e.hits.map(f => {
       const d = new Date(f.start);
       const dateStr = d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+      const timeStr = d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       const opp = f.opponent || f.summary || 'Unknown';
       const ha = f.isHome ? '🔴 H' : '✈️ A';
       const comp = f.competition || '';
       return `<div class="planner-result-fixture">
-        <span class="planner-result-fixture-date">${dateStr}</span>
+        <span class="planner-result-fixture-date">${dateStr}<br/><span style="font-size:10px">${timeStr}</span></span>
         <span class="planner-result-fixture-name">${ha} ${esc(opp)}</span>
         <span class="planner-result-fixture-comp">${esc(comp)}</span>
       </div>`;
@@ -1228,12 +1420,15 @@ function plannerCheck() {
     }).sort((a,b) => new Date(a.start) - new Date(b.start));
     return { ...e, hits };
   });
+  // Reset filters
   plannerHAFilter = 'all';
-  document.querySelectorAll('.planner-filter-btn').forEach(b => {
+  plannerCompFilter = 'all';
+  document.querySelectorAll('.planner-filter-btn[data-ha]').forEach(b => {
     b.classList.remove('active','active-home','active-away');
   });
   const allBtn = document.querySelector('.planner-filter-btn[data-ha="all"]');
   if (allBtn) allBtn.classList.add('active');
+  plannerBuildCompRow();
   plannerRenderResults();
   showPage('pagePlannerResults');
 }
@@ -1244,12 +1439,173 @@ function showPage(id) {
   const navBtn = document.querySelector(`.nav-item[data-page="${id}"]`);
   if (navBtn) navBtn.classList.add('active');
   else {
-    // sub-page: keep parent nav item highlighted
     if (id === 'pagePlannerResults') document.querySelector('.nav-item[data-page="pagePlanner"]').classList.add('active');
+    if (id === 'pageChangelog') document.querySelector('.nav-item[data-page="pageFixtures"]').classList.add('active');
   }
+  if (id === 'pageOTD') renderOTD();
+  if (id === 'pageChangelog') renderChangelog();
   window.scrollTo(0,0);
 }
+function goChangelog() { dismissBanner(); showPage('pageChangelog'); }
 // init planner when switching to planner tab - handled by main nav loop below
+
+// ── Change Detection ─────────────────────────────────────────────────────────
+const CHANGE_LOG_KEY = 'lfc_changelog_v1';
+const CHANGE_SEEN_KEY = 'lfc_changelog_seen_v1';
+
+function fixtureFingerprint(f) {
+  // A string that changes if key details change
+  return [f.uid||f.summary, f.start instanceof Date ? f.start.toISOString() : f.start, f.venue||''].join('|');
+}
+
+function detectChanges(newFixtures) {
+  // Load previous snapshot
+  let prev = [];
+  try { prev = JSON.parse(localStorage.getItem('lfc_snapshot_v1')) || []; } catch(e) {}
+  const prevMap = {};
+  prev.forEach(f => { if (f.uid||f.summary) prevMap[f.uid||f.summary] = f; });
+
+  const changes = [];
+  const now = new Date().toISOString();
+
+  newFixtures.forEach(f => {
+    const key = f.uid || f.summary;
+    const old = prevMap[key];
+    if (!old) {
+      changes.push({ type:'new', title: f.opponent || f.summary, detail: 'New fixture added: ' + formatShort(f.start) + (f.competition ? ' · ' + f.competition : ''), ts: now });
+    } else {
+      const oldStart = new Date(old.start);
+      const newStart = f.start instanceof Date ? f.start : new Date(f.start);
+      if (Math.abs(oldStart - newStart) > 60000) {
+        changes.push({ type:'changed', title: f.opponent || f.summary, detail: 'Date/time changed from ' + formatShort(oldStart) + ' to ' + formatShort(newStart), ts: now });
+      }
+    }
+  });
+
+  if (changes.length) {
+    // Load existing log and prepend
+    let log = [];
+    try { log = JSON.parse(localStorage.getItem(CHANGE_LOG_KEY)) || []; } catch(e) {}
+    log = [...changes, ...log].slice(0, 50); // keep last 50
+    localStorage.setItem(CHANGE_LOG_KEY, JSON.stringify(log));
+    // Show banner for the first/most recent change
+    showChangeBanner(changes[0]);
+    localStorage.removeItem(CHANGE_SEEN_KEY);
+  }
+
+  // Save new snapshot
+  localStorage.setItem('lfc_snapshot_v1', JSON.stringify(
+    newFixtures.map(f => ({ uid: f.uid||f.summary, summary: f.summary, start: f.start instanceof Date ? f.start.toISOString() : f.start, venue: f.venue||'' }))
+  ));
+}
+
+function formatShort(d) {
+  const dt = d instanceof Date ? d : new Date(d);
+  return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}) + ' ' +
+    dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+
+function showChangeBanner(change) {
+  const seen = localStorage.getItem(CHANGE_SEEN_KEY);
+  if (seen) return;
+  const banner = $id('changeBanner');
+  $id('changeBannerTitle').textContent = change.type === 'new' ? '🆕 New fixture added' : '📅 Fixture updated';
+  $id('changeBannerDetail').textContent = change.title + ' — ' + change.detail;
+  banner.classList.add('show');
+}
+
+function dismissBanner() {
+  $id('changeBanner').classList.remove('show');
+  localStorage.setItem(CHANGE_SEEN_KEY, '1');
+}
+
+function renderChangelog() {
+  const el = $id('changelogList');
+  if (!el) return;
+  let log = [];
+  try { log = JSON.parse(localStorage.getItem(CHANGE_LOG_KEY)) || []; } catch(e) {}
+  if (!log.length) {
+    el.innerHTML = '<div class="changelog-empty">No changes recorded yet.<br/>Changes are detected each time fixture data is refreshed.</div>';
+    return;
+  }
+  el.innerHTML = log.map(c => {
+    const ts = c.ts ? new Date(c.ts).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+    return `<div class="changelog-item">
+      <div class="changelog-item-header">
+        <span class="changelog-item-badge ${c.type==='new'?'new':'changed'}">${c.type==='new'?'NEW':'CHANGED'}</span>
+        <span class="changelog-item-time">${ts}</span>
+      </div>
+      <div class="changelog-item-title">${esc(c.title)}</div>
+      <div class="changelog-item-detail">${esc(c.detail)}</div>
+    </div>`;
+  }).join('');
+}
+
+function clearChangelog() {
+  if (!confirm('Clear all change history?')) return;
+  localStorage.removeItem(CHANGE_LOG_KEY);
+  localStorage.removeItem(CHANGE_SEEN_KEY);
+  dismissBanner();
+  renderChangelog();
+}
+
+// Hook into fetchICS to run change detection after load
+const _origFetchICS = fetchICS;
+
+// ── On This Day ──────────────────────────────────────────────────────────────
+function renderOTD() {
+  const el = $id('otdList');
+  const dateEl = $id('otdDate');
+  if (!el) return;
+  const now = new Date();
+  const day = now.getDate();
+  const month = now.getMonth();
+  dateEl.textContent = now.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+  const matches = allPast.filter(f => {
+    const d = f.start instanceof Date ? f.start : new Date(f.start);
+    return d.getDate() === day && d.getMonth() === month && d.getFullYear() < now.getFullYear();
+  }).sort((a,b) => {
+    const ay = (a.start instanceof Date ? a.start : new Date(a.start)).getFullYear();
+    const by = (b.start instanceof Date ? b.start : new Date(b.start)).getFullYear();
+    return by - ay; // most recent year first
+  });
+  if (!matches.length) {
+    el.innerHTML = '<div class="otd-empty">No results found for this day in previous years.<br/>Check back as more historical data is added.</div>';
+    return;
+  }
+  el.innerHTML = matches.map(f => {
+    const d = f.start instanceof Date ? f.start : new Date(f.start);
+    const year = d.getFullYear();
+    const ha = f.isHome ? '🔴 H' : '✈️ A';
+    const score = f.score || '';
+    const scoreCol = !score ? 'var(--muted)' :
+      score.includes('W') ? '#3dba78' :
+      score.includes('L') ? '#e42027' : '#F6EB61';
+    const comp = f.competition || '';
+    return `<div class="otd-item">
+      <div class="otd-year">${year}</div>
+      <div class="otd-info">
+        <div class="otd-opponent">${ha} ${esc(f.opponent||f.summary||'Unknown')}</div>
+        <div class="otd-meta">${esc(comp)}</div>
+      </div>
+      <div class="otd-score" style="color:${scoreCol}">${esc(score)}</div>
+    </div>`;
+  }).join('');
+}
+
+// Run change detection after each fresh ICS fetch
+const _buildUI_orig = buildUI;
+function buildUI() {
+  detectChanges(allFixtures);
+  _buildUI_orig();
+}
+
+// Show banner on load if unseen changes exist
+(function() {
+  let log = [];
+  try { log = JSON.parse(localStorage.getItem(CHANGE_LOG_KEY)) || []; } catch(e) {}
+  if (log.length && !localStorage.getItem(CHANGE_SEEN_KEY)) showChangeBanner(log[0]);
+})();
 
 // Offline
 function updateOnline() { $id('offlineBanner').classList.toggle('show', !navigator.onLine); }
@@ -1272,6 +1628,7 @@ document.querySelectorAll('.nav-item').forEach(btn => {
     $id('searchWrap').classList.toggle('visible', isFix && searchVisible);
     if (btn.dataset.page === 'pageCalendar') renderCalendar();
     if (btn.dataset.page === 'pagePlanner') plannerRender();
+    if (btn.dataset.page === 'pageOTD') renderOTD();
     if (btn.dataset.page === 'pageResults')  renderResults();
   });
 });
@@ -1317,6 +1674,7 @@ document.addEventListener('touchend', () => {
 // Home/Away filter
 $id('haRow').querySelectorAll('.tab').forEach(t => {
   t.addEventListener('click', () => {
+    if (navigator.vibrate) navigator.vibrate(8);
     $id('haRow').querySelectorAll('.tab').forEach(x => x.classList.remove('active','active-home','active-away'));
     if (t.dataset.ha==='home') t.classList.add('active-home');
     else if (t.dataset.ha==='away') t.classList.add('active-away');
@@ -1337,7 +1695,74 @@ if (cached) {
   } catch(e) { loadFixtures(); }
 } else { showSkeleton(); loadFixtures(); }
 
-$id('refreshBtn').addEventListener('click', loadFixtures);
+// ── Refresh button: tap = reload fixtures, long-press = hard cache clear ────
+(function() {
+  const btn = $id('refreshBtn');
+  const ring = $id('refreshRing');
+  const circle = $id('refreshRingCircle');
+  const HOLD_MS = 2000;
+  const circumference = 2 * Math.PI * 35; // r=35
+  let holdTimer = null;
+  let startTime = null;
+  let rafId = null;
+
+  function startHold(e) {
+    if (e.button !== undefined && e.button !== 0) return;
+    startTime = Date.now();
+    ring.classList.add('show');
+    circle.style.transition = `stroke-dashoffset ${HOLD_MS}ms linear`;
+    circle.style.strokeDashoffset = '0';
+    holdTimer = setTimeout(doHardRefresh, HOLD_MS);
+  }
+  function cancelHold() {
+    clearTimeout(holdTimer);
+    holdTimer = null;
+    ring.classList.remove('show');
+    circle.style.transition = 'none';
+    circle.style.strokeDashoffset = circumference;
+  }
+  async function doHardRefresh() {
+    ring.classList.remove('show');
+    if (navigator.vibrate) navigator.vibrate([60,40,60]);
+    showToast('Updating app…');
+    // Clear all caches
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+    // Unregister service workers
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+    }
+    // Clear ICS cache from localStorage (but not planner data)
+    localStorage.removeItem(CACHE_KEY);
+    setTimeout(() => location.reload(true), 600);
+  }
+
+  btn.addEventListener('click', loadFixtures);
+  btn.addEventListener('pointerdown', startHold);
+  btn.addEventListener('pointerup', cancelHold);
+  btn.addEventListener('pointerleave', cancelHold);
+  btn.addEventListener('contextmenu', e => e.preventDefault());
+})();
+
+// ── About page init ──────────────────────────────────────────────────────────
+(function() {
+  // Mirror crest image on About page
+  function syncAboutCrest() {
+    const src = $id('headerCrest') ? $id('headerCrest').src : '';
+    const el = $id('aboutCrest');
+    if (el && src) el.src = src;
+  }
+  // Version derived from cache key
+  const verMatch = CACHE_KEY.match(/v(\d+)/);
+  const verEl = $id('aboutVersion');
+  if (verEl && verMatch) verEl.textContent = 'Version ' + verMatch[1];
+  // Sync crest whenever About tab is shown
+  document.querySelector('.nav-item[data-page="pageAbout"]').addEventListener('click', syncAboutCrest);
+  syncAboutCrest();
+})();
 
 function showSkeleton() {
   $id('fixturesContent').innerHTML = '<div class="skeleton-wrap"><div class="skeleton-hero"></div>' +
@@ -1465,6 +1890,7 @@ function buildCompTabs() {
   filterSection.classList.remove('hidden');
   compRow.querySelectorAll('.tab').forEach(t => {
     t.addEventListener('click', () => {
+      if (navigator.vibrate) navigator.vibrate(8);
       compRow.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
       t.classList.add('active'); activeComp=t.dataset.comp; renderFixtures();
     });
