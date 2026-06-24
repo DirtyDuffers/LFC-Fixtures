@@ -710,6 +710,11 @@ const COMP_LOGOS = {
   'inter-cities fairs cup':               'https://upload.wikimedia.org/wikipedia/en/thumb/5/5a/UEFA_Europa_League_logo_and_wordmark.svg/500px-UEFA_Europa_League_logo_and_wordmark.svg.png',
   "uefa cup winners' cup":                'https://upload.wikimedia.org/wikipedia/en/thumb/a/a5/UEFA_Cup_Winners_Cup_logo.svg/500px-UEFA_Cup_Winners_Cup_logo.svg.png',
   'football league first division':       'https://upload.wikimedia.org/wikipedia/en/thumb/a/a9/Football_League_First_Division_logo.svg/500px-Football_League_First_Division_logo.svg.png',
+  'european cup':                         'https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg',
+  'uefa cup':                             'https://upload.wikimedia.org/wikipedia/en/0/04/UEFA_Europa_League_logo_and_wordmark.svg',
+  'conference league':                    'https://upload.wikimedia.org/wikipedia/en/f/f3/UEFA_Europa_Conference_League_logo_2021.svg',
+  'uefa conference league':               'https://upload.wikimedia.org/wikipedia/en/f/f3/UEFA_Europa_Conference_League_logo_2021.svg',
+  'europa league':                        'https://upload.wikimedia.org/wikipedia/en/0/04/UEFA_Europa_League_logo_and_wordmark.svg',
 };
 
 // Fuzzy comp logo lookup — falls back to partial keyword matching
@@ -717,16 +722,17 @@ function getCompLogo(c) {
   if (!c) return null;
   const k = c.toLowerCase().trim();
   if (COMP_LOGOS[k]) return COMP_LOGOS[k];
-  if (k.includes('premier') || k.includes('first division'))  return COMP_LOGOS['premier league'];
-  if (k.includes('champions'))                                 return COMP_LOGOS['champions league'];
-  if (k.includes('europa') || k.includes('fairs cup'))        return COMP_LOGOS['europa league'];
-  if (k.includes('fa cup') || k === 'fa cup')                 return COMP_LOGOS['fa cup'];
+  if (k.includes('premier') || k.includes('first division'))   return COMP_LOGOS['premier league'];
+  if (k.includes('champions') || k.includes('european cup'))   return COMP_LOGOS['european cup'];
+  if (k.includes('conference league'))                          return COMP_LOGOS['conference league'];
+  if (k.includes('europa') || k.includes('fairs cup') || k.includes('uefa cup')) return COMP_LOGOS['europa league'];
+  if (k.includes('fa cup'))                                     return COMP_LOGOS['fa cup'];
   if (k.includes('carabao') || k.includes('efl cup') || k.includes('league cup')) return COMP_LOGOS['carabao cup'];
-  if (k.includes('community shield'))                          return COMP_LOGOS['community shield'];
-  if (k.includes('club world'))                               return COMP_LOGOS['club world cup'];
-  if (k.includes('super cup'))                                return COMP_LOGOS['uefa super cup'];
-  if (k.includes('intercontinental'))                         return COMP_LOGOS['intercontinental cup'];
-  if (k.includes("cup winners"))                              return COMP_LOGOS["uefa cup winners' cup"];
+  if (k.includes('community shield'))                           return COMP_LOGOS['community shield'];
+  if (k.includes('club world'))                                 return COMP_LOGOS['club world cup'];
+  if (k.includes('super cup'))                                  return COMP_LOGOS['uefa super cup'];
+  if (k.includes('intercontinental'))                           return COMP_LOGOS['intercontinental cup'];
+  if (k.includes("cup winners"))                                return COMP_LOGOS["uefa cup winners' cup"];
   return null;
 }
 
@@ -2049,6 +2055,39 @@ function dv(v) {
 function dvDesc(v) {
   return v.replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\n/gi,'\n').replace(/\\\\/g,'\\').trim();
 }
+// Canonicalise competition names from ICS feed to internal standard names.
+// This handles naming variations like "Carabao Cup" vs "EFL Cup" vs "League Cup",
+// "Champions League" vs "UEFA Champions League", etc.
+function normaliseComp(raw) {
+  if (!raw) return raw;
+  const k = raw.toLowerCase().trim();
+  // League Cup variants → EFL Cup
+  if (k.includes('carabao') || k === 'league cup' || k === 'efl cup' ||
+      k.includes('efl carabao') || k.includes('worthington') || k.includes('carling cup') ||
+      k.includes('coca-cola cup') || k.includes('milk cup') || k.includes('rumbelows') ||
+      k.includes('littlewoods cup'))                return 'EFL Cup';
+  // FA Cup variants
+  if (k === 'fa cup' || k === 'the fa cup' ||
+      k.includes('emirates fa cup'))                return 'FA Cup';
+  // Champions League variants
+  if (k === 'champions league' || k === 'cl' ||
+      k.includes('champions league'))               return 'UEFA Champions League';
+  // Europa League variants
+  if (k === 'europa league' || k === 'uel' ||
+      k.includes('europa league') && !k.includes('qualifying'))  return 'UEFA Europa League';
+  if (k.includes('europa league') && k.includes('qualifying'))   return 'UEFA Europa League Qualifying';
+  // Conference League
+  if (k.includes('conference league'))              return 'UEFA Conference League';
+  // Community Shield
+  if (k.includes('community shield'))               return 'FA Community Shield';
+  // Club World Cup
+  if (k.includes('club world cup') || k.includes('club world championship')) return 'FIFA Club World Cup';
+  // Premier League
+  if (k === 'premier league' || k === 'pl' ||
+      k.includes('barclays premier') || k.includes('barclaycard premier')) return 'Premier League';
+  return raw; // unknown — pass through as-is
+}
+
 function enrich(e) {
   const s=e.summary||''; let comp='',home='',away='',isHome=null;
   if (e.description) {
@@ -2063,7 +2102,7 @@ function enrich(e) {
   if (lfc.some(n=>away.toLowerCase().includes(n))) isHome=false;
   const opponent = isHome===true ? away : isHome===false ? home : s;
   const venue = e.location || (isHome===true ? 'Anfield' : '');
-  return {...e, competition:comp, opponent:opponent||s, isHome, round:'', venue};
+  return {...e, competition:normaliseComp(comp), opponent:opponent||s, isHome, round:'', venue};
 }
 
 // Build UI
@@ -2072,7 +2111,7 @@ function buildUI() { buildCompTabs(); renderFixtures(); }
 function buildCompTabs() {
   const counts={};
   allFixtures.forEach(f => { const c=f.competition||'Other'; counts[c]=(counts[c]||0)+1; });
-  const order=['Premier League','UEFA Champions League','UEFA Europa League','FA Cup','EFL Cup','League Cup','Carabao Cup','Club World Cup','FIFA Club World Cup','Community Shield'];
+  const order=['Premier League','UEFA Champions League','UEFA Europa League','UEFA Conference League','FA Cup','EFL Cup','League Cup','Carabao Cup','FA Community Shield','Community Shield','Club World Cup','FIFA Club World Cup','UEFA Super Cup','Intercontinental Cup'];
   const sorted=[...order.filter(c=>counts[c]),...Object.keys(counts).filter(c=>!order.includes(c))];
   const compRow=$id('compRow');
   compRow.innerHTML = '<button class="tab active" data-comp="all">All (' + allFixtures.length + ')</button>';
@@ -2723,23 +2762,42 @@ function buildDaysPill(date) {
 function showToast(msg) { const t=$id('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2400); }
 function compShort(n) {
   const m={
-    'Premier League':'Premier League','UEFA Champions League':'Champions League',
-    'UEFA Champions League qualifying':'UCL Qualifying','UEFA Europa League':'Europa League',
-    'UEFA Europa League Qualifying':'UEL Qualifying','FA Cup':'FA Cup',
-    'EFL Cup':'League Cup','League Cup':'League Cup','Carabao Cup':'League Cup',
-    'Club World Cup':'Club World Cup','FIFA Club World Cup':'Club World Cup',
-    'Community Shield':'Comm. Shield','FA Community Shield':'Comm. Shield',
-    'UEFA Super Cup':'Super Cup','Intercontinental Cup':'Intercont. Cup',
-    "UEFA Cup Winners' Cup":"Cup Winners' Cup",'Inter-Cities Fairs Cup':'Fairs Cup',
-    'Football League First Division':'First Division'
+    'Premier League':'Premier League',
+    'UEFA Champions League':'Champions League',
+    'Champions League':'Champions League',
+    'UEFA Champions League qualifying':'UCL Qualifying',
+    'UEFA Europa League':'Europa League',
+    'Europa League':'Europa League',
+    'UEFA Europa League Qualifying':'UEL Qualifying',
+    'UEFA Conference League':'Conference League',
+    'Conference League':'Conference League',
+    'FA Cup':'FA Cup',
+    'The FA Cup':'FA Cup',
+    'EFL Cup':'League Cup',
+    'League Cup':'League Cup',
+    'Carabao Cup':'League Cup',
+    'EFL Carabao Cup':'League Cup',
+    'FA Community Shield':'Comm. Shield',
+    'Community Shield':'Comm. Shield',
+    'Club World Cup':'Club World Cup',
+    'FIFA Club World Cup':'Club World Cup',
+    'FIFA Club World Cup 2025':'Club World Cup',
+    'UEFA Super Cup':'Super Cup',
+    'Intercontinental Cup':'Intercont. Cup',
+    "UEFA Cup Winners' Cup":"Cup Winners' Cup",
+    'Inter-Cities Fairs Cup':'Fairs Cup',
+    'European Cup':'European Cup',
+    'UEFA Cup':'UEFA Cup',
+    'Football League First Division':'First Division',
   };
   return m[n]||n||'Fixture';
 }
 function getCompClass(n) {
   const k=(n||'').toLowerCase();
   if(k.includes('premier')||k.includes('first division')) return 'comp-pl';
-  if(k.includes('champions'))  return 'comp-cl';
-  if(k.includes('europa')||k.includes('fairs cup')) return 'comp-uel';
+  if(k.includes('champions')||k.includes('european cup')) return 'comp-cl';
+  if(k.includes('conference league'))  return 'comp-ucl'; // reuse a euro class
+  if(k.includes('europa')||k.includes('fairs cup')||k==='uefa cup') return 'comp-uel';
   if(k.includes('fa cup'))     return 'comp-fa';
   if(k.includes('league cup')||k.includes('efl')||k.includes('carabao')) return 'comp-lc';
   if(k.includes('friendly'))   return 'comp-fr';
@@ -2751,8 +2809,9 @@ function getCompClass(n) {
 function getAccentClass(n) {
   const k=(n||'').toLowerCase();
   if(k.includes('premier')||k.includes('first division')) return 'accent-pl';
-  if(k.includes('champions'))  return 'accent-cl';
-  if(k.includes('europa')||k.includes('fairs cup')) return 'accent-uel';
+  if(k.includes('champions')||k.includes('european cup')) return 'accent-cl';
+  if(k.includes('conference league'))  return 'accent-uel';
+  if(k.includes('europa')||k.includes('fairs cup')||k==='uefa cup') return 'accent-uel';
   if(k.includes('fa cup'))     return 'accent-fa';
   if(k.includes('league cup')||k.includes('efl')||k.includes('carabao')) return 'accent-lc';
   if(k.includes('club world')) return 'accent-cwc';
