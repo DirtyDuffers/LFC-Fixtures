@@ -635,7 +635,7 @@
         <p>Your Away Planner trips and preferences are stored separately and are <strong>never</strong> affected by a refresh.</p>
       </div>
 
-      <div class="about-version" id="aboutVersion">Version 1.0</div>
+      <div class="about-version" id="aboutVersion">v15.0.0</div>
     </div>
   </div>
 </div>
@@ -1650,18 +1650,48 @@ function renderOTD() {
   const day = now.getDate();
   const month = now.getMonth();
   dateEl.textContent = now.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
-  const matches = allPast.filter(f => {
+
+  // Collect from allPast
+  const seen = new Set();
+  const matches = [];
+  allPast.forEach(f => {
     const d = f.start instanceof Date ? f.start : new Date(f.start);
-    return d.getDate() === day && d.getMonth() === month && d.getFullYear() < now.getFullYear();
-  }).sort((a,b) => {
-    const ay = (a.start instanceof Date ? a.start : new Date(a.start)).getFullYear();
-    const by = (b.start instanceof Date ? b.start : new Date(b.start)).getFullYear();
-    return by - ay; // most recent year first
+    if (d.getDate() === day && d.getMonth() === month && d.getFullYear() < now.getFullYear()) {
+      let score = f.score || '';
+      let result = f.result || '';
+      if (!score) {
+        const h2h = getH2H(f.opponent) || [];
+        const iso = d.toISOString().slice(0,10);
+        const found = h2h.find(r => r.iso === iso);
+        if (found) { score = found.s; result = found.r; }
+      }
+      const key = d.toISOString().slice(0,10) + '|' + (f.opponent||'').toLowerCase();
+      seen.add(key);
+      matches.push({start:d, score, result, opponent:f.opponent||f.summary||'Unknown', competition:f.competition||'', isHome:f.isHome});
+    }
   });
+
+  // Also scan H2H_DATA — catches matches not in the ICS allPast (e.g. older PL games)
+  for (const [, entry] of Object.entries(H2H_DATA)) {
+    for (const r of entry.results) {
+      const d = new Date(r.iso);
+      if (d.getDate() === day && d.getMonth() === month && d.getFullYear() < now.getFullYear()) {
+        const key = r.iso + '|' + entry.name.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          matches.push({start:d, score:r.s, result:r.r, opponent:entry.name, competition:r.c||'', isHome:r.v==='H'});
+        }
+      }
+    }
+  }
+
+  matches.sort((a,b) => b.start - a.start);
+
   if (!matches.length) {
     el.innerHTML = '<div class="otd-empty">No results found for this day in previous years.<br/>Check back as more historical data is added.</div>';
     return;
   }
+
   el.innerHTML = matches.map(f => {
     const d = f.start instanceof Date ? f.start : new Date(f.start);
     const year = d.getFullYear();
@@ -1672,13 +1702,14 @@ function renderOTD() {
       resultLetter === 'W' ? '#3dba78' :
       resultLetter === 'L' ? '#e42027' : '#F6EB61';
     const comp = f.competition || '';
+    const ob = getClubBadge(f.opponent);
     return `<div class="otd-item">
       <div class="otd-year">${year}</div>
       <div class="otd-info">
-        <div class="otd-opponent">${ha} ${esc(f.opponent||f.summary||'Unknown')}</div>
+        <div class="otd-opponent">${ob ? `<img src="${ob}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px" onerror="this.style.display='none'"/>` : ''}${ha} ${esc(f.opponent||'Unknown')}</div>
         <div class="otd-meta">${esc(comp)}</div>
       </div>
-      <div class="otd-score" style="color:${scoreCol}">${esc(score)}</div>
+      <div class="otd-score" style="color:${scoreCol}">${esc(score)||'–'}</div>
     </div>`;
   }).join('');
 }
@@ -1688,6 +1719,8 @@ const _buildUI_orig = buildUI;
 function buildUI() {
   detectChanges(allFixtures);
   _buildUI_orig();
+  // Re-render OTD if that tab is currently visible
+  if ($id('pageOTD') && $id('pageOTD').classList.contains('active')) renderOTD();
 }
 
 // Show banner on load if unseen changes exist
@@ -1845,10 +1878,10 @@ if (cached) {
     const el = $id('aboutCrest');
     if (el && src) el.src = src;
   }
-  // Version derived from cache key
+  // Version derived from cache key — display as semver
   const verMatch = CACHE_KEY.match(/v(\d+)/);
   const verEl = $id('aboutVersion');
-  if (verEl && verMatch) verEl.textContent = 'Version ' + verMatch[1];
+  if (verEl && verMatch) verEl.textContent = 'v' + verMatch[1] + '.0.0';
   // Sync crest whenever About tab is shown
   document.querySelector('.nav-item[data-page="pageAbout"]').addEventListener('click', syncAboutCrest);
   syncAboutCrest();
