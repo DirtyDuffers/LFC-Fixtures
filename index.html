@@ -345,6 +345,20 @@
     .changelog-clear-btn:hover{border-color:var(--red);color:var(--red)}
     /* ── On This Day page ── */
     .otd-wrap{padding:16px 20px 0}
+    .otd-date-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+    .otd-date{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;color:var(--white);cursor:pointer;display:flex;align-items:center;gap:8px;user-select:none}
+    .otd-date:hover{opacity:.8}
+    .otd-date .otd-picker-icon{font-size:16px;opacity:.45;font-family:'Inter',sans-serif;font-weight:400}
+    .otd-date-picker{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;display:none}
+    .otd-date-picker.open{display:block}
+    .otd-picker-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .otd-picker-row{display:flex;gap:8px;margin-bottom:12px}
+    .otd-picker-select{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--white);border-radius:8px;padding:9px 10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+    .otd-picker-select:focus{border-color:var(--teal)}
+    .otd-picker-go{width:100%;background:var(--teal);border:none;color:#fff;border-radius:8px;padding:10px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;transition:opacity .15s}
+    .otd-picker-go:hover{opacity:.85}
+    .otd-today-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;margin-left:auto;display:block;margin-bottom:10px}
+    .otd-today-btn:hover{border-color:var(--teal);color:var(--teal)}
     .otd-date{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;color:var(--white);margin-bottom:2px}
     .otd-subtitle{font-size:12px;color:var(--muted);margin-bottom:16px}
     .otd-empty{text-align:center;color:var(--muted);font-size:13px;padding:40px 0}
@@ -508,8 +522,19 @@
 <div class="page" id="pageOTD">
   <div class="content-wrap">
     <div class="otd-wrap">
-      <div class="otd-date" id="otdDate"></div>
-      <div class="otd-subtitle">Past results on this day in history</div>
+      <div class="otd-date" id="otdDate" onclick="toggleOTDPicker()">
+        <span id="otdDateText"></span><span class="otd-picker-icon">▾</span>
+      </div>
+      <div class="otd-date-picker" id="otdDatePicker">
+        <div class="otd-picker-label">Change date</div>
+        <div class="otd-picker-row">
+          <select class="otd-picker-select" id="otdPickerDay"></select>
+          <select class="otd-picker-select" id="otdPickerMonth"></select>
+        </div>
+        <button class="otd-today-btn" onclick="otdGoToday()">Back to today</button>
+        <button class="otd-picker-go" onclick="otdApplyDate()">Show Results</button>
+      </div>
+      <div class="otd-subtitle" id="otdSubtitle">Past results on this day in history</div>
       <div id="otdList"></div>
     </div>
   </div>
@@ -1721,14 +1746,64 @@ function clearChangelog() {
 // (change detection is wired into buildUI below)
 
 // ── On This Day ──────────────────────────────────────────────────────────────
+// OTD state
+let otdDay = null, otdMonth = null;
+
+function initOTDPicker() {
+  const dayEl = $id('otdPickerDay');
+  const monEl = $id('otdPickerMonth');
+  if (!dayEl || dayEl.options.length) return; // already built
+  for (let d=1; d<=31; d++) {
+    const o = document.createElement('option'); o.value=d; o.textContent=String(d).padStart(2,'0');
+    dayEl.appendChild(o);
+  }
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  months.forEach((m,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=m; monEl.appendChild(o); });
+}
+
+function toggleOTDPicker() {
+  const picker = $id('otdDatePicker');
+  const isOpen = picker.classList.toggle('open');
+  if (isOpen) {
+    initOTDPicker();
+    $id('otdPickerDay').value = otdDay ?? new Date().getDate();
+    $id('otdPickerMonth').value = otdMonth ?? new Date().getMonth();
+  }
+}
+
+function otdApplyDate() {
+  otdDay = parseInt($id('otdPickerDay').value);
+  otdMonth = parseInt($id('otdPickerMonth').value);
+  $id('otdDatePicker').classList.remove('open');
+  renderOTD();
+}
+
+function otdGoToday() {
+  const now = new Date();
+  otdDay = now.getDate();
+  otdMonth = now.getMonth();
+  $id('otdDatePicker').classList.remove('open');
+  renderOTD();
+}
+
 function renderOTD() {
   const el = $id('otdList');
-  const dateEl = $id('otdDate');
+  const dateTextEl = $id('otdDateText');
+  const subtitleEl = $id('otdSubtitle');
   if (!el) return;
   const now = new Date();
-  const day = now.getDate();
-  const month = now.getMonth();
-  dateEl.textContent = now.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+  const day   = otdDay   ?? now.getDate();
+  const month = otdMonth ?? now.getMonth();
+
+  // Format display date (no year)
+  const displayDate = new Date(2000, month, day).toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+  if (dateTextEl) dateTextEl.textContent = displayDate.toUpperCase();
+
+  // Update subtitle
+  const isToday = day === now.getDate() && month === now.getMonth();
+  if (subtitleEl) subtitleEl.textContent = isToday
+    ? 'Past results on this day in history'
+    : 'Past results on ' + displayDate + ' in history';
 
   // Collect from allPast
   const seen = new Set();
@@ -1767,7 +1842,7 @@ function renderOTD() {
   matches.sort((a,b) => b.start - a.start);
 
   if (!matches.length) {
-    el.innerHTML = '<div class="otd-empty">No results found for this day in previous years.<br/>Check back as more historical data is added.</div>';
+    el.innerHTML = '<div class="otd-empty">No results found for this date in previous years.<br/>Try a different date or check back as more historical data is added.</div>';
     return;
   }
 
@@ -2682,13 +2757,40 @@ function renderCalMonthList(matches, today) {
 }
 function showCalPopup(date,matches) {
   $id('calPopupDate').textContent=date.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  const now = new Date();
 
   // Build cards with H2H panels, same as fixture list
   let html='';
   matches.forEach(f => {
-    html += buildFixCard(f);
+    const isPast = f && f.start < now;
+    if (isPast) {
+      // Use result card style so score is shown
+      const ds = f.start;
+      const ob = getClubBadge(f.opponent);
+      const cCls=getCompClass(f.competition), cLogo=getCompLogo(f.competition);
+      const accentCls=getAccentClass(f.competition);
+      const haSmall=f.isHome===true?'home':f.isHome===false?'away':'neutral';
+      const h2h=getH2H(f.opponent)||[];
+      const matchISO=ds.toISOString().slice(0,10);
+      const found=h2h.find(r=>r.iso===matchISO);
+      const scoreDisplay=f.score||(found?found.s:'TBD');
+      const resultLetter=f.result||(found?found.r:null);
+      const resultCls=resultLetter?(resultLetter==='W'?'win':resultLetter==='L'?'loss':'draw'):'tbd';
+      html += '<div class="result-card"><div class="fixture-accent '+accentCls+'"></div><div class="result-inner">' +
+        '<div class="fixture-date-col"><div class="fixture-day">'+ds.getDate()+'</div><div class="fixture-dow">'+ds.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase()+'</div></div>' +
+        '<div class="fixture-divider"></div>' +
+        '<div class="fixture-main"><div class="fixture-opponent">' +
+        (ob?'<img class="opp-badge" src="'+ob+'" alt="'+esc(f.opponent)+'" onerror="this.style.display=\'none\'"/>':'') +
+        '<span class="opp-name">'+esc(f.opponent)+'</span></div>' +
+        '<div class="fixture-sub"><span class="comp-badge '+cCls+'">'+(cLogo?'<img src="'+cLogo+'" alt="" onerror="this.style.display=\'none\'"/>':'')+compShort(f.competition)+'</span>' +
+        '<span class="ha-small '+haSmall+'">'+(f.isHome===true?'H':'A')+'</span></div></div>' +
+        '<div class="result-score '+resultCls+'">'+scoreDisplay+'</div>' +
+        '</div></div>';
+    } else {
+      html += buildFixCard(f);
+    }
     // Add H2H toggle + panel
-    const h2hId = 'calh2h_' + f.start.getTime();
+    const h2hId = 'calh2h_' + (f ? f.start.getTime() : Date.now());
     html += '<button class="h2h-toggle" data-id="'+h2hId+'" data-opponent="'+esc(f.opponent)+'">' +
       '<span class="h2h-arrow">\u25BE</span> Previous meetings vs '+esc(f.opponent)+'</button>' +
       '<div class="h2h-panel" id="'+h2hId+'"></div>';
