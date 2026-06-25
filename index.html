@@ -1604,11 +1604,11 @@ function plannerRenderResults() {
       const dateStr = d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
       const timeStr = d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       const opp = f.opponent || f.summary || 'Unknown';
-      const ha = f.isHome ? '🔴 H' : '✈️ A';
+      
       const comp = f.competition || '';
       return `<div class="planner-result-fixture">
         <span class="planner-result-fixture-date">${dateStr}<br/><span style="font-size:10px">${timeStr}</span></span>
-        <span class="planner-result-fixture-name">${ha} ${esc(opp)}</span>
+        <span class="planner-result-fixture-name">${esc(opp)}</span>
         <span class="planner-result-fixture-comp">${esc(comp)}</span>
       </div>`;
     }).join('');
@@ -1865,7 +1865,7 @@ function renderOTD() {
   el.innerHTML = matches.map(f => {
     const d = f.start instanceof Date ? f.start : new Date(f.start);
     const year = d.getFullYear();
-    const ha = f.isHome ? '🔴 H' : '✈️ A';
+    
     const score = f.score || '';
     const resultLetter = f.result || '';
     const scoreCol = !score ? 'var(--muted)' :
@@ -1873,11 +1873,13 @@ function renderOTD() {
       resultLetter === 'L' ? '#e42027' : '#F6EB61';
     const comp = f.competition || '';
     const ob = getClubBadge(f.opponent);
+    const haSmallOtd = f.isHome===true?'home':f.isHome===false?'away':'neutral';
+    const haLabelOtd = f.isHome===true?'H':f.isHome===false?'A':'N';
     return `<div class="otd-item">
       <div class="otd-year">${year}</div>
       <div class="otd-info">
-        <div class="otd-opponent">${ob ? `<img src="${ob}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px" onerror="this.style.display='none'"/>` : ''}${ha} ${esc(f.opponent||'Unknown')}</div>
-        <div class="otd-meta">${esc(comp)}${f.round ? ' · ' + esc(f.round) : ''}</div>
+        <div class="otd-opponent">${ob ? `<img src="${ob}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px" onerror="this.style.display='none'"/>` : ''}${esc(f.opponent||'Unknown')}</div>
+        <div class="otd-meta"><span class="ha-small ${haSmallOtd}">${haLabelOtd}</span> ${esc(comp)}${f.round ? ' · ' + esc(f.round) : ''}</div>
       </div>
       <div class="otd-score" style="color:${scoreCol}">${esc(score)||'–'}</div>
     </div>`;
@@ -2269,6 +2271,9 @@ function normaliseComp(raw) {
   return raw; // unknown — pass through as-is
 }
 
+function stripEmoji(str) {
+  return str.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{1F300}-\u{1F9FF}\u{FE00}-\u{FEFF}\u{1F900}-\u{1F9FF}]/gu, '').replace(/  +/g,' ').trim();
+}
 function enrich(e) {
   const s=e.summary||''; let comp='',home='',away='',isHome=null;
   if (e.description) {
@@ -2277,13 +2282,13 @@ function enrich(e) {
     comp = (pi>0 ? fl.slice(0,pi) : fl).trim();
   }
   const vs = s.split(/\s+v(?:s)?\.?\s+/i);
-  if (vs.length===2) { home=vs[0].trim(); away=vs[1].trim(); }
+  if (vs.length===2) { home=stripEmoji(vs[0].trim()); away=stripEmoji(vs[1].trim()); }
   const lfc = ['liverpool','lfc','liverpool fc'];
   if (lfc.some(n=>home.toLowerCase().includes(n))) isHome=true;
   if (lfc.some(n=>away.toLowerCase().includes(n))) isHome=false;
-  const opponent = isHome===true ? away : isHome===false ? home : s;
+  const opponent = isHome===true ? away : isHome===false ? home : stripEmoji(s);
   const venue = e.location || (isHome===true ? 'Anfield' : '');
-  return {...e, competition:normaliseComp(comp), opponent:opponent||s, isHome, round:'', venue};
+  return {...e, competition:normaliseComp(comp), opponent:opponent||stripEmoji(s), isHome, round:'', venue};
 }
 
 // Build UI
@@ -2818,7 +2823,7 @@ function renderCalMonthList(matches, today) {
     const dow = DAYS[f.start.getDay()];
     const day = f.start.getDate();
     const comp = f.competition||'';
-    const ha = f.isHome?'H':'A';
+    const ha = `<span class="ha-small ${f.isHome?'home':'away'}">${f.isHome?'H':'A'}</span>`;
     html+=`<div class="cal-match-row" data-midx="${i}">
       <div class="cal-match-date-col"><div class="cal-match-day">${day}</div><div class="cal-match-dow">${dow}</div></div>
       <div class="cal-match-main"><div class="cal-match-opp">${esc(f.opponent)}</div><div class="cal-match-comp">${esc(comp)} · ${ha}</div></div>
