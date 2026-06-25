@@ -2021,7 +2021,15 @@ document.querySelectorAll('.nav-item').forEach(btn => {
     if (btn.dataset.page === 'pageCalendar') renderCalendar();
     if (btn.dataset.page === 'pagePlanner') plannerRender();
     if (btn.dataset.page === 'pageOTD') renderOTD();
-    if (btn.dataset.page === 'pageResults')  renderResults();
+    if (btn.dataset.page === 'pageResults') renderResults();
+    if (btn.dataset.page === 'pageManagers') { renderManagers(); renderSeasonSummary(); }
+    // Hide search button & wrap when not on fixtures page
+    $id('searchBtn').style.visibility = isFix ? '' : 'hidden';
+    if (!isFix && searchVisible) {
+      searchVisible = false;
+      $id('searchWrap').classList.remove('visible');
+      $id('searchInput').value = ''; searchQ = '';
+    }
   });
 });
 
@@ -2686,6 +2694,10 @@ function getManager(dateStr) {
 function renderManagers() {
   const el = $id('managersContent');
   if (!el) return;
+  if (!MANAGER_STATS || !MANAGER_STATS.length) {
+    el.innerHTML = '<div style="padding:16px;color:var(--muted)">No manager data available.</div>';
+    return;
+  }
 
   // Sort by number of matches desc (caretakers last by P)
   const sorted = [...MANAGER_STATS].sort((a,b) => b.p - a.p);
@@ -2741,6 +2753,10 @@ function renderManagers() {
 function renderSeasonSummary() {
   const el = $id('seasonSummaryContent');
   if (!el) return;
+  if (!allPast || !allPast.length) {
+    el.innerHTML = '<div style="padding:16px;color:var(--muted);font-size:13px">Loading match data...</div>';
+    return;
+  }
 
   // Build per-season stats from allPast
   const seasons = {};
