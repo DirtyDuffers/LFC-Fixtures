@@ -2497,10 +2497,10 @@ function buildFixCard(f) {
     '<div class="fixture-date-col"><div class="fixture-day">'+d.getDate()+'</div><div class="fixture-dow">'+d.toLocaleDateString("en-GB",{weekday:"short"}).toUpperCase()+'</div></div>' +
     '<div class="fixture-divider"></div>' +
     '<div class="fixture-main"><div class="fixture-opponent">' +
-    (ob?'<img class="opp-badge" src="'+ob+'" alt="'+esc(f.opponent)+'" onerror="this.style.display='none'"/>':'') +
+    (ob?'<img class="opp-badge" src="'+ob+'" alt="'+esc(f.opponent)+'" onerror="this.style.display=\'none\'" />':'') +
     '<span class="opp-name">'+esc(f.opponent)+'</span></div>' +
     '<div class="fixture-sub"><span class="comp-badge '+cCls+'">' +
-    (cLogo?'<img src="'+cLogo+'" alt="" onerror="this.style.display='none'"/>':'') +
+    (cLogo?'<img src="'+cLogo+'" alt="" onerror="this.style.display=\'none\'" />':'') +
     compShort(f.competition)+'</span>' +
     '<span class="ha-small '+haSmall+'">'+haLabel+'</span>' +
     (f.venue?'<span class="venue-tag">· '+esc(f.venue)+'</span>':'') +
