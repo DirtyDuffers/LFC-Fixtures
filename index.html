@@ -2897,9 +2897,19 @@ function getManager(dateStr) {
   if (!dateStr) return null;
   if (DATE_MANAGER[dateStr]) return DATE_MANAGER[dateStr];
   if (dateStr > '2026-05-24') return 'Andoni Iraola';
-  // Range fallback: scan MANAGER_STATS for any manager whose era covers this date
+  // Range fallback using MANAGER_STATS eras
   for (const m of MANAGER_STATS) {
     if (m.from && m.to && dateStr >= m.from && dateStr <= m.to) return m.name;
+  }
+  // ±1 day fallback for ICS timezone-shifted dates (23:00 UTC = next day UK)
+  const d = new Date(dateStr + 'T12:00:00Z');
+  for (const delta of [-1, 1]) {
+    const adj = new Date(d); adj.setUTCDate(adj.getUTCDate() + delta);
+    const adjStr = adj.toISOString().slice(0,10);
+    if (DATE_MANAGER[adjStr]) return DATE_MANAGER[adjStr];
+    for (const m of MANAGER_STATS) {
+      if (m.from && m.to && adjStr >= m.from && adjStr <= m.to) return m.name;
+    }
   }
   return null;
 }
@@ -3067,8 +3077,14 @@ function renderStatsResults() {
   if (allPast && allPast.length) {
     for (const f of allPast) {
       const startStr = f.start instanceof Date ? f.start.toISOString() : String(f.start);
-      const iso = startStr.slice(0,10);
-      const d = new Date(iso + 'T12:00:00Z');
+      // Use noon UTC to avoid BST timezone flipping midnight games to previous day
+      const rawIso = startStr.slice(0,10);
+      const dCheck = new Date(rawIso + 'T12:00:00Z');
+      // If the original UTC hour was 23, the real UK date is +1 day — correct it
+      const origHour = f.start instanceof Date ? f.start.getUTCHours() : 0;
+      if (origHour >= 22) dCheck.setUTCDate(dCheck.getUTCDate() + 1);
+      const iso = dCheck.toISOString().slice(0,10);
+      const d = dCheck;
       const key = iso + '|' + (f.opponent||'').toLowerCase();
       if (seenKeys.has(key)) continue;
       seenKeys.add(key);
