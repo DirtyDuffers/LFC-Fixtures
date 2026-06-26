@@ -301,8 +301,8 @@
     .cal-cell.other-month{opacity:.28}
     .cal-day{font-size:13px;font-weight:600;color:var(--white);line-height:1;margin-bottom:3px}
     .cal-dot-row{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
-    .cal-dot{width:5px;height:5px;border-radius:50%;background:var(--red)}
-    [data-theme="light"] .cal-dot{background:var(--teal)}
+    .cal-dot{width:6px;height:6px;border-radius:50%;background:var(--muted)}
+    .cal-dot.win{background:#3dba78}.cal-dot.loss{background:var(--red)}.cal-dot.draw{background:#F6EB61}
     .cal-popup{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);padding:0 0 80px}
     .cal-popup.hidden{display:none}
     .cal-popup-inner{background:var(--bg2);border:1px solid var(--border);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:680px;max-height:60vh;overflow-y:auto;transition:background .3s}
@@ -551,6 +551,7 @@
     .otd-anniversary{display:inline-block;background:var(--gold);color:#111;font-size:9px;font-weight:800;padding:1px 5px;border-radius:8px;margin-top:2px}
     .otd-anniversary.big{background:var(--red);color:#fff}
     .otd-highlight{background:rgba(200,16,46,.06)}
+    .otd-big-margin .otd-score{font-weight:800;text-decoration:underline;text-underline-offset:2px}
     [data-theme="light"] .otd-highlight{background:rgba(200,16,46,.04)}
 
     /* Feature 6: Planner countdown */
@@ -1730,12 +1731,14 @@ function plannerRenderResults() {
       const dateStr = d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
       const timeStr = d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       const opp = f.opponent || f.summary || 'Unknown';
-      
       const comp = f.competition || '';
+      const haClass = f.isHome === true ? 'home' : f.isHome === false ? 'away' : 'neutral';
+      const haLabel = f.isHome === true ? 'H' : f.isHome === false ? 'A' : 'N';
       return `<div class="planner-result-fixture">
         <span class="planner-result-fixture-date">${dateStr}<br/><span style="font-size:10px">${timeStr}</span></span>
         <span class="planner-result-fixture-name">${esc(opp)}</span>
         <span class="planner-result-fixture-comp">${esc(comp)}</span>
+        <span class="ha-small ${haClass}">${haLabel}</span>
       </div>`;
     }).join('');
     return `<div class="planner-result-group">${header}${rows}</div>`;
@@ -2037,6 +2040,23 @@ function renderOTD() {
   });
 
   el.innerHTML = html;
+
+  // Highlight biggest margin of the day
+  let bestGd = -1, bestEl = null;
+  el.querySelectorAll('.otd-item').forEach(item => {
+    const scoreEl = item.querySelector('.otd-score');
+    if (!scoreEl) return;
+    const txt = scoreEl.textContent.trim().split('(')[0].trim();
+    const parts = txt.split('-');
+    if (parts.length === 2) {
+      const a = parseInt(parts[0]), b = parseInt(parts[1]);
+      if (!isNaN(a) && !isNaN(b) && Math.abs(a-b) > bestGd) {
+        bestGd = Math.abs(a-b);
+        bestEl = item;
+      }
+    }
+  });
+  if (bestEl && bestGd > 0) bestEl.classList.add('otd-big-margin');
 }
 
 // Run change detection after each fresh ICS fetch
@@ -2594,6 +2614,28 @@ function buildHero(f) {
     }
   }
 
+  // League form streak (last 5 league results)
+  let streakHtml = '';
+  if (allPast && allPast.length) {
+    const leaguePast = [...allPast]
+      .filter(m => {
+        const c = (m.competition||'').toLowerCase();
+        return c.includes('premier league') || c.includes('first division') || c.includes('football league');
+      })
+      .sort((a,b) => b.start - a.start)
+      .slice(0, 5)
+      .reverse();
+    if (leaguePast.length) {
+      const dots = leaguePast.map(m => {
+        let r = m.result || '';
+        if (!r) { const h2 = getH2H(m.opponent)||[]; const ds2 = m.start instanceof Date ? m.start : new Date(m.start); const ff = h2.find(x=>x.iso===ds2.toISOString().slice(0,10)); if(ff) r=ff.r; }
+        const cls = r==='W'?'w':r==='L'?'l':r==='D'?'d':'';
+        return cls ? '<span class="form-dot-mini '+cls+'">'+r+'</span>' : '';
+      }).join('');
+      if (dots) streakHtml = '<div class="hero-form-streak"><span class="hero-last-label">Form</span>' + dots + '</div>';
+    }
+  }
+
   const heroCard = '<div class="hero-section"><div class="section-label">Next Match</div><div class="hero-card'+(isMatchDay2?' matchday':'')+'">' +
     '<div class="hero-comp-row"><div class="hero-comp-badge">' +
     (cLogo?'<img src="'+cLogo+'" alt="" onerror="this.style.display=\'none\'"/>':'') +
@@ -2607,6 +2649,7 @@ function buildHero(f) {
     (f.venue?'<div class="hero-meta-item">\uD83D\uDCCD '+esc(f.venue)+'</div>':'') +
     '<div class="hero-meta-item"><span class="ha-badge '+haClass+'">'+haText+'</span></div></div>' +
     (lastResultHtml) +
+    (streakHtml) +
     '<div class="countdown-wrap" id="cdWrap"></div>' +
     '<div class="action-row">' +
     '<a class="action-btn" href="'+buildGCal(f)+'" target="_blank" rel="noopener">\uD83D\uDCC5 Google Cal</a>' +
@@ -2956,16 +2999,19 @@ function renderStatsResults() {
       key = f.competition || 'Unknown';
     } else if (statsMode === 'season') {
       key = getSeason(d);
+    } else if (statsMode === 'opponent') {
+      key = f.opponent || 'Unknown';
     } else {
       key = f.isHome === true ? 'Home' : f.isHome === false ? 'Away' : 'Neutral';
     }
-    if (!groups[key]) groups[key] = {key, p:0,w:0,d:0,l:0,gf:0,ga:0,atts:[]};
+    if (!groups[key]) groups[key] = {key, p:0,w:0,d:0,l:0,gf:0,ga:0,atts:[],recent:[]};
     const g = groups[key];
     g.p++;
 
     const result = f.result || '';
     const score = f.score || '';
     if (result==='W') g.w++; else if (result==='L') g.l++; else if (result==='D') g.d++;
+    if (result) g.recent.push({r:result, d:f.start instanceof Date ? f.start : new Date(f.start)});
 
     // Goals (score is always LFC-first in our static pool)
     if (score) {
@@ -3099,7 +3145,7 @@ function renderResults() {
       t.addEventListener('click', () => {
         if (navigator.vibrate) navigator.vibrate(8);
         compRow.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active'); resultsComp = t.dataset.rcomp; renderResults();
+        t.classList.add('active'); resultsComp = t.dataset.rcomp; sessionStorage.setItem('rComp', resultsComp); renderResults();
       });
     });
   }
@@ -3119,7 +3165,7 @@ function renderResults() {
       t.addEventListener('click', () => {
         if (navigator.vibrate) navigator.vibrate(8);
         seasonRow.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active'); resultsSeason = t.dataset.rseason; renderResults();
+        t.classList.add('active'); resultsSeason = t.dataset.rseason; sessionStorage.setItem('rSeason', resultsSeason); renderResults();
       });
     });
   }
@@ -3141,7 +3187,7 @@ function renderResults() {
       t.addEventListener('click', () => {
         if (navigator.vibrate) navigator.vibrate(8);
         mgrRow.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active'); resultsMgr = t.dataset.rmgr; renderResults();
+        t.classList.add('active'); resultsMgr = t.dataset.rmgr; sessionStorage.setItem('rMgr', resultsMgr); renderResults();
       });
     });
   }
@@ -3157,7 +3203,7 @@ function renderResults() {
         if (t.dataset.ha === 'home') t.classList.add('active-home');
         else if (t.dataset.ha === 'away') t.classList.add('active-away');
         else t.classList.add('active');
-        resultsHA = t.dataset.ha; renderResults();
+        resultsHA = t.dataset.ha; sessionStorage.setItem('rHA', resultsHA); renderResults();
       });
     });
   }
