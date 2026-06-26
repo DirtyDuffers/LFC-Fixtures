@@ -252,9 +252,11 @@
     .hero-last-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);flex-shrink:0}
     .hero-last-score{font-size:18px;font-weight:800;flex-shrink:0}
     .hero-last-opp{font-size:12px;color:var(--muted2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .hero-form-streak{display:flex;flex-direction:row;align-items:center;gap:6px;padding:8px 14px;margin-top:6px;background:var(--bg2);border:1px solid var(--border);border-radius:10px}
+    .hero-form-streak .form-dot-mini{margin:0}
     .otd-opponent img{vertical-align:middle;margin-bottom:2px}
     .result-inner{display:flex;align-items:center;gap:11px;padding:12px 14px 12px 15px;flex:1;min-width:0}
-    .result-score{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;flex-shrink:0;min-width:48px;text-align:right;color:var(--muted2)}
+    .result-score{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;flex-shrink:0;min-width:48px;text-align:right;color:var(--muted2)}.result-score.abandoned{font-size:11px;letter-spacing:.5px;color:var(--muted);font-family:inherit}
     .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px}
     .cal-month-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--white);cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none}
     .cal-month-label:hover{opacity:.8}
@@ -1731,6 +1733,7 @@ function plannerRenderResults() {
     if (!count) {
       return `<div class="planner-result-group">${header}<div class="planner-result-none">No matches for this filter &#127881;</div></div>`;
     }
+    const now2 = new Date();
     const rows = e.hits.map(f => {
       const d = new Date(f.start);
       const dateStr = d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
@@ -1739,11 +1742,23 @@ function plannerRenderResults() {
       const comp = f.competition || '';
       const haClass = f.isHome === true ? 'home' : f.isHome === false ? 'away' : 'neutral';
       const haLabel = f.isHome === true ? 'H' : f.isHome === false ? 'A' : 'N';
-      return `<div class="planner-result-fixture">
-        <span class="planner-result-fixture-date">${dateStr}<br/><span style="font-size:10px">${timeStr}</span></span>
+      const isPast = d < now2;
+      let score = f.score || '';
+      let resultLetter = f.result || '';
+      if (isPast && !score) {
+        const h2h = getH2H(opp) || [];
+        const iso = d.toISOString().slice(0,10);
+        const found = h2h.find(r => r.iso === iso);
+        if (found) { score = found.s; resultLetter = found.r; }
+      }
+      const resultCls = resultLetter === 'W' ? 'win' : resultLetter === 'L' ? 'loss' : resultLetter === 'D' ? 'draw' : '';
+      const scoreCol = resultLetter === 'W' ? '#3dba78' : resultLetter === 'L' ? '#e42027' : resultLetter === 'D' ? '#F6EB61' : 'var(--muted)';
+      return `<div class="planner-result-fixture${isPast ? ' played' : ''}">
+        <span class="planner-result-fixture-date">${dateStr}<br/><span style="font-size:10px">${isPast ? '' : timeStr}</span></span>
         <span class="planner-result-fixture-name">${esc(opp)}</span>
         <span class="planner-result-fixture-comp">${esc(comp)}</span>
         <span class="ha-small ${haClass}">${haLabel}</span>
+        ${isPast && score ? `<span class="planner-result-score" style="color:${scoreCol};font-weight:700;font-size:13px;min-width:36px;text-align:right">${esc(score)}</span>` : ''}
       </div>`;
     }).join('');
     return `<div class="planner-result-group">${header}${rows}</div>`;
@@ -1898,7 +1913,8 @@ function clearChangelog() {
 
 // ── On This Day ──────────────────────────────────────────────────────────────
 // OTD state
-let otdDay = null, otdMonth = null;
+let otdDay = sessionStorage.getItem('otdDay') !== null ? parseInt(sessionStorage.getItem('otdDay')) : null,
+  otdMonth = sessionStorage.getItem('otdMonth') !== null ? parseInt(sessionStorage.getItem('otdMonth')) : null;
 
 function initOTDPicker() {
   const dayEl = $id('otdPickerDay');
@@ -1925,6 +1941,8 @@ function toggleOTDPicker() {
 function otdApplyDate() {
   otdDay = parseInt($id('otdPickerDay').value);
   otdMonth = parseInt($id('otdPickerMonth').value);
+  sessionStorage.setItem('otdDay', otdDay);
+  sessionStorage.setItem('otdMonth', otdMonth);
   $id('otdDatePicker').classList.remove('open');
   renderOTD();
 }
@@ -1933,6 +1951,8 @@ function otdGoToday() {
   const now = new Date();
   otdDay = now.getDate();
   otdMonth = now.getMonth();
+  sessionStorage.setItem('otdDay', otdDay);
+  sessionStorage.setItem('otdMonth', otdMonth);
   $id('otdDatePicker').classList.remove('open');
   renderOTD();
 }
@@ -2850,6 +2870,7 @@ async function fetchAttendanceLive(dateStr, opponent, popupEl) {
 let statsMode = 'manager';     // manager | competition | season | venue
 let statsCompFilter = 'all';   // competition filter for cross-cutting
 let statsVenueFilter = 'all';  // home/away filter
+let statsSort = 'played';       // played | winpct | az
 
 function renderStatsPage() {
   const el = $id('statsPageContent');
@@ -2872,6 +2893,8 @@ function renderStatsPage() {
     '<div class="compare-section">' +
       '<div class="compare-label">Compare by</div>' +
       '<div class="compare-chips" id="statsModeChips"></div>' +
+      '<div class="compare-label" style="margin-top:10px">Sort by</div>' +
+      '<div class="compare-chips" id="statsSortChips"></div>' +
       '<div class="compare-label" style="margin-top:10px">Filter by competition</div>' +
       '<div class="compare-chips" id="statsCompChips"></div>' +
       '<div class="compare-label" style="margin-top:10px">Filter by venue</div>' +
@@ -2900,6 +2923,7 @@ function renderStatsPage() {
     if (id==='statsModeChips') statsMode=val;
     else if (id==='statsCompChips') statsCompFilter=val;
     else if (id==='statsVenueChips') statsVenueFilter=val;
+    else if (id==='statsSortChips') statsSort=val;
   }
 
   buildChips('statsModeChips', [
@@ -2920,6 +2944,11 @@ function renderStatsPage() {
     {val:'home',label:'🔴 Home'},
     {val:'away',label:'✈️ Away'}
   ], () => statsVenueFilter);
+  buildChips('statsSortChips', [
+    {val:'played',label:'Most Played'},
+    {val:'winpct',label:'Win %'},
+    {val:'az',label:'A–Z'}
+  ], () => statsSort);
 
   renderStatsResults();
 }
@@ -3034,9 +3063,13 @@ function renderStatsResults() {
   // Sort groups
   let sorted = Object.values(groups);
   if (statsMode === 'season') {
-    sorted.sort((a,b) => b.key.localeCompare(a.key)); // newest first
+    sorted.sort((a,b) => b.key.localeCompare(a.key)); // newest first (ignore statsSort for season)
+  } else if (statsSort === 'winpct') {
+    sorted.sort((a,b) => (b.p?b.w/b.p:0) - (a.p?a.w/a.p:0));
+  } else if (statsSort === 'az') {
+    sorted.sort((a,b) => a.key.localeCompare(b.key));
   } else {
-    sorted.sort((a,b) => b.p - a.p); // most matches first
+    sorted.sort((a,b) => b.p - a.p); // most matches first (default)
   }
 
   // Add caretaker label for managers
@@ -3340,9 +3373,10 @@ function renderResults() {
       const h2h=getH2H(f.opponent)||[];
       const matchISO=ds.toISOString().slice(0,10);
       const found=h2h.find(r=>r.iso===matchISO);
-      const scoreDisplay=f.score||(found?found.s:'TBD');
-      const resultLetter=f.result||(found?found.r:null);
-      const resultCls=resultLetter?(resultLetter==='W'?'win':resultLetter==='L'?'loss':'draw'):'tbd';
+      const isAbandoned = (f.round||'').toLowerCase().includes('abandon') || (f.score||'').toLowerCase().includes('abandon');
+      const scoreDisplay = isAbandoned ? 'ABD' : (f.score||(found?found.s:'TBD'));
+      const resultLetter = isAbandoned ? null : (f.result||(found?found.r:null));
+      const resultCls = isAbandoned ? 'abandoned' : (resultLetter?(resultLetter==='W'?'win':resultLetter==='L'?'loss':'draw'):'tbd');
       const fIdx=list.indexOf(f);
       html += '<div class="result-card" data-idx="'+fIdx+'" data-iso="'+matchISO+'"><div class="fixture-accent '+accentCls+'"></div><div class="result-inner">' +
         '<div class="fixture-date-col"><div class="fixture-day">'+ds.getDate()+'</div><div class="fixture-dow">'+ds.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase()+'</div></div>' +
@@ -3472,9 +3506,10 @@ function showCalPopup(date,matches) {
       const h2h=getH2H(f.opponent)||[];
       const matchISO=ds.toISOString().slice(0,10);
       const found=h2h.find(r=>r.iso===matchISO);
-      const scoreDisplay=f.score||(found?found.s:'TBD');
-      const resultLetter=f.result||(found?found.r:null);
-      const resultCls=resultLetter?(resultLetter==='W'?'win':resultLetter==='L'?'loss':'draw'):'tbd';
+      const isAbandoned2 = (f.round||'').toLowerCase().includes('abandon') || (f.score||'').toLowerCase().includes('abandon');
+      const scoreDisplay = isAbandoned2 ? 'ABD' : (f.score||(found?found.s:'TBD'));
+      const resultLetter = isAbandoned2 ? null : (f.result||(found?found.r:null));
+      const resultCls = isAbandoned2 ? 'abandoned' : (resultLetter?(resultLetter==='W'?'win':resultLetter==='L'?'loss':'draw'):'tbd');
       html += '<div class="result-card"><div class="fixture-accent '+accentCls+'"></div><div class="result-inner">' +
         '<div class="fixture-date-col"><div class="fixture-day">'+ds.getDate()+'</div><div class="fixture-dow">'+ds.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase()+'</div></div>' +
         '<div class="fixture-divider"></div>' +
