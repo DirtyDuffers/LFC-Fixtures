@@ -538,6 +538,11 @@
     .cell-w{color:#3dba78;font-weight:700}.cell-l{color:var(--red)}.cell-d{color:var(--gold)}
     .cell-pos{color:#3dba78}.cell-neg{color:var(--red)}
     .stats-empty{padding:32px 16px;text-align:center;color:var(--muted);font-size:13px}
+    .season-breakdown{background:var(--bg2);border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:12px}
+    .season-breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--border)}
+    .season-breakdown-row:last-child{border-bottom:none}
+    .season-breakdown-comp{flex:1;color:var(--text)}
+    .season-breakdown-stats{color:var(--muted);font-variant-numeric:tabular-nums}
 
     /* Feature 1: Round tag on result cards */
     .round-tag{background:var(--bg3);color:var(--muted);font-size:10px;padding:1px 5px;border-radius:6px;font-weight:600;letter-spacing:.3px}
@@ -3109,6 +3114,47 @@ function renderStatsResults() {
   </div></div>`;
 
   el.innerHTML = chartHtml + html;
+
+  // Feature 5: Season card expansion — show comp breakdown on click
+  if (statsMode === 'season') {
+    el.querySelectorAll('.stat-card').forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => {
+        // Toggle existing breakdown
+        let existing = card.nextElementSibling;
+        if (existing && existing.classList.contains('season-breakdown')) {
+          existing.remove(); return;
+        }
+        const seasonKey = card.querySelector('.stat-card-name').childNodes[0].textContent.trim();
+        // Group pool by competition for this season
+        const seasonPool = pool.filter(f => {
+          const fd = f.start instanceof Date ? f.start : new Date(f.start);
+          return getSeason(fd) === seasonKey;
+        });
+        const compGroups = {};
+        seasonPool.forEach(f => {
+          const k = f.competition || 'Unknown';
+          if (!compGroups[k]) compGroups[k] = {p:0,w:0,d:0,l:0};
+          compGroups[k].p++;
+          if (f.result==='W') compGroups[k].w++;
+          else if (f.result==='L') compGroups[k].l++;
+          else if (f.result==='D') compGroups[k].d++;
+        });
+        const breakdown = document.createElement('div');
+        breakdown.className = 'season-breakdown';
+        breakdown.innerHTML = Object.entries(compGroups)
+          .sort((a,b)=>b[1].p-a[1].p)
+          .map(([comp, g]) => {
+            const logo = getCompLogo(comp);
+            return `<div class="season-breakdown-row">
+              <span class="season-breakdown-comp">${logo?`<img src="${logo}" alt="" onerror="this.style.display='none'" style="width:14px;height:14px;vertical-align:middle;margin-right:4px"/>`:''}${esc(compShort(comp))}</span>
+              <span class="season-breakdown-stats">P${g.p} W${g.w} D${g.d} L${g.l}</span>
+            </div>`;
+          }).join('');
+        card.after(breakdown);
+      });
+    });
+  }
 }
 
 function renderResults() {
