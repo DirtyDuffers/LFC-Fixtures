@@ -3356,12 +3356,20 @@ function renderStatsResults() {
   html += '</div>';
 
   // Bar chart of win % by group (top 12 for readability)
-  const chartItems = [...sorted].sort((a,b)=>(b.p?b.w/b.p:0)-(a.p?a.w/a.p:0)).slice(0,12);
-  const maxPct = Math.max(...chartItems.map(g=>g.p?g.w/g.p*100:0), 1);
+  // Sort all groups by win% descending
+  const allByWin = (statsMode === 'opponent')
+    ? [...sorted].filter(g => g.p >= 5).sort((a,b) => (b.p?b.w/b.p:0) - (a.p?a.w/a.p:0))
+    : [...sorted].sort((a,b) => (b.p?b.w/b.p:0) - (a.p?a.w/a.p:0));
+  // Top 6 = best win%, Bottom 6 = worst win% (from end of sorted list)
+  const top6 = allByWin.slice(0, 6);
+  const bot6 = allByWin.length > 6 ? allByWin.slice(-6).reverse() : [];
+  // chartItems only used for maxPct calculation across both panels
+  const chartItems = [...top6, ...bot6];
+  const maxPct = 100; // always scale to 100% so bars represent true win rate
   const modeLabel = statsMode==='manager'?'by Manager':statsMode==='competition'?'by Competition':statsMode==='season'?'by Season':statsMode==='opponent'?'by Opponent':'by Venue';
 
-  function buildHBarPanel(items, title) {
-    const panelMax = Math.max(...items.map(g=>g.p?g.w/g.p*100:0), 1);
+  function buildHBarPanel(items, title, globalMax) {
+    const panelMax = globalMax || Math.max(...items.map(g=>g.p?g.w/g.p*100:0), 1);
     return '<div class="chart-panel">' +
       '<div class="chart-panel-title">'+title+'</div>' +
       '<div class="chart-hbars">' +
@@ -3386,119 +3394,253 @@ function renderStatsResults() {
       '</div></div>';
   }
 
-  const top6 = chartItems.slice(0, 6);
-  const bot6 = chartItems.slice(6, 12);
   const chartHtml = '<div class="chart-wrap">' +
-    '<div class="chart-title">Win % '+modeLabel+' <span class="chart-subtitle">(Top 12 by win %)</span></div>' +
+    '<div class="chart-title">Win % '+modeLabel+' <span class="chart-subtitle">'+(statsMode==='opponent'?'(5+ games, by win %)':'(Top 12 by win %)')+'</span></div>' +
     '<div class="chart-dual">' +
-      buildHBarPanel(top6, '🥇 Top 6') +
-      (bot6.length ? buildHBarPanel(bot6, '📉 Bottom 6') : '') +
+      buildHBarPanel(top6, '🥇 Top 6', maxPct) +
+      (bot6.length ? buildHBarPanel(bot6, '📉 Bottom 6', maxPct) : '') +
     '</div>' +
   '</div>';
 
-  // Aggregate totals across all sorted groups for mini charts
+  // Aggregate totals for all mini charts (from filtered pool directly)
   const totW = sorted.reduce((s,g)=>s+g.w, 0);
   const totD = sorted.reduce((s,g)=>s+g.d, 0);
   const totL = sorted.reduce((s,g)=>s+g.l, 0);
   const totGF = sorted.reduce((s,g)=>s+g.gf, 0);
   const totGA = sorted.reduce((s,g)=>s+g.ga, 0);
 
-  const miniChartsHtml = '<div class="mini-charts-row">' +
-    '<div class="mini-chart-card">' +
-      '<div class="mini-chart-title">W / D / L</div>' +
-      '<canvas id="wdlPie" width="100" height="100"></canvas>' +
-      '<div class="mini-chart-legend">' +
-        '<span class="mcl-dot" style="background:#3dba78"></span><span>W '+totW+'</span>' +
-        '<span class="mcl-dot" style="background:#F6EB61"></span><span>D '+totD+'</span>' +
-        '<span class="mcl-dot" style="background:#e42027"></span><span>L '+totL+'</span>' +
+  // Clean sheet + month data — computed directly from filtered pool
+  let cleanSheets = 0, goalsConceded = 0;
+  const monthData = Array.from({length:12}, () => ({w:0,d:0,l:0}));
+  pool.forEach(f => {
+    const score = f.score || '';
+    const result = f.result || '';
+    if (score && score.includes('-')) {
+      const raw = score.split('(')[0].trim().split('-');
+      if (raw.length === 2) {
+        const ga = parseInt(raw[1]);
+        if (!isNaN(ga)) { if (ga === 0) cleanSheets++; else goalsConceded++; }
+      }
+    }
+    const d = f.start instanceof Date ? f.start : new Date(f.start);
+    const mon = d.getUTCMonth();
+    if (result === 'W') monthData[mon].w++;
+    else if (result === 'D') monthData[mon].d++;
+    else if (result === 'L') monthData[mon].l++;
+  });
+  const totalWithScore = cleanSheets + goalsConceded;
+
+  const miniChartsHtml =
+    // Row 1: W/D/L donut + Goals waffle
+    '<div class="mini-charts-row">' +
+      '<div class="mini-chart-card">' +
+        '<div class="mini-chart-title">W / D / L</div>' +
+        '<canvas id="wdlDonut" width="100" height="100"></canvas>' +
+        '<div class="mini-chart-legend">' +
+          '<span class="mcl-dot" style="background:#3dba78"></span><span>W '+totW+'</span>' +
+          '<span class="mcl-dot" style="background:#F6EB61"></span><span>D '+totD+'</span>' +
+          '<span class="mcl-dot" style="background:#e42027"></span><span>L '+totL+'</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="mini-chart-card">' +
+        '<div class="mini-chart-title">Goals For vs Against</div>' +
+        '<canvas id="goalWaffle" width="110" height="110"></canvas>' +
+        '<div class="mini-chart-legend">' +
+          '<span class="mcl-dot" style="background:#00B2A9"></span><span>For '+totGF+'</span>' +
+          '<span class="mcl-dot" style="background:#e42027"></span><span>Agst '+totGA+'</span>' +
+        '</div>' +
       '</div>' +
     '</div>' +
-    '<div class="mini-chart-card">' +
-      '<div class="mini-chart-title">Goals For vs Against</div>' +
-      '<canvas id="goalWaffle" width="110" height="110"></canvas>' +
-      '<div class="mini-chart-legend">' +
-        '<span class="mcl-dot" style="background:#00B2A9"></span><span>For '+totGF+'</span>' +
-        '<span class="mcl-dot" style="background:#e42027"></span><span>Agst '+totGA+'</span>' +
+    // Row 2: Clean sheets stacked ring + Month heatmap
+    '<div class="mini-charts-row">' +
+      '<div class="mini-chart-card">' +
+        '<div class="mini-chart-title">Clean Sheets</div>' +
+        '<canvas id="csRing" width="100" height="100"></canvas>' +
+        '<div class="mini-chart-legend">' +
+          '<span class="mcl-dot" style="background:#00B2A9"></span><span>Clean '+cleanSheets+'</span>' +
+          '<span class="mcl-dot" style="background:#e42027"></span><span>Conceded '+goalsConceded+'</span>' +
+        '</div>' +
       '</div>' +
-    '</div>' +
-  '</div>';
+      '<div class="mini-chart-card" style="flex:2">' +
+        '<div class="mini-chart-title">Results by Month</div>' +
+        '<canvas id="monthHeat" width="220" height="80"></canvas>' +
+        '<div class="mini-chart-legend">' +
+          '<span class="mcl-dot" style="background:#3dba78"></span><span>Win %</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
 
   el.innerHTML = chartHtml + miniChartsHtml + html;
 
-  // ── W/D/L donut chart ─────────────────────────────────────────────────────
+  // ── W/D/L donut ───────────────────────────────────────────────────────────
   (function() {
-    const c = document.getElementById('wdlPie');
+    const c = document.getElementById('wdlDonut');
     if (!c) return;
     const ctx = c.getContext('2d');
     const total = totW + totD + totL;
     if (!total) return;
     const slices = [
-      { val: totW, col: '#3dba78' },
-      { val: totD, col: '#F6EB61' },
-      { val: totL, col: '#e42027' },
-    ].filter(s => s.val > 0);
-    const cx = 50, cy = 50, outer = 44, inner = 26;
-    let angle = -Math.PI / 2;
+      {val:totW, col:'#3dba78'},
+      {val:totD, col:'#F6EB61'},
+      {val:totL, col:'#e42027'},
+    ].filter(s=>s.val>0);
+    const cx=50, cy=50, outer=44, inner=26;
+    let angle = -Math.PI/2;
     slices.forEach(s => {
-      const sweep = (s.val / total) * 2 * Math.PI;
+      const sweep = (s.val/total)*2*Math.PI;
       ctx.beginPath();
-      ctx.arc(cx, cy, outer, angle, angle + sweep);
-      ctx.arc(cx, cy, inner, angle + sweep, angle, true);
+      ctx.arc(cx, cy, outer, angle, angle+sweep);
+      ctx.arc(cx, cy, inner, angle+sweep, angle, true);
       ctx.closePath();
       ctx.fillStyle = s.col;
       ctx.fill();
       angle += sweep;
     });
-    // Win % label in centre
-    const winPct = total ? Math.round(totW / total * 100) : 0;
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#111';
+    const winPct = Math.round(totW/total*100);
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim()||'#111';
     ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(winPct + '%', cx, cy - 4);
+    ctx.fillText(winPct+'%', cx, cy-4);
     ctx.font = '8px sans-serif';
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#888';
-    ctx.fillText('win', cx, cy + 9);
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#888';
+    ctx.fillText('win', cx, cy+9);
   })();
 
-  // ── Goals For vs Against waffle chart (10×10 grid) ─────────────────────
+  // ── Goals waffle ──────────────────────────────────────────────────────────
   (function() {
     const c = document.getElementById('goalWaffle');
     if (!c) return;
     const ctx = c.getContext('2d');
-    const total = totGF + totGA;
+    const total = totGF+totGA;
     if (!total) return;
-    const cols = 10, rows = 10, cells = cols * rows;
-    const forCells = Math.round((totGF / total) * cells);
-    const size = c.width / cols;
-    const gap = 2;
-    for (let i = 0; i < cells; i++) {
-      const row = Math.floor(i / cols);
-      const col = i % cols;
-      // Fill top-right (GF) teal, bottom-left (GA) red — reading order
-      const isFor = i < forCells;
-      ctx.fillStyle = isFor ? '#00B2A9' : '#e42027';
+    const cols=10, rows=10, cells=cols*rows;
+    const forCells = Math.round((totGF/total)*cells);
+    const size = c.width/cols, gap = 2;
+    for (let i=0; i<cells; i++) {
+      const row=Math.floor(i/cols), col=i%cols;
+      ctx.fillStyle = i<forCells ? '#00B2A9' : '#e42027';
       ctx.beginPath();
-      ctx.roundRect(
-        col * size + gap / 2,
-        row * size + gap / 2,
-        size - gap,
-        size - gap,
-        2
-      );
+      ctx.roundRect(col*size+gap/2, row*size+gap/2, size-gap, size-gap, 2);
       ctx.fill();
     }
-    // Pct label overlay in centre
-    const pct = Math.round((totGF / total) * 100);
+    const pct = Math.round((totGF/total)*100);
     ctx.fillStyle = 'rgba(0,0,0,0.55)';
-    ctx.beginPath();
-    ctx.roundRect(28, 38, 54, 24, 6);
-    ctx.fill();
+    ctx.beginPath(); ctx.roundRect(28,38,54,24,6); ctx.fill();
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 13px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(pct + '% for', 55, 50);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(pct+'% for', 55, 50);
+  })();
+
+  // ── Clean sheets stacked ring ─────────────────────────────────────────────
+  (function() {
+    const c = document.getElementById('csRing');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    if (!totalWithScore) return;
+    const cx=50, cy=50;
+    // Outer ring: clean sheets vs conceded
+    const outerSlices = [
+      {val:cleanSheets, col:'#00B2A9'},
+      {val:goalsConceded, col:'#e42027'},
+    ];
+    let angle = -Math.PI/2;
+    outerSlices.forEach(s => {
+      const sweep = (s.val/totalWithScore)*2*Math.PI;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 44, angle, angle+sweep);
+      ctx.arc(cx, cy, 30, angle+sweep, angle, true);
+      ctx.closePath();
+      ctx.fillStyle = s.col;
+      ctx.fill();
+      angle += sweep;
+    });
+    // Inner ring: W/D/L for clean sheet games vs conceded games
+    const csW = pool.filter(f=>{
+      const s=f.score||''; if(!s.includes('-')) return false;
+      const ga=parseInt(s.split('(')[0].trim().split('-')[1]);
+      return !isNaN(ga) && ga===0 && f.result==='W';
+    }).length;
+    const csGames = cleanSheets||1;
+    const concGames = goalsConceded||1;
+    // Inner arc: clean sheet win rate (teal shade) vs conceded win rate (red shade)
+    const csWinRate = cleanSheets ? csW/csGames : 0;
+    const innerSlices = [
+      {val:csWinRate, col:'#3dba78'},
+      {val:1-csWinRate, col:'rgba(0,178,169,0.25)'},
+    ];
+    angle = -Math.PI/2;
+    innerSlices.forEach(s => {
+      const sweep = s.val * 2 * Math.PI;
+      if (sweep < 0.01) return;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 26, angle, angle+sweep);
+      ctx.arc(cx, cy, 14, angle+sweep, angle, true);
+      ctx.closePath();
+      ctx.fillStyle = s.col;
+      ctx.fill();
+      angle += sweep;
+    });
+    // Centre: clean sheet %
+    const csPct = Math.round((cleanSheets/totalWithScore)*100);
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim()||'#111';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(csPct+'%', cx, cy-3);
+    ctx.font = '7px sans-serif';
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#888';
+    ctx.fillText('clean', cx, cy+6);
+  })();
+
+  // ── Results by month heatmap ──────────────────────────────────────────────
+  (function() {
+    const c = document.getElementById('monthHeat');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    const W=c.width, H=c.height;
+    const labels = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+    const cellW = W/12, cellH = H-16;
+    monthData.forEach((m, i) => {
+      const total = m.w+m.d+m.l;
+      const winPct = total ? m.w/total : 0;
+      const x = i*cellW;
+      // Colour: interpolate from red (0%) → gold (50%) → green (100%)
+      let col;
+      if (winPct >= 0.5) {
+        const t = (winPct-0.5)*2;
+        const r=Math.round(61+(58)*t), g=Math.round(186-(42)*t), b=Math.round(120*(1-t)+0*t);
+        col = `rgb(${Math.round(61+t*(61-61))},${Math.round(186-t*120)},${Math.round(120*t)})`;
+        // simpler: green intensity
+        const g2=Math.round(100+t*86), r2=Math.round(61-t*0);
+        col = `rgb(${Math.round(61*(1-t)+61*t)},${Math.round(186-(186-186)*t)},${120})`;
+        // Actually just lerp #F6EB61 → #3dba78
+        col = `rgb(${Math.round(246-t*(246-61))},${Math.round(235-t*(235-186))},${Math.round(97-t*(97-120))})`;
+      } else {
+        const t = winPct*2;
+        // lerp #e42027 → #F6EB61
+        col = `rgb(${Math.round(228+t*(246-228))},${Math.round(32+t*(235-32))},${Math.round(39+t*(97-39))})`;
+      }
+      // Draw cell
+      ctx.fillStyle = total ? col : (getComputedStyle(document.documentElement).getPropertyValue('--bg3').trim()||'#eee');
+      ctx.beginPath();
+      ctx.roundRect(x+1.5, 0, cellW-3, cellH-2, 3);
+      ctx.fill();
+      // Win% text if space
+      if (total) {
+        ctx.fillStyle = winPct>0.45 ? 'rgba(0,0,0,0.6)' : '#fff';
+        ctx.font = '7px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(Math.round(winPct*100)+'%', x+cellW/2, cellH/2-1);
+      }
+      // Month label
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#888';
+      ctx.font = 'bold 8px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(labels[i], x+cellW/2, cellH+2);
+    });
   })();
 
   // Feature 5: Season card expansion — show comp breakdown on click
