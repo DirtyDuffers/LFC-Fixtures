@@ -559,6 +559,7 @@
     .otd-anniversary.big{background:var(--red);color:#fff}
     .otd-highlight{background:rgba(200,16,46,.06)}
     .otd-big-margin .otd-score{font-weight:800;text-decoration:underline;text-underline-offset:2px}
+    .otd-detail{font-size:10px;margin-top:3px;color:var(--muted2);padding-top:3px;border-top:1px solid var(--border)}
     [data-theme="light"] .otd-highlight{background:rgba(200,16,46,.04)}
 
     /* Feature 6: Planner countdown */
@@ -2053,11 +2054,12 @@ function renderOTD() {
       const anniversaryBadge = isBigAnniversary ? '<span class="otd-anniversary big">' + yearsAgo + ' yrs</span>' :
                                isAnniversary    ? '<span class="otd-anniversary">' + yearsAgo + ' yrs</span>' : '';
 
-      return '<div class="otd-item' + (isBigAnniversary?' otd-highlight':'') + '">' +
+      return '<div class="otd-item' + (isBigAnniversary?' otd-highlight':'') + '" style="cursor:pointer" data-iso="'+iso+'" data-opp="'+esc(f.opponent||'')+'" data-mgr="'+esc(mgr||'')+'">' +
         '<div class="otd-year">' + year + (anniversaryBadge?'<br/>'+anniversaryBadge:'') + '</div>' +
         '<div class="otd-info">' +
           '<div class="otd-opponent">' + (ob?'<img src="'+ob+'" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px" onerror="this.style.display=\'none\'"/>':'') + esc(f.opponent||'Unknown') + '</div>' +
-          '<div class="otd-meta"><span class="ha-small '+haSmallOtd+'">'+haLabelOtd+'</span> '+esc(comp)+(f.round?' · '+esc(f.round):'')+(mgr?' · <span style="color:var(--muted);font-size:10px">'+esc(mgr)+'</span>':'')+'</div>' +
+          '<div class="otd-meta"><span class="ha-small '+haSmallOtd+'">'+haLabelOtd+'</span> '+esc(comp)+(f.round?' · '+esc(f.round):'')+' </div>' +
+          '<div class="otd-detail" style="display:none"></div>' +
         '</div>' +
         '<div class="otd-score" style="color:'+scoreCol+'">' + (esc(score)||'–') + '</div>' +
       '</div>';
@@ -2065,6 +2067,27 @@ function renderOTD() {
   });
 
   el.innerHTML = html;
+
+  // Wire OTD item clicks — expand to show manager + attendance
+  el.querySelectorAll('.otd-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const detail = item.querySelector('.otd-detail');
+      if (!detail) return;
+      if (detail.style.display !== 'none') {
+        detail.style.display = 'none';
+        return;
+      }
+      const iso = item.dataset.iso;
+      const mgr = item.dataset.mgr;
+      const att = iso ? getAttendance(iso) : null;
+      let parts = [];
+      if (mgr) parts.push('<span style="color:var(--muted2)">' + esc(mgr) + '</span>');
+      if (att) parts.push('<span style="color:var(--muted)">' + att.toLocaleString() + ' att.</span>');
+      if (!parts.length) parts.push('<span style="color:var(--muted);font-size:10px">No extra info</span>');
+      detail.innerHTML = parts.join(' · ');
+      detail.style.display = 'block';
+    });
+  });
 
   // Highlight biggest margin of the day
   let bestGd = -1, bestEl = null;
