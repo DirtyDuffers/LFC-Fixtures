@@ -3026,6 +3026,7 @@ let statsMode = 'manager';     // manager | competition | season | venue
 let statsCompFilter = 'all';   // competition filter for cross-cutting
 let statsVenueFilter = 'all';  // home/away filter
 let statsSort = 'played';       // played | winpct | az
+let statsOpponentSearch = '';   // filter in opponent mode
 
 function renderStatsPage() {
   const el = $id('statsPageContent');
@@ -3111,9 +3112,25 @@ function renderStatsPage() {
   renderStatsResults();
 }
 
+function onStatsOpponentSearch(val) {
+  statsOpponentSearch = val.toLowerCase().trim();
+  renderStatsResults();
+}
+
 function renderStatsResults() {
   const el = $id('statsResults');
   if (!el) return;
+
+  // Show/hide opponent search input based on mode
+  const searchWrap = $id('statsOpponentSearch');
+  if (searchWrap) {
+    searchWrap.style.display = statsMode === 'opponent' ? '' : 'none';
+    if (statsMode !== 'opponent') {
+      statsOpponentSearch = '';
+      const inp = $id('statsOpponentInput');
+      if (inp) inp.value = '';
+    }
+  }
 
   // Build match pool from static embedded data (works without ICS fetch)
   // First from H2H_DATA (per-opponent results)
