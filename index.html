@@ -325,7 +325,7 @@
     .state-view{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 30px;text-align:center;gap:12px}
     .state-icon{font-size:42px}
     .state-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--white)}
-    .state-msg{color:var(--muted);font-size:13.5px;max-width:300px;line-height:1.7}
+    .state-msg{color:var(--muted);font-size:13.5px;max-width:300px;line-height:1.7}.btn-clear-filters{margin-top:14px;padding:8px 18px;background:var(--red);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer}
     .retry-btn{margin-top:8px;background:var(--red);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer}
     .no-results{padding:40px 20px;text-align:center;color:var(--muted)}
     .export-row{text-align:center;padding:16px 20px 0}
@@ -378,7 +378,7 @@
     .otd-today-btn:hover{border-color:var(--teal);color:var(--teal)}
     .otd-date{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;color:var(--white);margin-bottom:2px}
     .otd-subtitle{font-size:12px;color:var(--muted);margin-bottom:16px}
-    .otd-empty{text-align:center;color:var(--muted);font-size:13px;padding:40px 0}
+    .otd-empty{text-align:center;color:var(--muted);font-size:13px;padding:40px 0}.otd-empty-nav{display:flex;gap:10px;justify-content:center;margin-top:14px}.otd-nav-btn{padding:8px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;font-size:13px;color:var(--text);cursor:pointer}
     .otd-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
     .otd-year{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--teal);width:44px;flex-shrink:0;text-align:center}
     .otd-info{flex:1;min-width:0}
@@ -1568,7 +1568,8 @@ function plannerRender() {
     return;
   }
   empty.classList.add('hidden');
-  list.innerHTML = plannerEntries.map((e,i) => {
+  const sortedEntries = [...plannerEntries].sort((a, b) => new Date(a.from) - new Date(b.from));
+  list.innerHTML = sortedEntries.map((e,i) => {
     const range = e.from === e.to ? plannerFmt(e.from) : plannerFmt(e.from) + ' – ' + plannerFmt(e.to);
     return `<div class="planner-entry" id="plannerEntry${i}">
       <div class="planner-entry-info">
@@ -1577,7 +1578,7 @@ function plannerRender() {
       </div>
       <div class="planner-entry-actions">
         <button class="planner-entry-edit" onclick="plannerEdit(${i})" title="Edit">&#9998;</button>
-        <button class="planner-entry-del" onclick="plannerDelete(${i})" title="Remove">&#10005;</button>
+        <button class="planner-entry-del" onclick="plannerDelete(${plannerEntries.indexOf(e)})" title="Remove">&#10005;</button>
       </div>
     </div>`;
   }).join('');
@@ -1983,6 +1984,19 @@ function otdApplyDate() {
   renderOTD();
 }
 
+function otdShift(delta) {
+  const now = new Date();
+  const day   = otdDay   ?? now.getDate();
+  const month = otdMonth ?? now.getMonth();
+  const d = new Date(2000, month, day);
+  d.setDate(d.getDate() + delta);
+  otdDay   = d.getDate();
+  otdMonth = d.getMonth();
+  sessionStorage.setItem('otdDay',   otdDay);
+  sessionStorage.setItem('otdMonth', otdMonth);
+  renderOTD();
+}
+
 function otdGoToday() {
   const now = new Date();
   otdDay = now.getDate();
@@ -2186,7 +2200,27 @@ function updateNavBadge() {
   } else if (badge) {
     badge.remove();
   }
+  updateCalBadge();
 }
+
+function updateCalBadge() {
+  if (!calYear) return;
+  const monthStart = new Date(calYear, calMonth, 1);
+  const monthEnd   = new Date(calYear, calMonth + 1, 0, 23, 59, 59);
+  const count = allFixtures.filter(f => f.start >= monthStart && f.start <= monthEnd).length;
+  let badge = document.querySelector('.nav-item[data-page="pageCalendar"] .nav-badge');
+  if (count > 0) {
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'nav-badge';
+      document.querySelector('.nav-item[data-page="pageCalendar"]').appendChild(badge);
+    }
+    badge.textContent = count;
+  } else if (badge) {
+    badge.remove();
+  }
+}
+
 
 // Navigation
 const filterSection = $id('filterSection');
@@ -3021,7 +3055,10 @@ function renderStatsPage() {
       '<div class="compare-label" style="margin-top:10px">Filter by venue</div>' +
       '<div class="compare-chips" id="statsVenueChips"></div>' +
     '</div>' +
-    '<div id="statsResults"></div>' +
+    '<div id="statsOpponentSearch" style="display:none;padding:8px 0 4px">' +
+      '<input id="statsOpponentInput" type="search" placeholder="Search opponents…" style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;outline:none" oninput="onStatsOpponentSearch(this.value)"/>' +
+      '</div>' +
+      '<div id="statsResults"></div>' +
   '</div>';
 
   // Helper: render a chip group
@@ -3185,6 +3222,11 @@ function renderStatsResults() {
     sorted.sort((a,b) => b.p - a.p); // most matches first (default)
   }
 
+  // Filter by opponent search term if in opponent mode
+  if (statsMode === 'opponent' && statsOpponentSearch) {
+    sorted = sorted.filter(g => g.key.toLowerCase().includes(statsOpponentSearch));
+  }
+
   // Add caretaker label for managers
   sorted.forEach(g => {
     if (statsMode === 'manager') {
@@ -3301,6 +3343,13 @@ function renderStatsResults() {
       });
     });
   }
+}
+
+function clearResultsFilters() {
+  resultsComp = 'all'; resultsHA = 'all'; resultsSeason = 'all'; resultsMgr = 'all';
+  sessionStorage.setItem('rComp','all'); sessionStorage.setItem('rHA','all');
+  sessionStorage.setItem('rSeason','all'); sessionStorage.setItem('rMgr','all');
+  renderResults();
 }
 
 function renderResults() {
@@ -3512,6 +3561,7 @@ function renderResults() {
   // Wire result card clicks to show popup
   el.querySelectorAll('.result-card').forEach((card, i) => {
     card.addEventListener('click', () => {
+      if (navigator.vibrate) navigator.vibrate(8);
       // Find the fixture data stored in data attribute or reconstruct from the card
       const idx = parseInt(card.dataset.idx);
       if (!isNaN(idx) && list[idx]) {
@@ -3552,7 +3602,7 @@ function renderCalendar() {
     const matches=matchDays[day]||[];
     c.className='cal-cell'+(isToday?' today':'')+(matches.length?' has-match':'');
     c.innerHTML='<div class="cal-day">'+day+'</div>' + (matches.length?'<div class="cal-dot-row">'+matches.slice(0,3).map(()=>'<div class="cal-dot"></div>').join('')+'</div>':'');
-    if (matches.length) c.addEventListener('click', ()=>showCalPopup(new Date(calYear,calMonth,day),matches));
+    if (matches.length) c.addEventListener('click', ()=>{if(navigator.vibrate)navigator.vibrate(8);showCalPopup(new Date(calYear,calMonth,day),matches)});
     grid.appendChild(c);
   }
   const rem=(7-(firstDow+daysInMonth)%7)%7;
@@ -3684,8 +3734,8 @@ function showCalPopup(date,matches) {
 
 $id('calPopupClose').addEventListener('click',()=>$id('calPopup').classList.add('hidden'));
 $id('calPopup').addEventListener('click',e=>{if(e.target===$id('calPopup'))$id('calPopup').classList.add('hidden');});
-$id('calPrev').addEventListener('click',()=>{calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();});
-$id('calNext').addEventListener('click',()=>{calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();});
+$id('calPrev').addEventListener('click',()=>{calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();updateCalBadge();});
+$id('calNext').addEventListener('click',()=>{calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();updateCalBadge();});
 
 // Month/year picker
 let pickerYear = null;
