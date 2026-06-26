@@ -521,13 +521,13 @@
 
     /* Chart area */
     .chart-wrap{padding:0 16px 16px}
-    .chart-canvas-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;overflow:hidden}
+    .chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:12px}.chart-title{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--text)}.mini-charts-row{display:flex;gap:10px;margin-bottom:12px}.mini-chart-card{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:8px}.mini-chart-title{font-size:11px;font-weight:700;color:var(--text);align-self:flex-start}.mini-chart-legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:10px;color:var(--muted2);align-items:center}.mcl-dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}.chart-subtitle{font-weight:400;font-size:11px;color:var(--muted)}.chart-dual{display:flex;gap:12px}.chart-panel{flex:1;min-width:0}.chart-panel-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
     .chart-title{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--white)}
-    .chart-bars{display:flex;align-items:flex-end;gap:4px;height:120px}
-    .chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
-    .chart-bar-inner{width:100%;border-radius:4px 4px 0 0;transition:height .4s ease}
-    .chart-bar-lbl{font-size:8px;color:var(--muted);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;display:flex;flex-direction:column;align-items:center}
-    .chart-bar-logo{display:flex;justify-content:center;margin-top:2px}
+    .chart-hbars{display:flex;flex-direction:column;gap:6px;padding-top:4px}
+    
+    .chart-hbar-row{display:flex;align-items:center;gap:8px}.chart-hbar-label{font-size:10px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:70px;flex-shrink:0;display:flex;align-items:center;gap:3px}.chart-hbar-track{flex:1;height:10px;background:var(--bg3);border-radius:6px;overflow:hidden}.chart-hbar-fill{height:100%;border-radius:6px;transition:width .4s ease}.chart-hbar-pct{font-size:11px;font-weight:700;color:var(--muted2);width:30px;text-align:right;flex-shrink:0}
+    
+    
     .chart-bar-val{font-size:9px;font-weight:700;color:var(--white)}
 
     /* Season table */
@@ -3051,6 +3051,7 @@ let statsCompFilter = 'all';   // competition filter for cross-cutting
 let statsVenueFilter = 'all';  // home/away filter
 let statsSort = 'played';       // played | winpct | az
 let statsOpponentSearch = '';   // filter in opponent mode
+let statsManagerSearch = '';    // filter in manager mode
 
 function renderStatsPage() {
   const el = $id('statsPageContent');
@@ -3080,7 +3081,10 @@ function renderStatsPage() {
       '<div class="compare-label" style="margin-top:10px">Filter by venue</div>' +
       '<div class="compare-chips" id="statsVenueChips"></div>' +
     '</div>' +
-    '<div id="statsOpponentSearch" style="display:none;padding:8px 0 4px">' +
+    '<div id="statsManagerSearch" style="display:none;padding:8px 0 4px">' +
+      '<input id="statsManagerInput" type="search" placeholder="Search managers…" style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;outline:none" oninput="onStatsManagerSearch(this.value)"/>' +
+      '</div>' +
+      '<div id="statsOpponentSearch" style="display:none;padding:8px 0 4px">' +
       '<input id="statsOpponentInput" type="search" placeholder="Search opponents…" style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;outline:none" oninput="onStatsOpponentSearch(this.value)"/>' +
       '</div>' +
       '<div id="statsResults"></div>' +
@@ -3136,6 +3140,11 @@ function renderStatsPage() {
   renderStatsResults();
 }
 
+function onStatsManagerSearch(val) {
+  statsManagerSearch = val.toLowerCase().trim();
+  renderStatsResults();
+}
+
 function onStatsOpponentSearch(val) {
   statsOpponentSearch = val.toLowerCase().trim();
   renderStatsResults();
@@ -3153,6 +3162,15 @@ function renderStatsResults() {
       statsOpponentSearch = '';
       const inp = $id('statsOpponentInput');
       if (inp) inp.value = '';
+    }
+  }
+  const mgrSearchWrap = $id('statsManagerSearch');
+  if (mgrSearchWrap) {
+    mgrSearchWrap.style.display = statsMode === 'manager' ? '' : 'none';
+    if (statsMode !== 'manager') {
+      statsManagerSearch = '';
+      const inp2 = $id('statsManagerInput');
+      if (inp2) inp2.value = '';
     }
   }
 
@@ -3263,9 +3281,12 @@ function renderStatsResults() {
     sorted.sort((a,b) => b.p - a.p); // most matches first (default)
   }
 
-  // Filter by opponent search term if in opponent mode
+  // Filter by search term in opponent/manager mode
   if (statsMode === 'opponent' && statsOpponentSearch) {
     sorted = sorted.filter(g => g.key.toLowerCase().includes(statsOpponentSearch));
+  }
+  if (statsMode === 'manager' && statsManagerSearch) {
+    sorted = sorted.filter(g => g.key.toLowerCase().includes(statsManagerSearch));
   }
 
   // Add caretaker label for managers
@@ -3337,32 +3358,148 @@ function renderStatsResults() {
   // Bar chart of win % by group (top 12 for readability)
   const chartItems = [...sorted].sort((a,b)=>(b.p?b.w/b.p:0)-(a.p?a.w/a.p:0)).slice(0,12);
   const maxPct = Math.max(...chartItems.map(g=>g.p?g.w/g.p*100:0), 1);
-  const chartHtml = `<div class="chart-wrap"><div class="chart-canvas-wrap">
-    <div class="chart-title">Win % ${statsMode==='manager'?'by Manager':statsMode==='competition'?'by Competition':statsMode==='season'?'by Season':statsMode==='opponent'?'by Opponent':'by Venue'}</div>
-    <div class="chart-bars">${chartItems.map(g => {
-      const pct = g.p ? (g.w/g.p*100) : 0;
-      const h = Math.round((pct/maxPct)*100);
-      const col = pct>=60?'#3dba78':pct>=50?'#00B2A9':pct>=40?'#F6EB61':'#e42027';
-      const shortKey = g.key.length>12 ? g.key.split(' ')[0] : g.key;
-      // Logo for competition or opponent mode
-      let logoHtml = '';
-      const imgStyle = 'width:14px;height:14px;object-fit:contain;margin-top:2px;display:block';
-      if (statsMode === 'competition') {
-        const logo = getCompLogo(g.key);
-        if (logo) logoHtml = '<img src="'+logo+'" alt="" style="'+imgStyle+'" onerror="this.remove()"/>';
-      } else if (statsMode === 'opponent') {
-        const badge = getClubBadge(g.key);
-        if (badge) logoHtml = '<img src="'+badge+'" alt="" style="'+imgStyle+'" onerror="this.remove()"/>';
-      }
-      return '<div class="chart-bar-col">' +
-        '<div class="chart-bar-val">'+pct.toFixed(0)+'%</div>' +
-        '<div class="chart-bar-inner" style="height:'+h+'%;background:'+col+'"></div>' +
-        '<div class="chart-bar-lbl">'+esc(shortKey)+(logoHtml?'<span class="chart-bar-logo">'+logoHtml+'</span>':'')+'</div>' +
-      '</div>';
-    }).join('')}</div>
-  </div></div>`;
+  const modeLabel = statsMode==='manager'?'by Manager':statsMode==='competition'?'by Competition':statsMode==='season'?'by Season':statsMode==='opponent'?'by Opponent':'by Venue';
 
-  el.innerHTML = chartHtml + html;
+  function buildHBarPanel(items, title) {
+    const panelMax = Math.max(...items.map(g=>g.p?g.w/g.p*100:0), 1);
+    return '<div class="chart-panel">' +
+      '<div class="chart-panel-title">'+title+'</div>' +
+      '<div class="chart-hbars">' +
+      items.map(g => {
+        const pct = g.p ? (g.w/g.p*100) : 0;
+        const w = Math.round((pct/panelMax)*100);
+        const col = pct>=60?'#3dba78':pct>=50?'#00B2A9':pct>=40?'#F6EB61':'#e42027';
+        let logoHtml = '';
+        if (statsMode === 'competition') {
+          const logo = getCompLogo(g.key);
+          if (logo) logoHtml = '<img src="'+logo+'" alt="" onerror="this.remove()" style="width:13px;height:13px;object-fit:contain;flex-shrink:0"/>';
+        } else if (statsMode === 'opponent') {
+          const badge = getClubBadge(g.key);
+          if (badge) logoHtml = '<img src="'+badge+'" alt="" onerror="this.remove()" style="width:13px;height:13px;object-fit:contain;flex-shrink:0"/>';
+        }
+        return '<div class="chart-hbar-row">' +
+          '<div class="chart-hbar-label">'+(logoHtml?logoHtml+' ':'')+esc(g.key)+'</div>' +
+          '<div class="chart-hbar-track"><div class="chart-hbar-fill" style="width:'+w+'%;background:'+col+'"></div></div>' +
+          '<div class="chart-hbar-pct">'+pct.toFixed(0)+'%</div>' +
+        '</div>';
+      }).join('') +
+      '</div></div>';
+  }
+
+  const top6 = chartItems.slice(0, 6);
+  const bot6 = chartItems.slice(6, 12);
+  const chartHtml = '<div class="chart-wrap">' +
+    '<div class="chart-title">Win % '+modeLabel+' <span class="chart-subtitle">(Top 12 by win %)</span></div>' +
+    '<div class="chart-dual">' +
+      buildHBarPanel(top6, '🥇 Top 6') +
+      (bot6.length ? buildHBarPanel(bot6, '📉 Bottom 6') : '') +
+    '</div>' +
+  '</div>';
+
+  // Aggregate totals across all sorted groups for mini charts
+  const totW = sorted.reduce((s,g)=>s+g.w, 0);
+  const totD = sorted.reduce((s,g)=>s+g.d, 0);
+  const totL = sorted.reduce((s,g)=>s+g.l, 0);
+  const totGF = sorted.reduce((s,g)=>s+g.gf, 0);
+  const totGA = sorted.reduce((s,g)=>s+g.ga, 0);
+
+  const miniChartsHtml = '<div class="mini-charts-row">' +
+    '<div class="mini-chart-card">' +
+      '<div class="mini-chart-title">W / D / L</div>' +
+      '<canvas id="wdlPie" width="100" height="100"></canvas>' +
+      '<div class="mini-chart-legend">' +
+        '<span class="mcl-dot" style="background:#3dba78"></span><span>W '+totW+'</span>' +
+        '<span class="mcl-dot" style="background:#F6EB61"></span><span>D '+totD+'</span>' +
+        '<span class="mcl-dot" style="background:#e42027"></span><span>L '+totL+'</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="mini-chart-card">' +
+      '<div class="mini-chart-title">Goals For vs Against</div>' +
+      '<canvas id="goalWaffle" width="110" height="110"></canvas>' +
+      '<div class="mini-chart-legend">' +
+        '<span class="mcl-dot" style="background:#00B2A9"></span><span>For '+totGF+'</span>' +
+        '<span class="mcl-dot" style="background:#e42027"></span><span>Agst '+totGA+'</span>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+
+  el.innerHTML = chartHtml + miniChartsHtml + html;
+
+  // ── W/D/L donut chart ─────────────────────────────────────────────────────
+  (function() {
+    const c = document.getElementById('wdlPie');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    const total = totW + totD + totL;
+    if (!total) return;
+    const slices = [
+      { val: totW, col: '#3dba78' },
+      { val: totD, col: '#F6EB61' },
+      { val: totL, col: '#e42027' },
+    ].filter(s => s.val > 0);
+    const cx = 50, cy = 50, outer = 44, inner = 26;
+    let angle = -Math.PI / 2;
+    slices.forEach(s => {
+      const sweep = (s.val / total) * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.arc(cx, cy, outer, angle, angle + sweep);
+      ctx.arc(cx, cy, inner, angle + sweep, angle, true);
+      ctx.closePath();
+      ctx.fillStyle = s.col;
+      ctx.fill();
+      angle += sweep;
+    });
+    // Win % label in centre
+    const winPct = total ? Math.round(totW / total * 100) : 0;
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#111';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(winPct + '%', cx, cy - 4);
+    ctx.font = '8px sans-serif';
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#888';
+    ctx.fillText('win', cx, cy + 9);
+  })();
+
+  // ── Goals For vs Against waffle chart (10×10 grid) ─────────────────────
+  (function() {
+    const c = document.getElementById('goalWaffle');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    const total = totGF + totGA;
+    if (!total) return;
+    const cols = 10, rows = 10, cells = cols * rows;
+    const forCells = Math.round((totGF / total) * cells);
+    const size = c.width / cols;
+    const gap = 2;
+    for (let i = 0; i < cells; i++) {
+      const row = Math.floor(i / cols);
+      const col = i % cols;
+      // Fill top-right (GF) teal, bottom-left (GA) red — reading order
+      const isFor = i < forCells;
+      ctx.fillStyle = isFor ? '#00B2A9' : '#e42027';
+      ctx.beginPath();
+      ctx.roundRect(
+        col * size + gap / 2,
+        row * size + gap / 2,
+        size - gap,
+        size - gap,
+        2
+      );
+      ctx.fill();
+    }
+    // Pct label overlay in centre
+    const pct = Math.round((totGF / total) * 100);
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.beginPath();
+    ctx.roundRect(28, 38, 54, 24, 6);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(pct + '% for', 55, 50);
+  })();
 
   // Feature 5: Season card expansion — show comp breakdown on click
   if (statsMode === 'season') {
