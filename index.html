@@ -2273,7 +2273,9 @@ if (cached) {
   try {
     const p = JSON.parse(cached);
     allFixtures = p.future.map(f => ({...f, start:new Date(f.start), end:f.end?new Date(f.end):null}));
-    allPast     = mergeHistorical(p.past.map(f  => ({...f, start:new Date(f.start), end:f.end?new Date(f.end):null})));
+    const cachedPast = p.past.map(f => ({...f, start:new Date(f.start), end:f.end?new Date(f.end):null}));
+    allPast     = mergeHistorical(cachedPast);
+    recordNewResults(cachedPast);
     getH2H._dirty = true;
     buildUI(); fetchICS(true);
   } catch(e) { loadFixtures(); }
@@ -2368,6 +2370,7 @@ async function fetchICS(silent) {
     const {future, past} = parseICS(text);
     allFixtures = future;
     allPast = mergeHistorical(past);
+    recordNewResults(past);
     getH2H._dirty = true;
     localStorage.setItem(CACHE_KEY, JSON.stringify({
       future: future.map(f => ({...f, start:f.start.toISOString(), end:f.end?f.end.toISOString():null})),
@@ -2387,6 +2390,57 @@ async function fetchICS(silent) {
 }
 
 // ICS Parser
+const NEW_RESULTS_KEY = 'lfc_new_results';
+
+function recordNewResults(icsPast) {
+  // Build set of all dates+opponents already in stored data
+  const stored = new Set();
+  for (const entry of Object.values(H2H_DATA)) {
+    for (const r of entry.results) {
+      stored.add(r.iso + '|' + entry.name.toLowerCase().trim());
+    }
+  }
+  for (const h of HIST_RESULTS) {
+    stored.add(h.start.slice(0,10) + '|' + (h.opponent||'').toLowerCase().trim());
+  }
+
+  // Load existing recorded results
+  let recorded = [];
+  try { recorded = JSON.parse(localStorage.getItem(NEW_RESULTS_KEY) || '[]'); } catch(e) {}
+  const recordedKeys = new Set(recorded.map(r => r.iso + '|' + (r.opponent||'').toLowerCase().trim()));
+
+  let added = 0;
+  for (const f of icsPast) {
+    if (!f.result || !f.score || !f.opponent) continue; // skip if no result yet
+    const d = f.start instanceof Date ? f.start : new Date(f.start);
+    const iso = d.toISOString().slice(0,10);
+    const oppKey = (f.opponent||'').toLowerCase().trim();
+    const key = iso + '|' + oppKey;
+    if (stored.has(key) || recordedKeys.has(key)) continue; // already in stored data
+    const mgr = getManager(iso);
+    recorded.push({
+      iso,
+      opponent: f.opponent,
+      isHome: f.isHome,
+      score: f.score,
+      result: f.result,
+      competition: f.competition || '',
+      round: f.round || '',
+      manager: mgr || ''
+    });
+    recordedKeys.add(key);
+    added++;
+  }
+  if (added > 0) {
+    localStorage.setItem(NEW_RESULTS_KEY, JSON.stringify(recorded));
+  }
+  return recorded;
+}
+
+function getNewResults() {
+  try { return JSON.parse(localStorage.getItem(NEW_RESULTS_KEY) || '[]'); } catch(e) { return []; }
+}
+
 function mergeHistorical(icsPast) {
   const now = new Date();
   // Build set of existing dates+opponents to avoid duplicates
@@ -3063,24 +3117,9 @@ function renderStatsResults() {
       score: h.score||'', _iso: iso
     });
   }
-  // Merge in any ICS allPast entries (recent matches not in static data)
-  if (allPast && allPast.length) {
-    for (const f of allPast) {
-      const startStr = f.start instanceof Date ? f.start.toISOString() : String(f.start);
-      // Use noon UTC to avoid BST timezone flipping midnight games to previous day
-      const rawIso = startStr.slice(0,10);
-      const dCheck = new Date(rawIso + 'T12:00:00Z');
-      // If the original UTC hour was 23, the real UK date is +1 day — correct it
-      const origHour = f.start instanceof Date ? f.start.getUTCHours() : 0;
-      if (origHour >= 22) dCheck.setUTCDate(dCheck.getUTCDate() + 1);
-      const iso = dCheck.toISOString().slice(0,10);
-      const d = dCheck;
-      const key = iso + '|' + (f.opponent||'').toLowerCase();
-      if (seenKeys.has(key)) continue;
-      seenKeys.add(key);
-      staticPool.push({...f, start: d, _iso: iso});
-    }
-  }
+  // Stats pool uses only H2H_DATA + HIST_RESULTS (5700+ matches, all with manager data).
+  // ICS allPast is excluded here — it causes duplicate entries with mismatched opponent
+  // names and timezone-shifted dates that produce Unknown manager attribution.
   // Only include past matches
   const now = new Date();
   let pool = staticPool.filter(f => f.start < now);
@@ -3101,7 +3140,7 @@ function renderStatsResults() {
     const iso = f._iso || d.toISOString().slice(0,10);
     let key;
     if (statsMode === 'manager') {
-      key = DATE_MANAGER[iso] || (iso > '2026-05-24' ? 'Andoni Iraola' : 'Unknown');
+      key = f._manager || getManager(iso) || 'Unknown';
     } else if (statsMode === 'competition') {
       key = f.competition || 'Unknown';
     } else if (statsMode === 'season') {
@@ -3131,6 +3170,7 @@ function renderStatsResults() {
     // Attendance
     const att = DATE_ATTENDANCE[iso];
     if (att) g.atts.push(att);
+    else if (f._attendance) g.atts.push(Number(f._attendance));
   });
 
   // Sort groups
