@@ -53,7 +53,7 @@
     .tab{display:inline-flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .18s;letter-spacing:.3px}
     .tab img{width:14px;height:14px;object-fit:contain}
     .tab:hover{color:var(--white);border-color:var(--muted)}
-    .tab.active{background:var(--red);border-color:var(--red);color:#fff}
+    .tab.active{background:var(--red);border-color:var(--red);color:#fff}.tab-count{font-size:10px;opacity:.75;margin-left:2px}
     [data-theme="light"] .tab.active{background:var(--teal);border-color:var(--teal)}
     .tab.active-home{background:rgba(200,16,46,.12);border-color:var(--red);color:var(--red)}
     .tab.active-away{background:rgba(0,178,169,.12);border-color:var(--teal);color:var(--teal)}
@@ -309,7 +309,7 @@
     .cal-popup.hidden{display:none}
     .cal-popup-inner{background:var(--bg2);border:1px solid var(--border);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:680px;max-height:60vh;overflow-y:auto;transition:background .3s}
     .cal-popup-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-    .cal-popup-date{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--white)}
+    .cal-popup-date{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--white)}.cal-popup-empty{padding:32px 16px;text-align:center;color:var(--muted);font-size:14px}
     .cal-popup-close{background:var(--bg3);border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
     .modal-overlay.hidden{display:none}
@@ -798,42 +798,41 @@
         <div class="about-card-title">📋 Fixtures</div>
         <p>The home screen shows your next fixture as a hero card, with a countdown to kick-off, recent league form dots, and the last result. Upcoming fixtures are listed below.</p>
         <p>Use the <strong>H / A / All</strong> and competition filters to narrow the list. The <strong>search bar</strong> lets you find any opponent by name. Tap any fixture to open a detail popup with H2H record, kick-off time and calendar export.</p>
-        <p><strong>Tip:</strong> tap any past result to see the score, manager, round and attendance if known.</p>
+        <p><strong>Tip:</strong> tap any past result to see the full details — score, manager, round and attendance if known.</p>
       </div>
 
       <div class="about-card">
         <div class="about-card-title">📅 Calendar</div>
-        <p>A month-by-month view of all fixtures. Past match days are colour-coded — <span style="color:#3dba78;font-weight:700">green</span> for wins, <span style="color:#F6EB61;font-weight:700;text-shadow:0 0 2px #888">gold</span> for draws, <span style="color:#e42027;font-weight:700">red</span> for losses. Tap any date to see that day's matches.</p>
-        <p>Use the arrow buttons to move between months, or tap <strong>Today</strong> to return to the current month.</p>
+        <p>A month-by-month view of all fixtures. The nav badge shows how many fixtures are in the current month. Past match days are colour-coded — <span style="color:#3dba78;font-weight:700">green</span> for wins, <span style="color:#F6EB61;font-weight:700;text-shadow:0 0 2px #888">gold</span> for draws, <span style="color:#e42027;font-weight:700">red</span> for losses.</p>
+        <p>Tap any date to see that day's matches. Dates with no fixture show a "No fixture on this date" message. Use the arrow buttons to move between months, or tap <strong>Today</strong> to return to the current month.</p>
       </div>
 
       <div class="about-card">
         <div class="about-card-title">🏆 Results</div>
-        <p>Browse all historical results from 1894 to today. Filter by <strong>competition</strong>, <strong>season</strong>, <strong>manager</strong> or <strong>home/away</strong> — filters are remembered when you switch tabs.</p>
-        <p>The stats strip at the top updates with the current filter: total played, won, drawn, lost, goals for/against, biggest win and worst loss.</p>
+        <p>Browse all historical results from 1894 to today. Filter by <strong>competition</strong>, <strong>season</strong>, <strong>manager</strong> or <strong>home/away</strong> — filters are remembered when you switch tabs. Each competition tab shows a live count of how many results match the current filter.</p>
+        <p>The stats strip at the top updates with the current filter: total played, won, drawn, lost, goals for/against, biggest win and worst loss. If no results match, a <strong>Clear filters</strong> button resets everything in one tap.</p>
         <p>Tap any result card for full details including manager, round and attendance.</p>
       </div>
 
       <div class="about-card">
         <div class="about-card-title">🕐 On This Day</div>
-        <p>Shows every Liverpool match played on today's date in previous years, grouped by decade. Tap the date picker to explore any date of the year.</p>
+        <p>Shows every Liverpool match played on today's date in previous years, grouped by decade. Tap the date picker to explore any date — your chosen date is remembered when you switch tabs and come back.</p>
         <p>Significant anniversaries are highlighted — <span style="background:#F6EB61;color:#111;font-size:11px;padding:1px 5px;border-radius:6px;font-weight:700">25 yrs</span> in gold, <span style="background:#e42027;color:#fff;font-size:11px;padding:1px 5px;border-radius:6px;font-weight:700">50 yrs</span> in red. The biggest winning margin of the day has its score underlined.</p>
-        <p>Tap any result to reveal the manager and attendance for that match.</p>
+        <p>If no matches are found for a date, <strong>Previous day</strong> and <strong>Next day</strong> buttons let you step through until you find one. Tap any result to reveal the manager and attendance.</p>
       </div>
 
       <div class="about-card">
         <div class="about-card-title">✈️ Away Planner</div>
-        <p>Log your away trips or holidays so you can see which matches you'll miss. Add a trip name and date range — the app automatically finds every fixture that falls within your travel window.</p>
-        <p>Each match shows whether it's home or away. For past trips, the actual result and score are displayed. The top of the planner shows a countdown to your next upcoming trip.</p>
-        <p>Your planner data is stored locally on your device and is never affected by an app refresh.</p>
+        <p>Log your away trips or holidays so you can see which matches you'll miss. Add a trip name and date range — the app automatically finds every fixture in that window, showing whether each is home or away.</p>
+        <p>Trips are sorted by start date. For past trips, the actual score and result are displayed automatically. The top of the planner shows a countdown to your next upcoming trip.</p>
+        <p><strong>To delete a trip, hold the ✕ button for half a second</strong> — this prevents accidental deletions on mobile. Your planner data is stored locally and is never affected by an app refresh.</p>
       </div>
 
       <div class="about-card">
         <div class="about-card-title">📊 Stats</div>
         <p>Analyse Liverpool's record across five dimensions: <strong>Manager</strong>, <strong>Competition</strong>, <strong>Season</strong>, <strong>Venue</strong> (home/away) and <strong>Opponent</strong>. Covers all 5,700+ matches.</p>
-        <p>Use the <strong>Sort by</strong> chips to order by most played, win percentage or A–Z. Stack the <strong>competition</strong> and <strong>home/away</strong> filters to narrow down. Each card shows P/W/D/L, goals, GD, average attendance and the last 5 results as form dots.</p>
-        <p>In <strong>Season</strong> mode, tap any season card to expand a competition breakdown for that year.</p>
-        <p>The bar chart shows win % for the top 12 groups in the current view.</p>
+        <p>Use the <strong>Sort by</strong> chips to order cards by most played, win % or A–Z. Stack the <strong>competition</strong> and <strong>home/away</strong> filters to narrow down further. In <strong>Opponent</strong> mode, a search box appears to filter across all 200+ clubs instantly.</p>
+        <p>Each card shows P/W/D/L, goals, GD, average attendance and the last 5 results as form dots. In <strong>Season</strong> mode, tap any card to expand a full competition breakdown for that year. The bar chart shows win % for the top 12 in the current view.</p>
       </div>
 
       <div class="about-card">
@@ -865,10 +864,11 @@
         <p>Your Away Planner trips and preferences are stored separately and are <strong>never</strong> affected by a refresh.</p>
       </div>
 
-      <div class="about-version" id="aboutVersion">v15.0.0</div>
+      <div class="about-version" id="aboutVersion">v15.1.2</div>
     </div>
   </div>
 </div>
+
 <!-- Long-press refresh ring overlay -->
 <div class="refresh-ring" id="refreshRing">
   <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="35" id="refreshRingCircle"/></svg>
@@ -1582,6 +1582,19 @@ function plannerRender() {
       </div>
     </div>`;
   }).join('');
+
+  // Wire long-press (500ms) on delete buttons
+  list.querySelectorAll('.planner-entry-del').forEach(btn => {
+    let timer;
+    const start = () => { timer = setTimeout(() => { plannerDelete(parseInt(btn.dataset.idx)); }, 500); };
+    const cancel = () => clearTimeout(timer);
+    btn.addEventListener('touchstart', e => { e.preventDefault(); start(); });
+    btn.addEventListener('touchend', cancel);
+    btn.addEventListener('touchmove', cancel);
+    btn.addEventListener('mousedown', start);
+    btn.addEventListener('mouseup', cancel);
+    btn.addEventListener('mouseleave', cancel);
+  });
 }
 let plannerEditIndex = -1;
 function plannerDateDisplay(iso) {
@@ -1970,8 +1983,15 @@ function toggleOTDPicker() {
   const isOpen = picker.classList.toggle('open');
   if (isOpen) {
     initOTDPicker();
-    $id('otdPickerDay').value = otdDay ?? new Date().getDate();
-    $id('otdPickerMonth').value = otdMonth ?? new Date().getMonth();
+    // Restore from state vars (which are persisted to sessionStorage)
+    const now = new Date();
+    const d = otdDay   ?? now.getDate();
+    const m = otdMonth ?? now.getMonth();
+    $id('otdPickerDay').value   = d;
+    $id('otdPickerMonth').value = m;
+    // Force-confirm the values were applied (some browsers need this)
+    if (parseInt($id('otdPickerDay').value)   !== d) $id('otdPickerDay').value   = d;
+    if (parseInt($id('otdPickerMonth').value) !== m) $id('otdPickerMonth').value = m;
   }
 }
 
@@ -2181,7 +2201,7 @@ updateOnline();
 // Back to top button
 window.addEventListener('scroll', () => {
   const btn = $id('backToTop');
-  if (btn) btn.classList.toggle('visible', window.scrollY > 300);
+  if (btn) btn.classList.toggle('visible', window.scrollY > 500);
 }, {passive: true});
 
 // Nav badge - show upcoming match count in next 7 days
@@ -2447,7 +2467,10 @@ function recordNewResults(icsPast) {
   for (const f of icsPast) {
     if (!f.result || !f.score || !f.opponent) continue; // skip if no result yet
     const d = f.start instanceof Date ? f.start : new Date(f.start);
-    const iso = d.toISOString().slice(0,10);
+    // Use local date string to match H2H/HIST keys (avoid UTC midnight shift)
+    const iso = d.getFullYear() + '-' +
+      String(d.getMonth()+1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0');
     const oppKey = (f.opponent||'').toLowerCase().trim();
     const key = iso + '|' + oppKey;
     if (stored.has(key) || recordedKeys.has(key)) continue; // already in stored data
@@ -3044,7 +3067,7 @@ function renderStatsPage() {
   el.innerHTML = '<div class="stats-pg">' +
     '<div class="stats-pg-header">' +
       '<div class="stats-pg-title">Stats</div>' +
-      '<div class="stats-pg-sub">Compare by manager, competition, season or venue</div>' +
+      '<div class="stats-pg-sub">Compare by manager, competition, season, venue or opponent</div>' +
     '</div>' +
     '<div class="compare-section">' +
       '<div class="compare-label">Compare by</div>' +
@@ -3574,6 +3597,20 @@ function renderResults() {
   });
   html += '</div>';
   el.innerHTML = html;
+
+  // Update comp tab labels with counts
+  const compRowEl = $id('resultsCompRow');
+  if (compRowEl) {
+    compRowEl.querySelectorAll('.tab').forEach(t => {
+      const rcomp = t.dataset.rcomp;
+      if (!rcomp) return;
+      const base = rcomp === 'all' ? 'All' : compShort(rcomp);
+      const count = rcomp === 'all' ? list.length :
+        list.filter(f => (f.competition||'') === rcomp).length;
+      const logo = t.querySelector('img');
+      t.innerHTML = (logo ? logo.outerHTML : '') + base + ' <span class="tab-count">' + count + '</span>';
+    });
+  }
 
   // Wire result card clicks to show popup
   el.querySelectorAll('.result-card').forEach((card, i) => {
