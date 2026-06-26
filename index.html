@@ -3499,12 +3499,7 @@ function renderResults() {
         '<span class="opp-name">'+esc(f.opponent)+'</span></div>' +
         '<div class="fixture-sub"><span class="comp-badge '+cCls+'">'+(cLogo?'<img src="'+cLogo+'" alt="" onerror="this.style.display=\'none\'"/>':'')+compShort(f.competition)+'</span>' +
         '<span class="ha-small '+haSmall+'">'+(f.isHome===true?'H':'A')+'</span></div>' +
-        (()=>{
-          const mgr=getManager(matchISO);
-          const rnd=f.round||'';
-          const rndShort=rnd?rnd.replace(/Quarter.?Final/i,'QF').replace(/Semi.?Final/i,'SF').replace(/Final/i,'F').replace(/Round of 16/i,'R16').replace(/Round of 32/i,'R32').replace(/Group Stage/i,'GS').replace(/\(.*?\)/g,'').trim():'';
-          return (mgr||rndShort)?'<div class="match-manager">'+(rndShort?'<span class="round-tag">'+esc(rndShort)+'</span> ':'')+( mgr?'<span>'+esc(mgr)+'</span>':'')+' </div>':'';
-        })() +
+
         '</div>' +
         '<div class="result-score '+resultCls+'">'+scoreDisplay+'</div>' +
         '</div></div>';
