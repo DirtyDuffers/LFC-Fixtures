@@ -526,7 +526,8 @@
     .chart-bars{display:flex;align-items:flex-end;gap:4px;height:120px}
     .chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
     .chart-bar-inner{width:100%;border-radius:4px 4px 0 0;transition:height .4s ease}
-    .chart-bar-lbl{font-size:8px;color:var(--muted);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
+    .chart-bar-lbl{font-size:8px;color:var(--muted);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;display:flex;flex-direction:column;align-items:center}
+    .chart-bar-logo{display:flex;justify-content:center;margin-top:2px}
     .chart-bar-val{font-size:9px;font-weight:700;color:var(--white)}
 
     /* Season table */
@@ -3333,11 +3334,21 @@ function renderStatsResults() {
       const h = Math.round((pct/maxPct)*100);
       const col = pct>=60?'#3dba78':pct>=50?'#00B2A9':pct>=40?'#F6EB61':'#e42027';
       const shortKey = g.key.length>12 ? g.key.split(' ')[0] : g.key;
-      return `<div class="chart-bar-col">
-        <div class="chart-bar-val">${pct.toFixed(0)}%</div>
-        <div class="chart-bar-inner" style="height:${h}%;background:${col}"></div>
-        <div class="chart-bar-lbl">${esc(shortKey)}</div>
-      </div>`;
+      // Logo for competition or opponent mode
+      let logoHtml = '';
+      const imgStyle = 'width:14px;height:14px;object-fit:contain;margin-top:2px;display:block';
+      if (statsMode === 'competition') {
+        const logo = getCompLogo(g.key);
+        if (logo) logoHtml = '<img src="'+logo+'" alt="" style="'+imgStyle+'" onerror="this.remove()"/>';
+      } else if (statsMode === 'opponent') {
+        const badge = getClubBadge(g.key);
+        if (badge) logoHtml = '<img src="'+badge+'" alt="" style="'+imgStyle+'" onerror="this.remove()"/>';
+      }
+      return '<div class="chart-bar-col">' +
+        '<div class="chart-bar-val">'+pct.toFixed(0)+'%</div>' +
+        '<div class="chart-bar-inner" style="height:'+h+'%;background:'+col+'"></div>' +
+        '<div class="chart-bar-lbl">'+esc(shortKey)+(logoHtml?'<span class="chart-bar-logo">'+logoHtml+'</span>':'')+'</div>' +
+      '</div>';
     }).join('')}</div>
   </div></div>`;
 
