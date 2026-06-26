@@ -2398,7 +2398,7 @@ if (cached) {
   // Version derived from cache key — display as semver
   const verMatch = CACHE_KEY.match(/v(\d+)/);
   const verEl = $id('aboutVersion');
-  if (verEl && verMatch) verEl.textContent = 'v' + verMatch[1] + '.0.0';
+  if (verEl) verEl.textContent = 'v15.1.2';
   // Sync crest whenever About tab is shown
   document.querySelector('.nav-item[data-page="pageAbout"]').addEventListener('click', syncAboutCrest);
   syncAboutCrest();
