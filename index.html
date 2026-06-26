@@ -3294,9 +3294,19 @@ function renderStatsResults() {
                : statsMode==='season' ? g.p+' matches'
                : g.p+' matches';
 
+    // Logo for card header
+    let cardLogo = '';
+    if (statsMode === 'competition') {
+      const cl = getCompLogo(g.key);
+      if (cl) cardLogo = '<img src="'+cl+'" alt="" onerror="this.remove()" style="width:20px;height:20px;object-fit:contain;flex-shrink:0"/>';
+    } else if (statsMode === 'opponent') {
+      const cb = getClubBadge(g.key);
+      if (cb) cardLogo = '<img src="'+cb+'" alt="" onerror="this.remove()" style="width:20px;height:20px;object-fit:contain;flex-shrink:0"/>';
+    }
+
     html += `<div class="stat-card">
       <div class="stat-card-head">
-        <div class="stat-card-name">${esc(g.key)}<small>${esc(sub)}</small></div>
+        <div class="stat-card-name" style="display:flex;align-items:center;gap:8px">${cardLogo}<span>${esc(g.key)}<small>${esc(sub)}</small></span></div>
         <div class="stat-card-pct ${pctCls}">${pctStr}</div>
       </div>
       <div class="stat-card-row">
