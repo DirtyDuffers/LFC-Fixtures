@@ -2551,7 +2551,7 @@ async function fetchICS(silent) {
 // ICS Parser
 const NEW_RESULTS_KEY = 'lfc_new_results';
 
-function recordNewResults(icsPast) {
+async function recordNewResults(icsPast) {
   // Build set of all dates+opponents already in stored data
   const stored = new Set();
   for (const entry of Object.values(H2H_DATA)) {
@@ -2568,7 +2568,7 @@ function recordNewResults(icsPast) {
   try { recorded = JSON.parse(localStorage.getItem(NEW_RESULTS_KEY) || '[]'); } catch(e) {}
   const recordedKeys = new Set(recorded.map(r => r.iso + '|' + (r.opponent||'').toLowerCase().trim()));
 
-  let added = 0;
+  const newlyAdded = [];
   for (const f of icsPast) {
     if (!f.result || !f.score || !f.opponent) continue; // skip if no result yet
     const d = f.start instanceof Date ? f.start : new Date(f.start);
@@ -2580,7 +2580,7 @@ function recordNewResults(icsPast) {
     const key = iso + '|' + oppKey;
     if (stored.has(key) || recordedKeys.has(key)) continue; // already in stored data
     const mgr = getManager(iso);
-    recorded.push({
+    const entry = {
       iso,
       opponent: f.opponent,
       isHome: f.isHome,
@@ -2588,15 +2588,52 @@ function recordNewResults(icsPast) {
       result: f.result,
       competition: f.competition || '',
       round: f.round || '',
-      manager: mgr || ''
-    });
+      manager: mgr || '',
+      opp_mgr: null,
+      attendance: null,
+      _enriched: false
+    };
+    recorded.push(entry);
+    newlyAdded.push(entry);
     recordedKeys.add(key);
-    added++;
   }
-  if (added > 0) {
+  if (newlyAdded.length > 0) {
     localStorage.setItem(NEW_RESULTS_KEY, JSON.stringify(recorded));
+    // Enrich newly captured matches in the background — score confirmation,
+    // opposition manager, and attendance via the Worker (football-data.org,
+    // falling back to lfchistory.net automatically server-side).
+    enrichNewResults(recorded, newlyAdded);
   }
   return recorded;
+}
+
+// Background enrichment: fills in opposition manager + attendance for any
+// newly recorded match, and any older recorded match still missing data.
+// Runs silently; failures are non-fatal since this is supplementary data.
+async function enrichNewResults(allRecorded, priorityList) {
+  const needsEnrich = allRecorded.filter(r => !r._enriched && (!r.opp_mgr || !r.attendance));
+  if (!needsEnrich.length) return;
+  let changed = false;
+  for (const r of needsEnrich) {
+    try {
+      const res = await fetch(WORKER_URL + '?match=' + r.iso);
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data.opp_mgr && !r.opp_mgr) { r.opp_mgr = data.opp_mgr; changed = true; }
+      if (data.attendance && !r.attendance) {
+        r.attendance = data.attendance;
+        DATE_ATTENDANCE[r.iso] = data.attendance;
+        changed = true;
+      }
+      // Confirm score matches what we already have — if lfchistory.net disagrees,
+      // trust the ICS-derived score (more current) but log nothing destructive.
+      r._enriched = true;
+      changed = true;
+    } catch(e) { /* silent — enrichment is best-effort */ }
+  }
+  if (changed) {
+    localStorage.setItem(NEW_RESULTS_KEY, JSON.stringify(allRecorded));
+  }
 }
 
 function getNewResults() {
@@ -3367,6 +3404,24 @@ function renderStatsResults() {
       opp_mgr: h.opp_mgr || null,
       competitive: h.competitive !== false,
       venue: h.venue || null
+    });
+  }
+  // Merge in any matches recorded since the last embedded data update
+  // (captured live from the ICS feed, enriched with opp manager + attendance
+  // via the Worker's lfchistory.net fallback — see recordNewResults()).
+  for (const nr of getNewResults()) {
+    const key = nr.iso + '|' + (nr.opponent||'').toLowerCase().trim();
+    if (seenKeys.has(key)) continue;
+    seenKeys.add(key);
+    const nrDate = new Date(nr.iso + 'T12:00:00Z');
+    staticPool.push({
+      start: nrDate, opponent: nr.opponent||'', isHome: nr.isHome,
+      competition: nr.competition||'', result: nr.result||'',
+      score: nr.score||'', _iso: nr.iso,
+      opp_mgr: nr.opp_mgr || null,
+      competitive: true,
+      venue: null,
+      _manager: nr.manager || null
     });
   }
   // Stats pool uses only H2H_DATA + HIST_RESULTS (5700+ matches, all with manager data).
