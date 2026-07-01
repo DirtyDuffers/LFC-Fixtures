@@ -2618,16 +2618,19 @@ function renderOTD() {
 
   const currentYear = new Date().getFullYear();
 
-  // Manager tenure milestones matching this day (first/last match in charge of a spell)
+  // Manager tenure milestones matching this day (first/last ACTUAL match in charge of a spell —
+  // computed from real match dates, not the MANAGER_STATS from/to fields directly, since those
+  // sometimes record an appointment/departure date rather than a genuine match date, e.g. Arne
+  // Slot's "from" is his 1 June 2024 appointment, not his 19 July 2024 first match in charge).
+  const spellBounds = getManagerSpellBounds();
   const milestoneItems = [];
-  MANAGER_STATS.forEach(m => {
-    if (!m.from || !m.to) return;
-    const fD = new Date(m.from + 'T12:00:00Z'), tD = new Date(m.to + 'T12:00:00Z');
+  spellBounds.forEach(sb => {
+    const fD = new Date(sb.first + 'T12:00:00Z'), tD = new Date(sb.last + 'T12:00:00Z');
     if (fD.getUTCDate()===day && fD.getUTCMonth()===month && fD.getUTCFullYear()<currentYear) {
-      milestoneItems.push({year: fD.getUTCFullYear(), name: m.name, type: 'First match in charge', caretaker: m.caretaker});
+      milestoneItems.push({year: fD.getUTCFullYear(), name: sb.name, type: 'First match in charge', caretaker: sb.caretaker});
     }
-    if (m.from !== m.to && tD.getUTCDate()===day && tD.getUTCMonth()===month && tD.getUTCFullYear()<currentYear) {
-      milestoneItems.push({year: tD.getUTCFullYear(), name: m.name, type: 'Last match in charge', caretaker: m.caretaker});
+    if (sb.first !== sb.last && tD.getUTCDate()===day && tD.getUTCMonth()===month && tD.getUTCFullYear()<currentYear) {
+      milestoneItems.push({year: tD.getUTCFullYear(), name: sb.name, type: 'Last match in charge', caretaker: sb.caretaker});
     }
   });
   milestoneItems.sort((a,b) => b.year - a.year);
@@ -2966,7 +2969,7 @@ if (cached) {
   // Version derived from cache key — display as semver
   const verMatch = CACHE_KEY.match(/v(\d+)/);
   const verEl = $id('aboutVersion');
-  if (verEl) verEl.textContent = 'v15.8.1';
+  if (verEl) verEl.textContent = 'v15.8.2';
   // Sync crest whenever About tab is shown
   document.querySelector('.nav-item[data-page="pageAbout"]').addEventListener('click', syncAboutCrest);
   syncAboutCrest();
@@ -4078,6 +4081,25 @@ function getManager(dateStr) {
     if (m.from && m.to && dateStr >= m.from && dateStr <= m.to) return m.name;
   }
   return null;
+}
+
+// For each MANAGER_STATS spell, finds the actual first and last real match date within
+// that spell's window — as opposed to trusting the spell's own from/to fields, which for
+// some managers (especially recent appointments) record an appointment/departure date rather
+// than a genuine match date. Scans the full historical dataset once and caches the result.
+let _managerSpellBoundsCache = null;
+function getManagerSpellBounds() {
+  if (_managerSpellBoundsCache) return _managerSpellBoundsCache;
+  const allDates = new Set();
+  HIST_RESULTS.forEach(f => { if (f.start) allDates.add(f.start.slice(0,10)); });
+  Object.values(H2H_DATA).forEach(entry => (entry.results||[]).forEach(r => { if (r.iso) allDates.add(r.iso); }));
+  const sortedDates = [...allDates].sort();
+  _managerSpellBoundsCache = MANAGER_STATS.filter(m => m.from && m.to).map(m => {
+    const inSpell = sortedDates.filter(d => d >= m.from && d <= m.to);
+    if (!inSpell.length) return null;
+    return { name: m.name, caretaker: m.caretaker, first: inSpell[0], last: inSpell[inSpell.length-1] };
+  }).filter(Boolean);
+  return _managerSpellBoundsCache;
 }
 function getVenue(dateStr) {
   if (!dateStr) return null;
