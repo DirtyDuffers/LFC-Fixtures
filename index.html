@@ -401,13 +401,15 @@
     .otd-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
     .otd-milestone{border-left:3px solid var(--teal);cursor:default !important}
     .otd-famous-item{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
-    .otd-famous{display:inline-block;background:var(--gold);color:#111;font-size:9px;font-weight:800;padding:1px 6px;border-radius:8px;vertical-align:middle;white-space:nowrap}
+    .otd-famous-row{margin-top:2px}
+    .otd-famous{display:inline-block;background:var(--gold);color:#111;font-size:9px;font-weight:800;padding:1px 6px;border-radius:8px;vertical-align:middle;white-space:normal}
     .otd-blurb{font-size:12px;line-height:1.5;color:var(--muted2);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
     .otd-year{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--teal);width:44px;flex-shrink:0;text-align:center}
     .otd-info{flex:1;min-width:0}
     .otd-opponent{font-size:13px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .otd-meta{font-size:11px;color:var(--muted);margin-top:2px}
-    .otd-score{font-size:16px;font-weight:800;flex-shrink:0;text-align:right}
+    .otd-score{font-size:16px;font-weight:800;flex-shrink:0;text-align:right;max-width:90px}
+    .otd-score-sub{font-size:11px;font-weight:700;opacity:.75;white-space:nowrap}
     /* ── About Page ── */
     .about-wrap{padding:20px 20px 0}
     .about-hero{text-align:center;padding:24px 0 20px}
@@ -636,7 +638,6 @@
     .otd-share-btn:active{transform:scale(.95)}
     .otd-detail{font-size:10px;margin-top:3px;color:var(--muted2);padding-top:3px;border-top:1px solid var(--border);display:none}
     .otd-detail.open{display:block}
-    .otd-tap-hint{font-size:9px;color:var(--muted);margin-left:4px}
     [data-theme="light"] .otd-highlight{background:rgba(200,16,46,.04)}
 
     /* Feature 6: Planner countdown */
@@ -2677,17 +2678,18 @@ function renderOTD() {
       const famousLabel = famousMatch ? famousMatch.label : '';
       const anniversaryBadge = isBigAnniversary ? '<span class="otd-anniversary big">' + yearsAgo + ' yrs</span>' :
                                isAnniversary    ? '<span class="otd-anniversary">' + yearsAgo + ' yrs</span>' : '';
-      const famousBadge = famousLabel ? '<span class="otd-famous">&#9733; ' + esc(famousLabel) + '</span><span class="otd-tap-hint">tap for more &#9662;</span>' : '';
+      const famousBadge = famousLabel ? '<span class="otd-famous">&#9733; ' + esc(famousLabel) + '</span>' : '';
 
       const shareData = encodeURIComponent(JSON.stringify({y:year, opp:f.opponent||'Unknown', score, comp, round:f.round||'', ha:haLabelOtd}));
       return '<div class="otd-item' + (isBigAnniversary?' otd-highlight':'') + (famousLabel?' otd-famous-item':'') + '" style="cursor:pointer" data-iso="'+iso+'" data-opp="'+esc(f.opponent||'')+'" data-mgr="'+esc(mgr||'')+'" data-share="'+shareData+'"'+(famousMatch?' data-famous-blurb="'+esc(famousMatch.blurb)+'"':'')+'>' +
         '<div class="otd-year">' + year + (anniversaryBadge?'<br/>'+anniversaryBadge:'') + '</div>' +
         '<div class="otd-info">' +
-          '<div class="otd-opponent">' + (ob?'<img src="'+ob+'" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px" onerror="this.style.display=\'none\'"/>':'') + esc(f.opponent||'Unknown') + (famousBadge?' '+famousBadge:'') + '</div>' +
+          '<div class="otd-opponent">' + (ob?'<img src="'+ob+'" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px" onerror="this.style.display=\'none\'"/>':'') + esc(f.opponent||'Unknown') + '</div>' +
+          (famousBadge ? '<div class="otd-famous-row">'+famousBadge+'</div>' : '') +
           '<div class="otd-meta"><span class="ha-small '+haSmallOtd+'">'+haLabelOtd+'</span> '+esc(comp)+(f.round?' · '+esc(f.round):'')+' </div>' +
           '<div class="otd-detail"></div>' +
         '</div>' +
-        '<div class="otd-score" style="color:'+scoreCol+'">' + (esc(score)||'–') + '</div>' +
+        '<div class="otd-score" style="color:'+scoreCol+'">' + formatScoreHtml(score) + '</div>' +
       '</div>';
     }).join('');
   });
@@ -2959,7 +2961,7 @@ if (cached) {
   // Version derived from cache key — display as semver
   const verMatch = CACHE_KEY.match(/v(\d+)/);
   const verEl = $id('aboutVersion');
-  if (verEl) verEl.textContent = 'v15.7.0';
+  if (verEl) verEl.textContent = 'v15.7.2';
   // Sync crest whenever About tab is shown
   document.querySelector('.nav-item[data-page="pageAbout"]').addEventListener('click', syncAboutCrest);
   syncAboutCrest();
@@ -5874,6 +5876,15 @@ function getAccentClass(n) {
 }
 function pad(n) { return String(n).padStart(2,'0'); }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// Splits a score like "3-3 AET (3-2 pens)" into a main line ("3-3") and a smaller
+// sub-line ("AET (3-2 pens)") so long extra-time/penalty detail wraps under the score
+// instead of squeezing other card content sideways.
+function formatScoreHtml(score) {
+  if (!score) return '–';
+  const m = String(score).match(/^(\S+)\s+(.+)$/);
+  if (m) return esc(m[1]) + '<br/><span class="otd-score-sub">' + esc(m[2]) + '</span>';
+  return esc(score);
+}
 // getCompLogo and getClubBadge defined above with COMP_LOGOS and BADGES
 
 
