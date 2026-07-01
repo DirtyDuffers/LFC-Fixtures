@@ -1061,8 +1061,8 @@ function getCompLogo(c) {
 }
 
 const BADGES = {
-  '1.fc kosice (1951 - 2004)': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMUI0RTlCIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGRkZGRkYiPktPU0lDRTwvdGV4dD48L3N2Zz4=',
-  'aberdeen': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjYzgxMDJlIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI2MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmYiPkFGQzwvdGV4dD48L3N2Zz4=',
+  '1.fc kosice (1951 - 2004)': 'https://upload.wikimedia.org/wikipedia/en/c/c1/Fcvsskosice.png',
+  'aberdeen': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Aberdeen_FC_stars_crest.svg',
   'ac milan': 'https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg',
   'ac sparta': 'https://upload.wikimedia.org/wikipedia/commons/d/dd/AC-Sparta-LOGO2021.svg',
   'ac sparta prague': 'https://upload.wikimedia.org/wikipedia/commons/d/dd/AC-Sparta-LOGO2021.svg',
@@ -1095,7 +1095,8 @@ const BADGES = {
   'atletico de madrid': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Atletico_Madrid_Logo_2024.svg',
   'atletico madrid': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Atletico_Madrid_Logo_2024.svg',
   'atlético de madrid': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Atletico_Madrid_Logo_2024.svg',
-  'austria vienna': 'https://upload.wikimedia.org/wikipedia/en/5/52/FK_Austria_Wien_logo.svg',
+  'austria vienna': 'https://upload.wikimedia.org/wikipedia/commons/6/65/FK_Austria_Wien_Logo.png',
+  'austria': 'https://upload.wikimedia.org/wikipedia/en/b/b7/Austria_national_football_team_crest.svg',
   'az alkmaar': 'https://upload.wikimedia.org/wikipedia/en/a/ae/AZ_Alkmaar.svg',
   'barcelona': 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg',
   'barnsley': 'https://upload.wikimedia.org/wikipedia/en/c/c9/Barnsley_FC.svg',
@@ -1115,6 +1116,7 @@ const BADGES = {
   'blackpool': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjZjQ1OTBkIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI2MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmYiPkJGQzwvdGV4dD48L3N2Zz4=',
   'boavista': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMDAwMDAwIiBzdHJva2U9IiNGN0QwMDAiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGN0QwMDAiPkJGQzwvdGV4dD48L3N2Zz4=',
   'boca juniors': 'https://upload.wikimedia.org/wikipedia/en/f/f4/Boca_Juniors_logo.svg',
+  'bobby charlton select XI': 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Bobby_Charlon_%281970%29.jpg',
   'bologna': 'https://upload.wikimedia.org/wikipedia/commons/5/5b/Bologna_F.C._1909_logo.svg',
   'bologna fc 1909': 'https://upload.wikimedia.org/wikipedia/commons/5/5b/Bologna_F.C._1909_logo.svg',
   'bolton': 'https://upload.wikimedia.org/wikipedia/en/8/8c/Bolton_Wanderers_FC_logo.svg',
@@ -1145,7 +1147,7 @@ const BADGES = {
   'cardiff city': 'https://upload.wikimedia.org/wikipedia/en/3/3c/Cardiff_City_crest.svg',
   'carlisle united': 'https://upload.wikimedia.org/wikipedia/en/b/b3/Carlisle_United_FC_logo.svg',
   'celta de vigo': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjODdDRUVCIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI2MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiMxYTFhMWEiPlJDPC90ZXh0Pjwvc3ZnPg==',
-  'celtic': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTEwIj48cGF0aCBkPSJNNTAgNSBMODggMTggTDg4IDY1IFE4OCA5MiA1MCAxMDggUTEyIDkyIDEyIDY1IEwxMiAxOCBaIiBmaWxsPSIjMWE1YzFhIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjUwIiB5PSI2MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmYiPkNGQzwvdGV4dD48L3N2Zz4=',
+  'celtic': 'https://upload.wikimedia.org/wikipedia/en/7/71/Celtic_FC_crest.svg',
   'charlton': 'https://upload.wikimedia.org/wikipedia/en/6/6b/Charlton_Athletic_FC_logo.svg',
   'charlton athletic': 'https://upload.wikimedia.org/wikipedia/en/6/6b/Charlton_Athletic_FC_logo.svg',
   'chelsea': 'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg',
