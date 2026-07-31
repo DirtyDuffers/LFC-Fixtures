@@ -1033,7 +1033,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.0</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.1</div>
     </div>
   </div>
 </div>
@@ -1342,7 +1342,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.0';
+const APP_VERSION = 'v17.1.1';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -2608,11 +2608,23 @@ function getNewResults() {
 
 function mergeHistorical(icsPast) {
   const now = new Date();
-  // Build set of existing dates+opponents to avoid duplicates
-  const existing = new Set(icsPast.map(f => {
+  const keyOf = f => {
     const d = f.start instanceof Date ? f.start : new Date(f.start);
     return d.toISOString().slice(0,10) + '|' + (f.opponent||'').toLowerCase().trim();
-  }));
+  };
+  // The live ICS feed only ever supplies opponent/date/competition — enrich()
+  // never sets .score/.result, because the feed's SUMMARY text is just
+  // "Home v Away", never a score. So once a match that's already fully recorded
+  // in HIST_RESULTS/H2H_DATA starts appearing in the live "past fixtures" list
+  // too (which happens naturally as time passes), the dedup logic below must
+  // prefer whichever version actually has a score — previously it just kept
+  // whichever source's key it saw first, which silently dropped the complete
+  // entry in favour of a scoreless live stub. That's what caused Results/
+  // Calendar to show newly-added matches with no score, while H2H/Stats (which
+  // have their own separate lookup fallbacks) still displayed them correctly.
+  const icsHasScore = new Map(icsPast.map(f => [keyOf(f), !!(f.score && f.result)]));
+  const existing = new Set(icsPast.map(keyOf));
+  const supersededIcsKeys = new Set(); // scoreless ICS stubs a fuller entry below replaces
 
   // Pull in HIST_RESULTS (deep historical data)
   const hist = HIST_RESULTS
@@ -2629,7 +2641,11 @@ function mergeHistorical(icsPast) {
     .filter(r => {
       if (r.start >= now) return false;
       const key = r.start.toISOString().slice(0,10) + '|' + (r.opponent||'').toLowerCase().trim();
-      if (existing.has(key)) return false;
+      if (existing.has(key)) {
+        if (icsHasScore.get(key)) return false; // ICS side already has a real score — keep that one
+        supersededIcsKeys.add(key); // ICS stub has no score — this complete entry takes its place
+        return true;
+      }
       existing.add(key);
       return true;
     });
@@ -2642,8 +2658,13 @@ function mergeHistorical(icsPast) {
       if (d >= now) continue;
       const oppLower = entry.name.toLowerCase().trim();
       const key = r.iso + '|' + oppLower;
-      if (existing.has(key)) continue;
-      existing.add(key);
+      if (existing.has(key)) {
+        if (supersededIcsKeys.has(key)) continue; // hist already claimed this scoreless stub's slot
+        if (icsHasScore.get(key)) continue; // ICS side already has a real score — keep that one
+        supersededIcsKeys.add(key);
+      } else {
+        existing.add(key);
+      }
       const isHome = r.v==='H' ? true : r.v==='A' ? false : null;
       const venueResolved = r.venue || (isHome===true ? 'Anfield' : '');
       h2hFlat.push({
@@ -2665,7 +2686,8 @@ function mergeHistorical(icsPast) {
     }
   }
 
-  const merged = [...icsPast, ...hist, ...h2hFlat];
+  const icsPastFiltered = icsPast.filter(f => !supersededIcsKeys.has(keyOf(f)));
+  const merged = [...icsPastFiltered, ...hist, ...h2hFlat];
   merged.sort((a,b) => b.start - a.start);
   return merged;
 }
