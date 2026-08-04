@@ -1033,7 +1033,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.2</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.3</div>
     </div>
   </div>
 </div>
@@ -1342,7 +1342,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.2';
+const APP_VERSION = 'v17.1.3';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -2608,6 +2608,34 @@ function getNewResults() {
 
 function mergeHistorical(icsPast) {
   const now = new Date();
+  // The live ICS feed's event text uses the club's own short-form naming
+  // ("Leeds" rather than "Leeds United"), which never matches the fuller name
+  // already used throughout HIST_RESULTS/H2H_DATA — without reconciling them,
+  // a match already fully recorded under the full name would get a second,
+  // separate scoreless row here under the short name, since the dedup key
+  // below is built straight from the opponent string. Same conservative
+  // canonicalization the Worker's automation already does before writing new
+  // entries (see the app docs) — only auto-corrects when exactly one existing
+  // name plausibly matches, otherwise leaves the ICS name alone rather than
+  // guessing between, say, Manchester United and Manchester City.
+  const canonicalOpponentNames = new Set();
+  HIST_RESULTS.forEach(r => { if (r.opponent) canonicalOpponentNames.add(r.opponent); });
+  Object.values(H2H_DATA).forEach(e => { if (e.name) canonicalOpponentNames.add(e.name); });
+  const normForCanon = n => (n || '').toLowerCase().replace(/\bafc\b|\bfc\b/g, '').replace(/[^a-z0-9]/g, '').trim();
+  const canonicaliseOpponentName = icsName => {
+    const norm = normForCanon(icsName);
+    if ([...canonicalOpponentNames].some(n => normForCanon(n) === norm)) return icsName;
+    const candidates = [...canonicalOpponentNames].filter(n => {
+      const cn = normForCanon(n);
+      return cn.startsWith(norm) || norm.startsWith(cn);
+    });
+    return candidates.length === 1 ? candidates[0] : icsName;
+  };
+  icsPast = icsPast.map(f => {
+    const canonical = canonicaliseOpponentName(f.opponent);
+    return canonical !== f.opponent ? { ...f, opponent: canonical } : f;
+  });
+
   const keyOf = f => {
     const d = f.start instanceof Date ? f.start : new Date(f.start);
     return d.toISOString().slice(0,10) + '|' + (f.opponent||'').toLowerCase().trim();
