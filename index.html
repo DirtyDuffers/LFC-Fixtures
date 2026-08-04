@@ -1033,7 +1033,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.1</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.2</div>
     </div>
   </div>
 </div>
@@ -1342,7 +1342,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.1';
+const APP_VERSION = 'v17.1.2';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -2612,17 +2612,23 @@ function mergeHistorical(icsPast) {
     const d = f.start instanceof Date ? f.start : new Date(f.start);
     return d.toISOString().slice(0,10) + '|' + (f.opponent||'').toLowerCase().trim();
   };
-  // The live ICS feed only ever supplies opponent/date/competition — enrich()
-  // never sets .score/.result, because the feed's SUMMARY text is just
-  // "Home v Away", never a score. So once a match that's already fully recorded
-  // in HIST_RESULTS/H2H_DATA starts appearing in the live "past fixtures" list
-  // too (which happens naturally as time passes), the dedup logic below must
-  // prefer whichever version actually has a score — previously it just kept
-  // whichever source's key it saw first, which silently dropped the complete
-  // entry in favour of a scoreless live stub. That's what caused Results/
-  // Calendar to show newly-added matches with no score, while H2H/Stats (which
-  // have their own separate lookup fallbacks) still displayed them correctly.
+  // The live ICS feed only ever supplies opponent/date/competition/venue —
+  // enrich() never sets .score/.result, because the feed's SUMMARY text is
+  // just "Home v Away", never a score. So once a match that's already fully
+  // recorded in HIST_RESULTS/H2H_DATA starts appearing in the live "past
+  // fixtures" list too (which happens naturally as time passes), the dedup
+  // logic below must prefer whichever version actually has a score — it used
+  // to just keep whichever source's key it saw first, which silently dropped
+  // the complete entry in favour of a scoreless live stub (fixed in v17.1.1).
+  //
+  // But the live stub can still carry fields the "winning" entry lacks — venue
+  // especially, since the automated result pipeline (see the app docs) didn't
+  // originally capture it at all, and even now, entries added before that fix
+  // are permanently missing it in the stored data. Rather than requiring every
+  // such gap to be fixed at the source, the ICS stub's venue backfills the
+  // winning entry whenever the winning entry doesn't already have one.
   const icsHasScore = new Map(icsPast.map(f => [keyOf(f), !!(f.score && f.result)]));
+  const icsVenueByKey = new Map(icsPast.map(f => [keyOf(f), f.venue || '']));
   const existing = new Set(icsPast.map(keyOf));
   const supersededIcsKeys = new Set(); // scoreless ICS stubs a fuller entry below replaces
 
@@ -2638,6 +2644,12 @@ function mergeHistorical(icsPast) {
       description: r.competition + (r.score ? '\nScore: '+r.score+' ('+r.result+')' : ''),
       summary: r.summary
     }))
+    .map(r => {
+      if (r.venue) return r; // already has one, nothing to backfill
+      const key = r.start.toISOString().slice(0,10) + '|' + (r.opponent||'').toLowerCase().trim();
+      const icsVenue = icsVenueByKey.get(key);
+      return icsVenue ? { ...r, venue: icsVenue, location: icsVenue } : r;
+    })
     .filter(r => {
       if (r.start >= now) return false;
       const key = r.start.toISOString().slice(0,10) + '|' + (r.opponent||'').toLowerCase().trim();
@@ -2666,7 +2678,7 @@ function mergeHistorical(icsPast) {
         existing.add(key);
       }
       const isHome = r.v==='H' ? true : r.v==='A' ? false : null;
-      const venueResolved = r.venue || (isHome===true ? 'Anfield' : '');
+      const venueResolved = r.venue || icsVenueByKey.get(key) || (isHome===true ? 'Anfield' : '');
       h2hFlat.push({
         start: d,
         end: null,
