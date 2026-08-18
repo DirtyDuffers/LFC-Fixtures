@@ -1033,7 +1033,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.4</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.5</div>
     </div>
   </div>
 </div>
@@ -1342,7 +1342,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.4';
+const APP_VERSION = 'v17.1.5';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -5431,7 +5431,7 @@ function showCalPopup(date,matches) {
         '<span class="opp-name">'+esc(f.opponent)+'</span></div>' +
         '<div class="fixture-sub"><span class="comp-badge '+cCls+'">'+(cLogo?'<img src="'+cLogo+'" alt="" onerror="this.style.display=\'none\'"/>':'')+compShort(f.competition)+'</span>' +
         '<span class="ha-small '+haSmall+'">'+(f.isHome===true?'H':f.isHome===false?'A':'N')+'</span></div>' +
-        (()=>{const mgr=getManager(matchISO);const att=getAttendance(matchISO);const rnd2=f.round||'';const ven=f.venue||getVenue(matchISO)||'';return (mgr||att||rnd2||ven)?'<div class="match-manager">'+(rnd2?'<span class="round-tag">'+esc(rnd2)+'</span> ':'')+( mgr?'<span>'+esc(mgr)+'</span> ':'')+( ven?'<span style="color:var(--muted);font-size:11px">&#127960; '+esc(ven)+'</span> ':'')+( att?'<span style="color:var(--muted);font-size:11px">&#128100; '+att.toLocaleString()+'</span>':'')+' </div>':''})() +
+        (()=>{const mgr=getManager(matchISO);const att=f.attendance||getAttendance(matchISO);const rnd2=f.round||'';const ven=f.venue||getVenue(matchISO)||'';return (mgr||att||rnd2||ven)?'<div class="match-manager">'+(rnd2?'<span class="round-tag">'+esc(rnd2)+'</span> ':'')+( mgr?'<span>'+esc(mgr)+'</span> ':'')+( ven?'<span style="color:var(--muted);font-size:11px">&#127960; '+esc(ven)+'</span> ':'')+( att?'<span style="color:var(--muted);font-size:11px">&#128100; '+att.toLocaleString()+'</span>':'')+' </div>':''})() +
         '</div>' +
         '<div class="result-score '+resultCls+'">'+scoreDisplay+'</div>' +
         '</div></div>';
