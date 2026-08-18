@@ -1033,7 +1033,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.3</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.4</div>
     </div>
   </div>
 </div>
@@ -1342,7 +1342,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.3';
+const APP_VERSION = 'v17.1.4';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -1508,7 +1508,7 @@ function plannerRender() {
         <div class="planner-entry-dates">${range}</div>
       </div>
       <div class="planner-entry-actions">
-        <button class="planner-entry-edit" onclick="plannerEdit(${i})" title="Edit">&#9998;</button>
+        <button class="planner-entry-edit" onclick="plannerEdit(${plannerEntries.indexOf(e)})" title="Edit">&#9998;</button>
         <button class="planner-entry-del" onclick="plannerDelete(${plannerEntries.indexOf(e)})" title="Remove">&#10005;</button>
       </div>
     </div>`;
@@ -5197,7 +5197,7 @@ function renderResults() {
     if (resultsSeason !== 'all' && getSeason(d) !== resultsSeason) return false;
     if (resultsMgr !== 'all') {
       const iso = d.toISOString().slice(0,10);
-      if (DATE_MANAGER[iso] !== resultsMgr) return false;
+      if (getManager(iso) !== resultsMgr) return false;
     }
     if (resultsEra !== 'all') {
       const yr = d.getFullYear();
