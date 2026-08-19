@@ -1033,7 +1033,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.5</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.6</div>
     </div>
   </div>
 </div>
@@ -1342,7 +1342,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.5';
+const APP_VERSION = 'v17.1.6';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -1789,7 +1789,8 @@ function plannerCheck() {
   plannerLoad();
   if (!plannerEntries.length) { showToast('Add at least one date range first'); return; }
   const allF = [...allFixtures, ...allPast];
-  plannerResultsData = plannerEntries.map(e => {
+  const sortedTrips = [...plannerEntries].sort((a, b) => new Date(a.from) - new Date(b.from));
+  plannerResultsData = sortedTrips.map(e => {
     const from = new Date(e.from + 'T00:00:00');
     const to   = new Date(e.to   + 'T23:59:59');
     const hits = allF.filter(f => {
