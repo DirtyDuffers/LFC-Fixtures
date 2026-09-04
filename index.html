@@ -1033,7 +1033,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.6</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.7</div>
     </div>
   </div>
 </div>
@@ -1353,7 +1353,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.6';
+const APP_VERSION = 'v17.1.7';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
