@@ -1319,9 +1319,20 @@ function getH2H(opponentName) {
     if (k.startsWith(q + ' ') || q.startsWith(k + ' ')) return v.slice().sort((a,b)=>(b.iso||"").localeCompare(a.iso||""));
   }
 
-  // 3. Contains match — opponent name appears in key or vice versa
+  // 3. Contains match — opponent name appears in key or vice versa, but only
+  // at a WORD boundary (e.g. "roma" correctly matches "as roma"), never as an
+  // arbitrary substring inside another word. Confirmed as a real bug: a
+  // search for "Lens" (the French club) matched "St Helens" purely because
+  // "lens" happens to be the literal last four characters of "Helens" — no
+  // word boundary involved at all, just character coincidence. Liverpool's
+  // 1909 Lancashire Senior Cup history against St Helens was showing up as
+  // if it were history against Lens.
+  const wordBoundaryContains = (haystack, needle) => {
+    const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp('(^|\\s)' + escaped + '(\\s|$)').test(haystack);
+  };
   for (const [k, v] of Object.entries(map)) {
-    if (k.includes(q) || q.includes(k)) return v.slice().sort((a,b)=>(b.iso||"").localeCompare(a.iso||""));
+    if (wordBoundaryContains(k, q) || wordBoundaryContains(q, k)) return v.slice().sort((a,b)=>(b.iso||"").localeCompare(a.iso||""));
   }
 
   // 4. Word overlap — share most significant words
