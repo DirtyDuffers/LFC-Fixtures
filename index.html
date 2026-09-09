@@ -106,8 +106,6 @@
     .hero-team{text-align:center;flex:1}
     .hero-badge-wrap{width:60px;height:60px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center}
     .hero-badge-wrap img{max-width:60px;max-height:60px;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
-    [data-theme="dark"] .hero-badge-wrap.opponent-badge{background:radial-gradient(circle,rgba(255,255,255,.92) 62%,rgba(255,255,255,0) 64%);border-radius:50%}
-    [data-theme="dark"] .hero-badge-wrap.opponent-badge img{max-width:46px;max-height:46px;filter:none}
     .lfc-hero-logo{filter:drop-shadow(0 2px 8px rgba(0,0,0,.3)) !important}
     .hero-team-name{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.8px;line-height:1.2;word-break:break-word;color:#fff}
     .hero-vs{font-family:'Bebas Neue',sans-serif;font-size:30px;color:rgba(255,255,255,.18);flex-shrink:0}
@@ -1033,7 +1031,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.9</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.10</div>
     </div>
   </div>
 </div>
@@ -1363,7 +1361,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.9';
+const APP_VERSION = 'v17.1.10';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
