@@ -1033,7 +1033,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.7</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.9</div>
     </div>
   </div>
 </div>
@@ -1270,6 +1270,16 @@ function getH2H(opponentName) {
       .replace(/^leeds$/,             'leeds united')
       .replace(/^palace$/,            'crystal palace')
       .replace(/^forest$/,            'nottingham forest')
+      // "Internazionale" (the modern official/UEFA name, likely what a live
+      // fixture feed uses) and "Inter Milan" (the more common English-language
+      // historical naming) are the same club but share no words or substring
+      // relationship at all — "internazionale" is one unbroken word, so no
+      // amount of fuzzy/word-boundary matching below would ever connect them.
+      // Needs an explicit alias, same as Wolves/Spurs/Newcastle above, not a
+      // broader fuzzy-matching change (which risks the opposite problem —
+      // see the Lens/St Helens false-positive this app hit previously).
+      .replace(/^(fc )?internazionale( milano)?$/, 'inter milan')
+      .replace(/^inter$/,             'inter milan')
       // Strip common suffixes/prefixes
       .replace(/\s+fc$/, '').replace(/^fc\s+/, '')
       .replace(/\s+afc$/, '').replace(/^afc\s+/, '')
@@ -1353,7 +1363,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.7';
+const APP_VERSION = 'v17.1.9';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -2340,6 +2350,7 @@ document.querySelectorAll('.nav-item').forEach(btn => {
       $id('searchWrap').classList.remove('visible');
       $id('searchInput').value = ''; searchQ = '';
     }
+    window.scrollTo(0,0);
   });
 });
 
