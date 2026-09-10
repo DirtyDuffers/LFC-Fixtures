@@ -1031,7 +1031,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.10</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.11</div>
     </div>
   </div>
 </div>
@@ -1246,7 +1246,13 @@ function getH2H(opponentName) {
   if (!opponentName) return null;
 
   function norm(n) {
-    return n.toLowerCase().trim()
+    return n.normalize('NFD').replace(/[\u0300-\u036f]/g, '') // strip accents ("Atlético" -> "Atletico") — without this, an
+      // accented spelling and its plain-ASCII equivalent are treated as
+      // completely different words by every step below, including the word-
+      // overlap fallback. Confirmed via the identical bug found and fixed in
+      // the Worker's own opponent-matching: "Atlético de Madrid" vs
+      // "Atletico Madrid" would otherwise show no shared words at all.
+      .toLowerCase().trim()
       // Replace & with 'and' and vice-versa variants
       .replace(/\s*&\s*/g, ' and ')
       // Common short-name expansions
@@ -1361,7 +1367,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.10';
+const APP_VERSION = 'v17.1.11';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
