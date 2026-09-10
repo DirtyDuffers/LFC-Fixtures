@@ -1031,7 +1031,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.11</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.12</div>
     </div>
   </div>
 </div>
@@ -1367,7 +1367,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.11';
+const APP_VERSION = 'v17.1.12';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -2648,24 +2648,75 @@ function mergeHistorical(icsPast) {
   const canonicalOpponentNames = new Set();
   HIST_RESULTS.forEach(r => { if (r.opponent) canonicalOpponentNames.add(r.opponent); });
   Object.values(H2H_DATA).forEach(e => { if (e.name) canonicalOpponentNames.add(e.name); });
-  const normForCanon = n => (n || '').toLowerCase().replace(/\bafc\b|\bfc\b/g, '').replace(/[^a-z0-9]/g, '').trim();
+  // Strips accents before the alphanumeric filter, same fix already proven in
+  // getH2H()'s norm() and the Worker's normaliseForKey — without it, "é" (and
+  // any other accented character) gets deleted outright rather than converted
+  // to its plain form, so "Atlético" becomes "atltico" instead of "atletico"
+  // and never matches its unaccented spelling at all.
+  const normForCanon = n => (n || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\bafc\b|\bfc\b/g, '').replace(/[^a-z0-9]/g, '').trim();
+  // Same idea, but keeping spaces — needed for the significant-word-set check
+  // below, since normForCanon strips all whitespace.
+  const normForCanonKeepingSpaces = n => (n || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\bafc\b|\bfc\b/g, '').replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+  const CANON_FILLER_WORDS = new Set(['de', 'of', 'the', 'and', 'la', 'los', 'las', 'el']);
+  const significantWordsForCanon = n => normForCanonKeepingSpaces(n).split(' ').filter(w => w && !CANON_FILLER_WORDS.has(w));
   const canonicaliseOpponentName = icsName => {
     const norm = normForCanon(icsName);
     if ([...canonicalOpponentNames].some(n => normForCanon(n) === norm)) return icsName;
-    const candidates = [...canonicalOpponentNames].filter(n => {
+    const startsWithCandidates = [...canonicalOpponentNames].filter(n => {
       const cn = normForCanon(n);
       return cn.startsWith(norm) || norm.startsWith(cn);
     });
-    return candidates.length === 1 ? candidates[0] : icsName;
+    if (startsWithCandidates.length === 1) return startsWithCandidates[0];
+    // Catches names that differ by an interposed filler word even after
+    // accents are fixed — "Atlético de Madrid" vs "Atletico Madrid" share no
+    // contiguous substring at all because of the "de", so startsWith() alone
+    // (even accent-corrected) can't connect them. Compares the SET of
+    // significant words instead, matching only when one is fully contained
+    // in the other, so "Real Madrid" is still correctly kept separate from
+    // "Atlético de Madrid" despite sharing the word "madrid".
+    const icsWords = significantWordsForCanon(icsName);
+    const wordSetCandidates = icsWords.length ? [...canonicalOpponentNames].filter(n => {
+      const nWords = significantWordsForCanon(n);
+      if (!nWords.length) return false;
+      const setA = new Set(icsWords), setB = new Set(nWords);
+      const [smaller, larger] = setA.size <= setB.size ? [setA, setB] : [setB, setA];
+      return [...smaller].every(w => larger.has(w));
+    }) : [];
+    return wordSetCandidates.length === 1 ? wordSetCandidates[0] : icsName;
   };
   icsPast = icsPast.map(f => {
     const canonical = canonicaliseOpponentName(f.opponent);
     return canonical !== f.opponent ? { ...f, opponent: canonical } : f;
   });
 
+  // Date matching between the live ICS feed and stored data can't require an
+  // exact string match either — same reasoning as the Worker's identical fix:
+  // a late-evening kickoff at a non-UK venue can legitimately fall on a
+  // different calendar date depending on which timezone recorded it (the
+  // Wrexham/Yankee Stadium case — 29 July per the ICS feed, 30 July per
+  // lfchistory.net). This was never actually observed causing a visible
+  // duplicate here, only because the affected fixtures happened to age out of
+  // the ICS feed's "recent past" window before anyone noticed — the
+  // underlying gap was identical and just as real. One day of tolerance
+  // absorbs a timezone crossing without being wide enough to risk merging two
+  // genuinely different fixtures against the same opponent days apart.
+  const daysBetween = (dateA, dateB) => Math.abs((dateA - dateB) / 86400000);
   const keyOf = f => {
     const d = f.start instanceof Date ? f.start : new Date(f.start);
     return d.toISOString().slice(0,10) + '|' + (f.opponent||'').toLowerCase().trim();
+  };
+  // Finds a key in `keys` (any iterable of "YYYY-MM-DD|opponent" strings)
+  // within one day of `targetIso` for the same opponent, rather than
+  // requiring an exact date match — see the note above this block for why.
+  const findCloseKey = (targetIso, targetOpponent, keys) => {
+    const targetDate = new Date(targetIso);
+    const oppLower = (targetOpponent || '').toLowerCase().trim();
+    for (const key of keys) {
+      const sep = key.indexOf('|');
+      if (key.slice(sep + 1) !== oppLower) continue;
+      if (daysBetween(new Date(key.slice(0, sep)), targetDate) <= 1) return key;
+    }
+    return null;
   };
   // The live ICS feed only ever supplies opponent/date/competition/venue —
   // enrich() never sets .score/.result, because the feed's SUMMARY text is
@@ -2701,16 +2752,19 @@ function mergeHistorical(icsPast) {
     }))
     .map(r => {
       if (r.venue) return r; // already has one, nothing to backfill
-      const key = r.start.toISOString().slice(0,10) + '|' + (r.opponent||'').toLowerCase().trim();
-      const icsVenue = icsVenueByKey.get(key);
+      const iso = r.start.toISOString().slice(0,10);
+      const closeKey = findCloseKey(iso, r.opponent, icsVenueByKey.keys());
+      const icsVenue = closeKey ? icsVenueByKey.get(closeKey) : undefined;
       return icsVenue ? { ...r, venue: icsVenue, location: icsVenue } : r;
     })
     .filter(r => {
       if (r.start >= now) return false;
-      const key = r.start.toISOString().slice(0,10) + '|' + (r.opponent||'').toLowerCase().trim();
-      if (existing.has(key)) {
-        if (icsHasScore.get(key)) return false; // ICS side already has a real score — keep that one
-        supersededIcsKeys.add(key); // ICS stub has no score — this complete entry takes its place
+      const iso = r.start.toISOString().slice(0,10);
+      const key = iso + '|' + (r.opponent||'').toLowerCase().trim();
+      const closeKey = findCloseKey(iso, r.opponent, existing);
+      if (closeKey) {
+        if (icsHasScore.get(closeKey)) return false; // ICS side already has a real score — keep that one
+        supersededIcsKeys.add(closeKey); // ICS stub has no score — this complete entry takes its place
         return true;
       }
       existing.add(key);
@@ -2725,15 +2779,17 @@ function mergeHistorical(icsPast) {
       if (d >= now) continue;
       const oppLower = entry.name.toLowerCase().trim();
       const key = r.iso + '|' + oppLower;
-      if (existing.has(key)) {
-        if (supersededIcsKeys.has(key)) continue; // hist already claimed this scoreless stub's slot
-        if (icsHasScore.get(key)) continue; // ICS side already has a real score — keep that one
-        supersededIcsKeys.add(key);
+      const closeKey = findCloseKey(r.iso, entry.name, existing);
+      if (closeKey) {
+        if (supersededIcsKeys.has(closeKey)) continue; // hist already claimed this scoreless stub's slot
+        if (icsHasScore.get(closeKey)) continue; // ICS side already has a real score — keep that one
+        supersededIcsKeys.add(closeKey);
       } else {
         existing.add(key);
       }
       const isHome = r.v==='H' ? true : r.v==='A' ? false : null;
-      const venueResolved = r.venue || icsVenueByKey.get(key) || (isHome===true ? 'Anfield' : '');
+      const venueCloseKey = findCloseKey(r.iso, entry.name, icsVenueByKey.keys());
+      const venueResolved = r.venue || (venueCloseKey ? icsVenueByKey.get(venueCloseKey) : '') || (isHome===true ? 'Anfield' : '');
       h2hFlat.push({
         start: d,
         end: null,
