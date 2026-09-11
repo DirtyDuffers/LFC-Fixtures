@@ -665,15 +665,15 @@
   <img class="crest" id="headerCrest" src="" alt="LFC"/>
   <div class="header-text"><h1>LFC Fixtures</h1><p id="lastUpdated">Men's First Team</p></div>
   <div class="header-right">
-    <button class="btn-icon" id="searchBtn" title="Search">🔍</button>
-    <button class="btn-icon" id="themeBtn" title="Toggle theme"></button>
-    <button class="btn-icon" id="refreshBtn" title="Refresh">↺</button>
+    <button class="btn-icon" id="searchBtn" title="Search" aria-label="Search">🔍</button>
+    <button class="btn-icon" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"></button>
+    <button class="btn-icon" id="refreshBtn" title="Refresh" aria-label="Refresh">↺</button>
   </div>
 </header>
 <div class="search-wrap" id="searchWrap">
   <div class="search-inner">
     <span class="search-icon">🔍</span>
-    <input class="search-input" id="searchInput" placeholder="Search opponent or competition…" autocomplete="off"/>
+    <input class="search-input" id="searchInput" placeholder="Search opponent or competition…" aria-label="Search opponent or competition" autocomplete="off"/>
     <button class="search-clear" id="searchClear">✕</button>
   </div>
 </div>
@@ -829,7 +829,7 @@
   <div class="modal-box">
     <h2>Head-to-Head History</h2>
     <p>Show previous results against each opponent. Get a free key (100 calls/day, no card) at <a href="https://dashboard.api-football.com/register" target="_blank">api-football.com</a>.</p>
-    <input class="modal-input" id="h2hKeyInput" type="password" placeholder="Paste key…" autocomplete="off"/>
+    <input class="modal-input" id="h2hKeyInput" type="password" placeholder="Paste key…" aria-label="Head-to-head API key" autocomplete="off"/>
     <button class="modal-btn" id="h2hSaveBtn">ENABLE H2H</button>
     <button class="modal-skip" id="h2hSkipBtn">Skip for now</button>
   </div>
@@ -844,20 +844,20 @@
         <div class="planner-form-title" id="plannerFormTitle" style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">New Trip</div>
         <div class="planner-row">
           <div class="planner-field">
-            <label class="planner-label">Event name</label>
+            <label class="planner-label" for="plannerName">Event name</label>
             <input class="planner-input" id="plannerName" type="text" placeholder="e.g. Lanzarote holiday" maxlength="50"/>
           </div>
         </div>
         <div class="planner-row">
           <div class="planner-field">
-            <label class="planner-label">From</label>
+            <label class="planner-label" for="plannerFrom">From</label>
             <div class="planner-date-wrap">
               <div class="planner-date-display" id="plannerFromDisplay"><span id="plannerFromText">Start date</span><span class="cal-icon">📅</span></div>
               <input class="planner-date-hidden" id="plannerFrom" type="date" onchange="plannerFromChanged()"/>
             </div>
           </div>
           <div class="planner-field">
-            <label class="planner-label">To (same for single day)</label>
+            <label class="planner-label" for="plannerTo">To (same for single day)</label>
             <div class="planner-date-wrap">
               <div class="planner-date-display" id="plannerToDisplay"><span id="plannerToText">End date</span><span class="cal-icon">📅</span></div>
               <input class="planner-date-hidden" id="plannerTo" type="date"/>
@@ -1031,7 +1031,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.12</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.13</div>
     </div>
   </div>
 </div>
@@ -1367,7 +1367,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.12';
+const APP_VERSION = 'v17.1.13';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -3350,7 +3350,7 @@ function renderH2HSearchView(el) {
       '<div class="stats-pg-sub">Search any team Liverpool have faced</div>' +
     '</div>' +
     '<div class="h2h-search-wrap">' +
-      '<input class="h2h-search-input" type="search" placeholder="Search for a team…" oninput="onH2HSearchInput(this.value)" autofocus/>' +
+      '<input class="h2h-search-input" type="search" placeholder="Search for a team…" aria-label="Search for a team" oninput="onH2HSearchInput(this.value)" autofocus/>' +
     '</div>' +
     '<div class="h2h-opp-list" id="h2hOppList">' + h2hBuildOppListHtml() + '</div>';
 }
@@ -4026,13 +4026,13 @@ function renderStatsPage() {
       '<div class="compare-chips" id="statsEraChips"></div>' +
     '</div>' +
     '<div id="statsOppMgrSearch" style="padding:8px 0 4px">' +
-      '<input id="statsOppMgrInput" type="search" placeholder="Search opposition manager…" style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;outline:none" oninput="onStatsOppMgrSearch(this.value)"/>' +
+      '<input id="statsOppMgrInput" type="search" placeholder="Search opposition manager…" aria-label="Search opposition manager" style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;outline:none" oninput="onStatsOppMgrSearch(this.value)"/>' +
     '</div>' +
     '<div id="statsManagerSearch" style="display:none;padding:8px 0 4px">' +
-      '<input id="statsManagerInput" type="search" placeholder="Search managers…" style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;outline:none" oninput="onStatsManagerSearch(this.value)"/>' +
+      '<input id="statsManagerInput" type="search" placeholder="Search managers…" aria-label="Search managers" style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;outline:none" oninput="onStatsManagerSearch(this.value)"/>' +
       '</div>' +
       '<div id="statsOpponentSearch" style="display:none;padding:8px 0 4px">' +
-      '<input id="statsOpponentInput" type="search" placeholder="Search opponents…" style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;outline:none" oninput="onStatsOpponentSearch(this.value)"/>' +
+      '<input id="statsOpponentInput" type="search" placeholder="Search opponents…" aria-label="Search opponents" style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;outline:none" oninput="onStatsOpponentSearch(this.value)"/>' +
       '</div>' +
       '<div id="statsResults"></div>' +
   '</div>';
