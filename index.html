@@ -1031,7 +1031,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.17</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.18</div>
     </div>
   </div>
 </div>
@@ -1367,7 +1367,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.17';
+const APP_VERSION = 'v17.1.18';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
@@ -2059,6 +2059,12 @@ function renderOTD() {
   const addOppMgr = (iso, opp, mgr) => { if (mgr) oppMgrByKey[String(iso).slice(0,10)+'|'+String(opp||'').toLowerCase()] = mgr; };
   HIST_RESULTS.forEach(h => addOppMgr(h.start, h.opponent, h.opp_mgr));
   getNewResults().forEach(nr => addOppMgr(nr.iso, nr.opponent, nr.opp_mgr));
+  // H2H_DATA holds most managers (the OTD list is mostly built from it), so index it too.
+  Object.values(H2H_DATA).forEach(entry => entry.results.forEach(r => addOppMgr(r.iso, entry.name, r.opp_mgr)));
+  // Date-only fallback for when the opponent's name differs between sources; only used when
+  // every known entry for that date agrees on one manager.
+  const oppMgrByDate = {};
+  Object.keys(oppMgrByKey).forEach(k => { const d = k.slice(0,10); (oppMgrByDate[d] = oppMgrByDate[d] || new Set()).add(oppMgrByKey[k]); });
 
   // Collect from allPast
   const seen = new Set();
@@ -2212,7 +2218,7 @@ function renderOTD() {
         '<span class="otd-famous">&#9733; ' + (hasAnniversary ? yearsAgo + ' yrs — ' : '') + esc(famousLabel) + '</span>' : '';
 
       const shareData = encodeURIComponent(JSON.stringify({y:year, opp:f.opponent||'Unknown', score, comp, round:f.round||'', ha:haLabelOtd}));
-      return '<div class="otd-item' + (isBigAnniversary?' otd-highlight':'') + (isTributeMatch?' otd-tribute-item':(famousLabel?' otd-famous-item':'')) + '" style="cursor:pointer" data-iso="'+iso+'" data-opp="'+esc(f.opponent||'')+'" data-mgr="'+esc(mgr||'')+'" data-opp-mgr="'+esc(f.opp_mgr||f._opp_mgr||oppMgrByKey[iso+'|'+(f.opponent||'').toLowerCase()]||'')+'" data-share="'+shareData+'"'+(famousMatch&&!isTributeMatch?' data-famous-blurb="'+esc(famousMatch.blurb)+'"':'')+'>' +
+      return '<div class="otd-item' + (isBigAnniversary?' otd-highlight':'') + (isTributeMatch?' otd-tribute-item':(famousLabel?' otd-famous-item':'')) + '" style="cursor:pointer" data-iso="'+iso+'" data-opp="'+esc(f.opponent||'')+'" data-mgr="'+esc(mgr||'')+'" data-opp-mgr="'+esc(f.opp_mgr||f._opp_mgr||oppMgrByKey[iso+'|'+(f.opponent||'').toLowerCase()]||((oppMgrByDate[iso]&&oppMgrByDate[iso].size===1)?[...oppMgrByDate[iso]][0]:'')||'')+'" data-share="'+shareData+'"'+(famousMatch&&!isTributeMatch?' data-famous-blurb="'+esc(famousMatch.blurb)+'"':'')+'>' +
         '<div class="otd-year">' + year + (anniversaryBadge?'<br/>'+anniversaryBadge:'') + '</div>' +
         '<div class="otd-info">' +
           '<div class="otd-opponent">' + (ob?'<img src="'+ob+'" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px" onerror="this.style.display=\'none\'"/>':'') + esc(f.opponent||'Unknown') + '</div>' +
