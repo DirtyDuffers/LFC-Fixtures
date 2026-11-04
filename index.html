@@ -1031,7 +1031,7 @@
         <button class="changelog-clear-btn" onclick="runDataAuditUI()">Run data check</button>
       </div>
 
-      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.16</div>
+      <div class="about-version" id="aboutVersion" onclick="onVersionTap()" style="cursor:default">v17.1.17</div>
     </div>
   </div>
 </div>
@@ -1067,7 +1067,7 @@
 
 const WORKER_URL='https://lfc-fixtures.duff13.workers.dev';
 const CACHE_KEY='lfc_ics_v15';
-const HISTORIC_CUPS = new Set(["League War Cup", "League War Cup Knockout Competition", "Liverpool Senior Cup", "Floodlit Challenge Cup", "Footballers National War Fund", "Lord Mayors War Fund", "Palatine League", "Test Match", "Birkenhead Hospitals Cup", "Bristol Hospitals Lord Mayors Cup", "Hospital Cup", "Bass Charity Vase", "Governor Otto Kerner Trophy", "Screen Sport Super Cup", "Football League 100th Championship Challenge", "Football League Northern Section", "Lancashire Senior Cup", "Lancashire Section Principal Tournament", "Lancashire Section Supplementary Competition", "Lancashire Section Subsidiary Competition", "North Regional League", "Western Division", "Lancashire League"]);
+const HISTORIC_CUPS = new Set(["League War Cup", "League War Cup Knockout Competition", "Liverpool Senior Cup", "Floodlit Challenge Cup", "Footballers National War Fund", "Lord Mayors War Fund", "Palatine League", "Test Match", "Birkenhead Hospitals Cup", "Bristol Hospitals Lord Mayors Cup", "Hospital Cup", "Bass Charity Vase", "Governor Otto Kerner Trophy", "Dubai Champions Cup", "Screen Sport Super Cup", "Football League 100th Championship Challenge", "Football League Northern Section", "Lancashire Senior Cup", "Lancashire Section Principal Tournament", "Lancashire Section Supplementary Competition", "Lancashire Section Subsidiary Competition", "North Regional League", "Western Division", "Lancashire League"]);
 // Genuinely historic/iconic results, independent of round-number anniversaries — shown with a
 // distinct highlight and label on the On This Day page, with an expandable blurb explaining why
 // the match matters. Dates verified against HIST_RESULTS/H2H_DATA.
@@ -1367,7 +1367,7 @@ let calYear, calMonth;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let theme = localStorage.getItem('lfc_theme') || (systemDark ? 'dark' : 'light');
 const $id = id => document.getElementById(id);
-const APP_VERSION = 'v17.1.16';
+const APP_VERSION = 'v17.1.17';
 
 // Checks whether a newer version of the app has been deployed, by re-fetching this same
 // page (bypassing cache) and comparing its embedded version string against the one actually
